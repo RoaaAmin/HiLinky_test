@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>130850188106-1lef572cpubpg83m4f19g7boq3q51mvu.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.130850188106-1lef572cpubpg83m4f19g7boq3q51mvu</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDyjPAt8Uag0kZh2YgEWddWXwBFyrCwfno</string>
+	<key>GCM_SENDER_ID</key>
+	<string>130850188106</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.hilinkyTest</string>
+	<key>PROJECT_ID</key>
+	<string>hilinky-test</string>
+	<key>STORAGE_BUCKET</key>
+	<string>hilinky-test.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:130850188106:ios:05b1c4c3ba8d019bc0efb3</string>
+</dict>
+</plist>

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "130850188106",
+    "project_id": "hilinky-test",
+    "storage_bucket": "hilinky-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:130850188106:android:3183cfc967eb9b89c0efb3",
+        "android_client_info": {
+          "package_name": "com.example.hilinky_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "130850188106-so4pb0oja0k0jh14jdk0efde2nmgtprp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8dVA2QCJypnZuT5UdcxcjMxZUTCF6tJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "130850188106-so4pb0oja0k0jh14jdk0efde2nmgtprp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "130850188106-1lef572cpubpg83m4f19g7boq3q51mvu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.hilinkyTest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
