@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:random_string/random_string.dart';
+import '../API/SendUserNotification.dart';
 import '../feeds.dart';
 import '../main.dart';
 
@@ -34,30 +35,34 @@ class _CreatePostState extends State<CreatePost> {
   File? selectedImage;
 
   Future getImage(ImageSource source) async {
-    var image = await ImagePicker.platform.pickImage(source: source);
+    var image = await ImagePicker.platform.getImageFromSource(source: source); //pickImage
+    print('printing source of image $source');
     setState(() {
       selectedImage = File(image!.path);
     });
   }
-  uploadpost() async {
+   uploadpost() async {
     if (selectedImage != null) {
       await FirebaseStorage.instance.ref('Posts/')
           .child(randomAlphaNumeric(9).toString() + '.jpg')
           .putFile(selectedImage!).then((value) async {
         await value.ref.getDownloadURL().then((link) async {
-         print('printing link of image $link');
+         print('printing linkkkkkk of image $link');
           await FirebaseFirestore.instance.collection('Posts').add({
             "ImageURL": link,
             "Description": description,
             "Status": 'OPEN',
-            "LiveLocationID": null,
-            "LiveLocationStatus": false,
             "PostedByUID": sUserID,
             "TimeStamp": DateTime.now(),
           }).then((value) async {
-         print('saved');
-           });
-       // Navigator.of(context).pop();
+          print('saved');
+         SendNotification(
+           title: 'New Post Added!',
+           body: 'Hey, Check out the posted case.',
+         ).sendToAllUsers(context);
+        // await context.loaderOverlay.hide();
+         Navigator.of(context).pop();
+          });
          Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (BuildContext context) => Feeds()));
 
         });
@@ -67,39 +72,6 @@ class _CreatePostState extends State<CreatePost> {
      // showInSnackBar('You have to fill all the fields ', Colors.red, Colors.white, 3,context,_scaffoldKey);
     }
   }
-
-  // @override
-  // void initState() {
-  //   getCurrentLocation();
-  //   if (widget.post != null) {
-  //     setState(() {
-  //       editMode=true;
-  //       editModeImageURL=widget.post.data()!['ImageURL'];
-  //       descriptionController.text = widget.post.data()!['Description'];
-  //       name = widget.post.data()!['Name'];
-  //       from = widget.post.data()!['Age'];
-  //       to = widget.post.data()!['CountryOrCity'];
-  //       phone = widget.post.data()!['Phone'];
-  //       time = widget.post.data()!['Time'];
-  //       description = widget.post.data()!['Description'];
-  //     });
-  //   }
-  //   super.initState();
-  //  }
-////////////////
-//   editPost() async {
-//    // await context.loaderOverlay.show();
-//     await FirebaseFirestore.instance.collection('Cases').doc(widget.post.id).update({
-//
-//       "Status": 'OPEN',
-//       "Description": description,
-//     }).then((value) async {
-//      // await context.loaderOverlay.hide();
-//       print('updated..')
-//       Navigator.pop(context);
-//     });
-//   }
-
   @override
   Widget build(BuildContext context) {
 

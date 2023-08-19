@@ -45,6 +45,7 @@ class _FeedsState extends State<Feeds> {
     }});
   }
 
+
   getUserData() async {
     await FirebaseFirestore.instance.collection('Users').doc(sUserID).get().then((value) {
       setState(() {
@@ -100,7 +101,7 @@ class _FeedsState extends State<Feeds> {
                         Padding(
                           padding: EdgeInsets.only(top: 1.0, bottom: 20.0),
                           child: Text(
-                            "Ride List",
+                            "Posts",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20.0,
@@ -224,6 +225,7 @@ class _FeedsState extends State<Feeds> {
                                   postsDocs[i].data()!['Status'],
                                   style: TextStyle(color: Colors.red, fontWeight: FontWeight.w800, fontSize: 14),
                                 ),
+                               // postsDocs[i].data()!['TimeStamp'],
                               ],
                             ),
                           ],

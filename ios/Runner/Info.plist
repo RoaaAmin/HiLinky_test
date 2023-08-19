@@ -48,9 +48,9 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-    	<string>HiLinky App Need Photos Permission To Pick Car Pictures.</string>
+    	<string>HiLinky App Need Photos Permission To Pick Pictures.</string>
     	<key>NSCameraUsageDescription</key>
-    	<string>HiLinky App Need Camera Permission To Pick Car Pictures.</string>
+    	<string>HiLinky App Need Camera Permission To Pick Pictures.</string>
 
 </dict>
 </plist>

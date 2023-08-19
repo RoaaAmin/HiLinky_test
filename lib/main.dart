@@ -5,6 +5,8 @@ import 'package:hilinky_test/screens/create_post.dart';
 import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:hilinky_test/screens/login_screen.dart';
 import 'package:hilinky_test/screens/signup_screen.dart';
+import 'API/SendUserNotification.dart';
+import 'API/notifications.dart';
 import 'auth.dart';
 import 'feeds.dart';
 import 'firebase_options/firebase_options.dart';
@@ -24,6 +26,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseConfig.platformOptions,
   );
+ // await SendNotification(body: '', title: '').initNotifications();
   runApp(const MyApp());
 }
 
@@ -46,7 +49,7 @@ class MyApp extends StatelessWidget {
         'homeScreen': (context) =>   HomeScreen(),
         'signupScreen': (context) =>  SignupScreen(),
         'loginScreen':  (context) =>  LoginScreen(),
-      //  'settingPage': (context) =>  settingPage(),
+        'NotificationsPage': (context) =>  NotificationsPage(),
         'feeds': (context) => Feeds(),
         'CreatePost': (context) => CreatePost(),
       },

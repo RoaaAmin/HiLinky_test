@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:line_icons/line_icons.dart';
 
 
+import '../API/notifications.dart';
 import '../auth.dart';
 
 import '../main.dart';
@@ -48,10 +49,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
         children: [
+          SizedBox(height: 99,),
           IconButton(
               icon: Icon(LineIcons.bell, size:30.0),
               onPressed: () {
-                // Navigator.pushNamed(context, notificationsViewRoute);
+                Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (BuildContext context) => NotificationsPage()));
               }
           ),
         ],
