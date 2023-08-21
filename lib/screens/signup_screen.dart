@@ -311,19 +311,19 @@ bool passwordConfirmed(){
           await userCredentials.user!.sendEmailVerification().then((metaData) async{
             try{
               await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).set({
-                'UserID':userCredentials.user!.uid,
-                'UserEmail':userCredentials.user!.email,
-                'UserName':nameController.text,
-                'UserPhoneNumber':phoneNumberController.text,
+                'sUserID':userCredentials.user!.uid,
+                'sUserEmail':userCredentials.user!.email,
+                'sUserName':nameController.text,
+                'sUserPhoneNumber':phoneNumberController.text,
                 'AccountCreatedDateTime':DateTime.now(),
               }).then((value) async{
                 await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).get().then((userDBData) async{
                   setState(() {
                     userData=userDBData;
-                   sUserID = userCredentials.user!.uid;
-                    sUserEmail = userDBData.data()!['UserEmail'];
-                    sUserName = userDBData.data()!['UserName'];
-                    sUserPhoneNumber = userDBData.data()!['UserPhoneNumber'];
+                    sUserID = userCredentials.user!.uid;
+                    sUserEmail = userDBData.data()!['sUserEmail'];
+                    sUserName = userDBData.data()!['sUserName'];
+                    sUserPhoneNumber = userDBData.data()!['sUserPhoneNumber'];
                    // sUserNotificationToken = userDBData.data()!['FBNotificationToken'];
                   });
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();

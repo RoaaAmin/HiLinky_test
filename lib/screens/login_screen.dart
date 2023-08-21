@@ -225,9 +225,9 @@ SizedBox(height: 25),
               await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).get().then((userDataInfo) {
                 setState(() {
                   sUserID = userCredentials.user!.uid;
-                  sUserEmail = userDataInfo.data()!['UserEmail'];
-                  sUserName = userDataInfo.data()!['UserName'];
-                  sUserPhoneNumber = userDataInfo.data()!['UserPhoneNumber'];
+                  sUserEmail = userDataInfo.data()!['sUserEmail'];
+                  sUserName = userDataInfo.data()!['sUserName'];
+                  sUserPhoneNumber = userDataInfo.data()!['sUserPhoneNumber'];
                 });
               });
             });
