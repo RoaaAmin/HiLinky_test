@@ -62,7 +62,7 @@ bool passwordConfirmed(){
     _confirmPasswordConroller.dispose();
   }
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-
+  String? notificationToken;
   @override
   void initState() {
     _firebaseMessaging.requestPermission(
@@ -77,7 +77,7 @@ bool passwordConfirmed(){
     _firebaseMessaging.getToken().then((String? token) {
       assert(token != null);
       setState(() {
-       // notificationToken=token;
+       notificationToken=token;
       });
     });
     super.initState();
@@ -315,6 +315,7 @@ bool passwordConfirmed(){
                 'sUserEmail':userCredentials.user!.email,
                 'sUserName':nameController.text,
                 'sUserPhoneNumber':phoneNumberController.text,
+                'sUserNotificationToken':notificationToken,
                 'AccountCreatedDateTime':DateTime.now(),
               }).then((value) async{
                 await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).get().then((userDBData) async{
@@ -324,7 +325,7 @@ bool passwordConfirmed(){
                     sUserEmail = userDBData.data()!['sUserEmail'];
                     sUserName = userDBData.data()!['sUserName'];
                     sUserPhoneNumber = userDBData.data()!['sUserPhoneNumber'];
-                   // sUserNotificationToken = userDBData.data()!['FBNotificationToken'];
+                   sUserNotificationToken = userDBData.data()!['sUserNotificationToken'];
                   });
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   clearControllers();

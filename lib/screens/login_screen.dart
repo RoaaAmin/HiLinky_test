@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,6 +23,27 @@ class _LoginScreenState extends State<LoginScreen>{
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  String? notificationToken;
+  @override
+  void initState() {
+    _firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,);
+
+    _firebaseMessaging.getToken().then((String? token) {
+      assert(token != null);
+      setState(() {
+        notificationToken=token;
+      });
+    });
+    super.initState();
+  }
 
   void openSignupScreen(){
     Navigator.of(context).pushReplacementNamed('signupScreen');
@@ -216,6 +238,11 @@ SizedBox(height: 25),
         password: _passwordController.text,
       ).then((userCredentials)async{
         if(userCredentials.user?.uid!=null){
+          //
+          await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).update({
+            'FBNotificationToken': notificationToken,
+          });
+          //
           if(userCredentials.user?.emailVerified==false){
             clearControllers();
             await userCredentials.user?.sendEmailVerification();
@@ -228,6 +255,7 @@ SizedBox(height: 25),
                   sUserEmail = userDataInfo.data()!['sUserEmail'];
                   sUserName = userDataInfo.data()!['sUserName'];
                   sUserPhoneNumber = userDataInfo.data()!['sUserPhoneNumber'];
+                  sUserNotificationToken = userDataInfo.data()!['sUserNotificationToken'];
                 });
               });
             });
@@ -255,7 +283,7 @@ SizedBox(height: 25),
       showInSnackBar('Invalid Email', Colors.red, Colors.white, 2, context, _scaffoldKey);
     }else {
       await FirebaseFirestore.instance.collection('Users')
-          .where('UserEmail',isEqualTo: _emailController.text)
+          .where('sUserEmail',isEqualTo: _emailController.text)
           .get().then((whereResult) async{
         if(whereResult==null && whereResult.docs.isEmpty){
           showInSnackBar('There is no record for this email', Colors.red, Colors.white, 3, context, _scaffoldKey);
