@@ -117,7 +117,7 @@ bool passwordConfirmed(){
                         controller: nameController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'User Name',
+                          hintText: 'Name',
                           prefixIcon: Icon(
                             LineIcons.user,
                             color: Colors.black38,
@@ -208,15 +208,32 @@ bool passwordConfirmed(){
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+
 
                 //confirm pass
+                SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
+                    ),
+
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: TextField(
+                        controller: _confirmPasswordConroller,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Confirm Password',
+                          prefixIcon: Icon(
+                            LineIcons.lock,
+                            color: Colors.black38,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -294,6 +311,8 @@ bool passwordConfirmed(){
       showInSnackBar('Please enter your phone number, ex: 05xxxxxxxxx', Colors.red, Colors.white, 2, context, _scaffoldKey);
     }else if(_passwordConroller.text==null||_passwordConroller.text.length<6){
       showInSnackBar('Password is too weak.', Colors.red, Colors.white, 2, context, _scaffoldKey);
+    } else if (_passwordConroller.text != _confirmPasswordConroller.text) {
+      showInSnackBar('Passwords do not match.', Colors.red, Colors.white, 2, context, _scaffoldKey);
     }else{
       print('Validation Completed');
       signup();
