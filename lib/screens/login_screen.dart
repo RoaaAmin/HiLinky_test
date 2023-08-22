@@ -23,6 +23,7 @@ class _LoginScreenState extends State<LoginScreen>{
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
+
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String? notificationToken;
   @override
@@ -86,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen>{
                         controller: _emailController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Email',
+                          hintText: 'Email or userName',
                           prefixIcon: Icon(
                             LineIcons.envelope,
                             color: Colors.grey,
@@ -218,60 +219,160 @@ SizedBox(height: 25),
     );
   }
 
-  void loginValidation(){
-    if(_emailController.text==null||_emailController.text.contains('@')==false||_emailController.text.contains('.com')==false){
-      showInSnackBar('Invalid Email', Colors.red, Colors.white, 2, context, _scaffoldKey);
-    }else if(_passwordController.text==null||_passwordController.text.length<6){
-      showInSnackBar('Invalid Password', Colors.red, Colors.white, 2, context, _scaffoldKey);
-    }else{
-      print('Validation Completed');
-      signIn();
+  // void loginValidation(){
+  //   if(_emailController.text==null||_emailController.text.contains('@')==false||_emailController.text.contains('.com')==false){
+  //     showInSnackBar('Invalid Email/Username', Colors.red, Colors.white, 2, context, _scaffoldKey);
+  //   }else if(_passwordController.text==null||_passwordController.text.length<6){
+  //     showInSnackBar('Invalid Password', Colors.red, Colors.white, 2, context, _scaffoldKey);
+  //   }else{
+  //     print('Validation Completed');
+  //     signIn();
+  //   }
+  // }
+
+  void loginValidation() {
+    String input = _emailController.text.trim();
+    if (input.contains('@') && input.contains('.com')) {
+      signInWithEmail(input);
+    } else {
+      signInWithUserName(input);
+    }
+  }
+  Future<void> signInWithEmail(String email) async {
+    try {
+      UserCredential userCredentials = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: _passwordController.text,
+      );
+
+      if (userCredentials.user?.uid != null) {
+        //await updateNotificationToken(userCredentials.user!.uid);
+        if (!userCredentials.user!.emailVerified) {
+          clearControllers();
+          //await sendEmailVerification(userCredentials.user!);
+        } else {
+         // await navigateToAuthPage(userCredentials.user!.uid);
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      showInSnackBar('Login failed, incorrect account information.', Colors.red, Colors.white, 2, context, _scaffoldKey);
 
     }
   }
 
-  Future signIn() async{
+  Future<void> signInWithUserName(String username) async {
+    try {
+      QuerySnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .where('uniqueUserName', isEqualTo: username)
+          .get();
+
+      if (userSnapshot.docs.isNotEmpty) {
+        String userEmail = userSnapshot.docs[0].get('sUserEmail');
+        await signInWithEmail(userEmail);
+      } else {
+        showInSnackBar('No user found with the provided email/username.', Colors.red, Colors.white, 2, context, _scaffoldKey);
+      }
+    } catch (e) {
+      showInSnackBar('An error occurred while logging in.', Colors.red, Colors.white, 2, context, _scaffoldKey);
+    }
+  }
+
+
+  Future signIn() async {
     print('Authentication Started.......');
-    try{
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      ).then((userCredentials)async{
-        if(userCredentials.user?.uid!=null){
-          //
+    try {
+      String input = _emailController.text.trim();
+
+      // Check if input is an email
+      if (input.contains('@') && input.contains('.com')) {
+        UserCredential userCredentials = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: input,
+          password: _passwordController.text,
+        );
+
+        if (userCredentials.user?.uid != null) {
           await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).update({
             'FBNotificationToken': notificationToken,
           });
-          //
-          if(userCredentials.user?.emailVerified==false){
+
+          if (userCredentials.user?.emailVerified == false) {
             clearControllers();
             await userCredentials.user?.sendEmailVerification();
             await FirebaseAuth.instance.signOut().then((value) {
               showInSnackBar('Oops, Your email is not verified, Please verify your email', Colors.amber[800]!, Colors.white, 3, context, _scaffoldKey);
-            }).then((metaData)async{
+            }).then((metaData) async {
               await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).get().then((userDataInfo) {
                 setState(() {
                   sUserID = userCredentials.user!.uid;
                   sUserEmail = userDataInfo.data()!['sUserEmail'];
-                  sUserName = userDataInfo.data()!['sUserName'];
+                  uniqueUserName = userDataInfo.data()!['uniqueUserName'];
                   sUserPhoneNumber = userDataInfo.data()!['sUserPhoneNumber'];
                   sUserNotificationToken = userDataInfo.data()!['sUserNotificationToken'];
                 });
               });
             });
-          }else{
+          } else {
             await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user?.uid).get().then((userDoc) {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (BuildContext context) => Auth()));
             });
           }
         }
-      });
-    }on FirebaseAuthException catch(e){
+      } else {
+        // Check if input is a username
+        QuerySnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('Users')
+            .where('uniqueUserName', isEqualTo: input)
+            .get();
+
+        if (userSnapshot.docs.isNotEmpty) {
+          String userEmail = userSnapshot.docs[0].get('sUserEmail');
+          UserCredential userCredentials = await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: userEmail,
+            password: _passwordController.text,
+          );
+
+          if (userCredentials.user?.uid != null) {
+            await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).update({
+              'FBNotificationToken': notificationToken,
+            });
+
+            if (userCredentials.user?.emailVerified == false) {
+              clearControllers();
+              await userCredentials.user?.sendEmailVerification();
+              await FirebaseAuth.instance.signOut().then((value) {
+                showInSnackBar('Oops, Your email is not verified, Please verify your email', Colors.amber[800]!, Colors.white, 3, context, _scaffoldKey);
+              }).then((metaData) async {
+                await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).get().then((userDataInfo) {
+                  setState(() {
+                    sUserID = userCredentials.user!.uid;
+                    sUserEmail = userDataInfo.data()!['sUserEmail'];
+                    uniqueUserName = userDataInfo.data()!['uniqueUserName'];
+                    sUserPhoneNumber = userDataInfo.data()!['sUserPhoneNumber'];
+                    sUserNotificationToken = userDataInfo.data()!['sUserNotificationToken'];
+                  });
+                });
+              });
+            } else {
+              await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user?.uid).get().then((userDoc) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (BuildContext context) => Auth()));
+              });
+            }
+          }
+        } else {
+          // No user found with the provided email/username
+          // Handle this case (e.g., show an error message)
+          return;
+        }
+      }
+    } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       showInSnackBar('Login failed, incorrect account information.', Colors.red, Colors.white, 3, context, _scaffoldKey);
     }
   }
+
   clearControllers(){
     _emailController.clear();
     _passwordController.clear();
@@ -280,7 +381,7 @@ SizedBox(height: 25),
 
   sendRecoveryPass()async{
     if(_emailController.text==null||_emailController.text.contains('@')==false||_emailController.text.contains('.com')==false){
-      showInSnackBar('Invalid Email', Colors.red, Colors.white, 2, context, _scaffoldKey);
+      showInSnackBar('Invalid Email or Username', Colors.red, Colors.white, 2, context, _scaffoldKey);
     }else {
       await FirebaseFirestore.instance.collection('Users')
           .where('sUserEmail',isEqualTo: _emailController.text)
