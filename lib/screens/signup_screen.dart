@@ -29,12 +29,15 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordConroller = TextEditingController();
   TextEditingController _confirmPasswordConroller = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
 
 
-
+  void openLoginScreen(){
+    Navigator.of(context).pushReplacementNamed('loginScreen');
+  }
   Future signUp() async{
 
     if(passwordConfirmed()){
@@ -44,6 +47,7 @@ class _SignupScreenState extends State<SignupScreen> {
       Navigator.of(context).pushReplacementNamed('/');
     }
   }
+
 bool passwordConfirmed(){
     if(_passwordConroller.text.trim() ==
         _confirmPasswordConroller.text.trim()){
@@ -52,14 +56,13 @@ bool passwordConfirmed(){
       return false;
     }
 }
-  void openLoginScreen(){
-    Navigator.of(context).pushReplacementNamed('loginScreen');
-  }
+
   void dispose(){
     super.dispose();
     _emailController.dispose();
     _passwordConroller.dispose();
     _confirmPasswordConroller.dispose();
+    usernameController.dispose();
   }
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String? notificationToken;
@@ -118,6 +121,31 @@ bool passwordConfirmed(){
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Name',
+                          prefixIcon: Icon(
+                            LineIcons.user,
+                            color: Colors.black38,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                // Username
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: TextField(
+                        controller: usernameController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Username',
                           prefixIcon: Icon(
                             LineIcons.user,
                             color: Colors.black38,
@@ -313,9 +341,31 @@ bool passwordConfirmed(){
       showInSnackBar('Password is too weak.', Colors.red, Colors.white, 2, context, _scaffoldKey);
     } else if (_passwordConroller.text != _confirmPasswordConroller.text) {
       showInSnackBar('Passwords do not match.', Colors.red, Colors.white, 2, context, _scaffoldKey);
+    } else if (usernameController.text == null || usernameController.text.isEmpty) {
+      showInSnackBar('Please enter a valid username.', Colors.red, Colors.white, 2, context, _scaffoldKey);
     }else{
+      checkUsernameAvailability();
       print('Validation Completed');
-      signup();
+      //signup();
+    }
+  }
+
+  Future checkUsernameAvailability() async {
+    try {
+      QuerySnapshot usernameSnapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .where('uniqueUserName', isEqualTo: usernameController.text)
+          .get();
+
+      if (usernameSnapshot.docs.isNotEmpty) {
+        showInSnackBar('Username is already taken.', Colors.red, Colors.white, 2, context, _scaffoldKey);
+      } else {
+        print('Validation Completed');
+        signup(); // Proceed with signup if username is available
+      }
+    } catch (e) {
+      // Handle error if the query fails
+      print('Error checking username availability: $e');
     }
   }
 
@@ -335,6 +385,7 @@ bool passwordConfirmed(){
                 'sUserName':nameController.text,
                 'sUserPhoneNumber':phoneNumberController.text,
                 'sUserNotificationToken':notificationToken,
+                'uniqueUserName': usernameController.text,
                 'AccountCreatedDateTime':DateTime.now(),
               }).then((value) async{
                 await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).get().then((userDBData) async{
@@ -343,6 +394,7 @@ bool passwordConfirmed(){
                     sUserID = userCredentials.user!.uid;
                     sUserEmail = userDBData.data()!['sUserEmail'];
                     sUserName = userDBData.data()!['sUserName'];
+                    uniqueUserName = userDBData.data()!['uniqueUserName'];
                     sUserPhoneNumber = userDBData.data()!['sUserPhoneNumber'];
                    sUserNotificationToken = userDBData.data()!['sUserNotificationToken'];
                   });
@@ -374,11 +426,14 @@ bool passwordConfirmed(){
   }
 
   clearControllers(){
+    usernameController.clear();
     _emailController.clear();
     _passwordConroller.clear();
+    _confirmPasswordConroller.clear();
     nameController.clear();
     phoneNumberController.clear();
     _emailController.clear();
+
 
   }
 }
