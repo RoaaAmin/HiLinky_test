@@ -23,7 +23,9 @@ class _LoginScreenState extends State<LoginScreen>{
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-
+  void openSignupScreen(){
+    Navigator.of(context).pushReplacementNamed('signupScreen');
+  }
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String? notificationToken;
   @override
@@ -46,9 +48,6 @@ class _LoginScreenState extends State<LoginScreen>{
     super.initState();
   }
 
-  void openSignupScreen(){
-    Navigator.of(context).pushReplacementNamed('signupScreen');
-  }
   void dispose(){
     super.dispose();
     _emailController.dispose();

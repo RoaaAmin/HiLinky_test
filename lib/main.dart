@@ -21,6 +21,8 @@ String sUserPhoneNumber = ' ';
 String sUserNotificationToken = ' ';
 String userProfileImage = ' ';
 String uniqueUserName =' ';
+String sNationality= ' ';
+String sCity= ' ';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

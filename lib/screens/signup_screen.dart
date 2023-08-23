@@ -38,6 +38,70 @@ class _SignupScreenState extends State<SignupScreen> {
   void openLoginScreen(){
     Navigator.of(context).pushReplacementNamed('loginScreen');
   }
+
+  String selectedNationality = 'Select Nationality';
+  String selectedCity = 'Select City';
+
+  List<String> nationalityOptions = [
+    'Select Nationality',
+    'Nationality 1',
+    'Nationality 2',
+    'Nationality 3',
+    // Add more nationalities as needed
+  ];
+
+  List<String> cityOptions = [
+    'Select City',
+    'City 1',
+    'City 2',
+    'City 3',
+    // Add more cities as needed
+  ];
+
+  void selectNationality() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return ListView.builder(
+          itemCount: nationalityOptions.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(nationalityOptions[index]),
+              onTap: () {
+                setState(() {
+                  selectedNationality = nationalityOptions[index];
+                });
+                Navigator.pop(context);
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void selectCity() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return ListView.builder(
+          itemCount: cityOptions.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(cityOptions[index]),
+              onTap: () {
+                setState(() {
+                  selectedCity = cityOptions[index];
+                });
+                Navigator.pop(context);
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
   Future signUp() async{
 
     if(passwordConfirmed()){
@@ -210,6 +274,76 @@ bool passwordConfirmed(){
               ),
             ),
         SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 8),
+                          DropdownButton<String>(
+                            value: selectedNationality,
+                            onChanged: (newValue) {
+                              setState(() {
+                                selectedNationality = newValue!;
+                              });
+                            },
+                            items: nationalityOptions.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 10),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 8),
+                          DropdownButton<String>(
+                            value: selectedCity,
+                            onChanged: (newValue) {
+                              setState(() {
+                                selectedCity = newValue!;
+                              });
+                            },
+                            items: cityOptions.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 10),
+
                 //pass
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -386,6 +520,8 @@ bool passwordConfirmed(){
                 'sUserPhoneNumber':phoneNumberController.text,
                 'sUserNotificationToken':notificationToken,
                 'uniqueUserName': usernameController.text,
+                'sNationality': selectedNationality,
+                'sCity': selectedCity,
                 'AccountCreatedDateTime':DateTime.now(),
               }).then((value) async{
                 await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).get().then((userDBData) async{
@@ -396,7 +532,10 @@ bool passwordConfirmed(){
                     sUserName = userDBData.data()!['sUserName'];
                     uniqueUserName = userDBData.data()!['uniqueUserName'];
                     sUserPhoneNumber = userDBData.data()!['sUserPhoneNumber'];
-                   sUserNotificationToken = userDBData.data()!['sUserNotificationToken'];
+                    sNationality = userDBData.data()!['sNationality'];
+                    sCity = userDBData.data()!['sCity'];
+                    sUserNotificationToken = userDBData.data()!['sUserNotificationToken'];
+
                   });
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   clearControllers();
