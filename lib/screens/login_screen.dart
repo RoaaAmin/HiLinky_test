@@ -18,14 +18,15 @@ class LoginScreen extends StatefulWidget{
   }
 
 class _LoginScreenState extends State<LoginScreen>{
+
+  void openSignupScreen(){
+    Navigator.of(context).pushReplacementNamed('signupScreen');
+  }
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool obscureText = true;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  void openSignupScreen(){
-    Navigator.of(context).pushReplacementNamed('signupScreen');
-  }
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String? notificationToken;
   @override
