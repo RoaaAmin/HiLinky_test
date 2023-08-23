@@ -10,18 +10,16 @@ import '../auth.dart';
 import '../main.dart';
 import '../models/SnackBar.dart';
 
-class LoginScreen extends StatefulWidget{
+class LoginScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState()=> _LoginScreenState();
+  State<StatefulWidget> createState() => _LoginScreenState();
+}
 
-
-  }
-
-class _LoginScreenState extends State<LoginScreen>{
-
-  void openSignupScreen(){
+class _LoginScreenState extends State<LoginScreen> {
+  void openSignupScreen() {
     Navigator.of(context).pushReplacementNamed('signupScreen');
   }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool obscureText = true;
   TextEditingController _emailController = TextEditingController();
@@ -29,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen>{
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String? notificationToken;
+
   @override
   void initState() {
     _firebaseMessaging.requestPermission(
@@ -38,22 +37,24 @@ class _LoginScreenState extends State<LoginScreen>{
       carPlay: false,
       criticalAlert: false,
       provisional: false,
-      sound: true,);
+      sound: true,
+    );
 
     _firebaseMessaging.getToken().then((String? token) {
       assert(token != null);
       setState(() {
-        notificationToken=token;
+        notificationToken = token;
       });
     });
     super.initState();
   }
 
-  void dispose(){
+  void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,18 +62,23 @@ class _LoginScreenState extends State<LoginScreen>{
       backgroundColor: Colors.grey[200],
       body: SafeArea(
         child: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-              children:[
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
 //Title
-              Text('SIGN IN',
-                style: GoogleFonts.robotoCondensed(fontSize:40, fontWeight: FontWeight.bold),
-              ),
-                Text('Welcome back!',
-                  style: GoogleFonts.robotoCondensed(fontSize:18),
+                Text(
+                  'SIGN IN',
+                  style: GoogleFonts.robotoCondensed(
+                      fontSize: 40, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 50,),
+                Text(
+                  'Welcome back!',
+                  style: GoogleFonts.robotoCondensed(fontSize: 18),
+                ),
+                SizedBox(
+                  height: 50,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: Container(
@@ -102,10 +108,10 @@ class _LoginScreenState extends State<LoginScreen>{
                         keyboardType: TextInputType.emailAddress,
                         style: TextStyle(color: Colors.black),
                         cursorColor: Colors.white,
-                        ),
                       ),
                     ),
                   ),
+                ),
 
                 SizedBox(height: 10),
                 //pass
@@ -116,12 +122,11 @@ class _LoginScreenState extends State<LoginScreen>{
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                     ),
-
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: TextField(
                         controller: _passwordController,
-                       // obscureText: true,
+                        // obscureText: true,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Password',
@@ -135,7 +140,12 @@ class _LoginScreenState extends State<LoginScreen>{
                                 obscureText = !obscureText;
                               });
                             },
-                            child: Icon(obscureText ? Icons.visibility_off : Icons.visibility,color: Colors.grey,),
+                            child: Icon(
+                              obscureText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.grey,
+                            ),
                           ),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
@@ -148,38 +158,40 @@ class _LoginScreenState extends State<LoginScreen>{
                         style: TextStyle(color: Colors.black),
                         cursorColor: Colors.white,
                         obscureText: obscureText,
-                        ),
                       ),
                     ),
                   ),
+                ),
 
-
-SizedBox(height: 15),
+                SizedBox(height: 15),
 // sign in button
-Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 25),
-  child:   GestureDetector(
-    onTap: loginValidation,
-    child: Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.amber[900],
-        borderRadius: BorderRadius.circular(12)
-      ),
-      child: Center(child: Text('Sign in', style: GoogleFonts.roboto(
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-        fontSize: 18,
-      ),)),
-    ),
-  ),
-),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: GestureDetector(
+                    onTap: loginValidation,
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                          color: Colors.amber[900],
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Center(
+                          child: Text(
+                        'Sign in',
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      )),
+                    ),
+                  ),
+                ),
 //space between button and text
-SizedBox(height: 25),
+                SizedBox(height: 25),
                 Center(
                   child: GestureDetector(
-                    onTap: () async{
-                        sendRecoveryPass();
+                    onTap: () async {
+                      sendRecoveryPass();
                     },
                     child: Text(
                       'Forget Password ?',
@@ -190,31 +202,36 @@ SizedBox(height: 25),
                     ),
                   ),
                 ),
-                const SizedBox(height: 40,),
+                const SizedBox(
+                  height: 40,
+                ),
                 // make text to sign up
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text ('Not a member? ',
+                    Text(
+                      'Not a member? ',
                       style: GoogleFonts.roboto(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                      ),),
-
+                      ),
+                    ),
                     GestureDetector(
                       onTap: openSignupScreen,
-                      child: Text('sign up Now',
+                      child: Text(
+                        'sign up Now',
                         style: GoogleFonts.roboto(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                      ),),
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     )
                   ],
                 )
               ],
+            ),
           ),
         ),
-    ),
       ),
     );
   }
@@ -233,14 +250,16 @@ SizedBox(height: 25),
   void loginValidation() {
     String input = _emailController.text.trim();
     if (input.contains('@') && input.contains('.com')) {
-      signInWithEmail(input);
+      signIn(input);
     } else {
       signInWithUserName(input);
     }
   }
+
   Future<void> signInWithEmail(String email) async {
     try {
-      UserCredential userCredentials = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredentials =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: _passwordController.text,
       );
@@ -251,12 +270,12 @@ SizedBox(height: 25),
           clearControllers();
           //await sendEmailVerification(userCredentials.user!);
         } else {
-         // await navigateToAuthPage(userCredentials.user!.uid);
+          // await navigateToAuthPage(userCredentials.user!.uid);
         }
       }
     } on FirebaseAuthException catch (e) {
-      showInSnackBar('Login failed, incorrect account information.', Colors.red, Colors.white, 2, context, _scaffoldKey);
-
+      showInSnackBar('Login failed, incorrect account information.', Colors.red,
+          Colors.white, 2, context, _scaffoldKey);
     }
   }
 
@@ -269,30 +288,40 @@ SizedBox(height: 25),
 
       if (userSnapshot.docs.isNotEmpty) {
         String userEmail = userSnapshot.docs[0].get('sUserEmail');
-        await signInWithEmail(userEmail);
+        await signIn(userEmail);
       } else {
-        showInSnackBar('No user found with the provided email/username.', Colors.red, Colors.white, 2, context, _scaffoldKey);
+        showInSnackBar('No user found with the provided email/username.',
+            Colors.red, Colors.white, 2, context, _scaffoldKey);
       }
     } catch (e) {
-      showInSnackBar('An error occurred while logging in.', Colors.red, Colors.white, 2, context, _scaffoldKey);
+      showInSnackBar('An error occurred while logging in.', Colors.red,
+          Colors.white, 2, context, _scaffoldKey);
     }
   }
 
-
-  Future signIn() async {
+  Future signIn(String userEmail) async {
     print('Authentication Started.......');
     try {
       String input = _emailController.text.trim();
+      if (input.contains('@') && input.contains('.com')) {
+        String input=_emailController.text.trim();
+      } else {
+        input=userEmail;
+      }
 
       // Check if input is an email
       if (input.contains('@') && input.contains('.com')) {
-        UserCredential userCredentials = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        UserCredential userCredentials =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: input,
           password: _passwordController.text,
         );
 
         if (userCredentials.user?.uid != null) {
-          await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).update({
+          await FirebaseFirestore.instance
+              .collection('Users')
+              .doc(userCredentials.user!.uid)
+              .update({
             'FBNotificationToken': notificationToken,
           });
 
@@ -300,22 +329,38 @@ SizedBox(height: 25),
             clearControllers();
             await userCredentials.user?.sendEmailVerification();
             await FirebaseAuth.instance.signOut().then((value) {
-              showInSnackBar('Oops, Your email is not verified, Please verify your email', Colors.amber[800]!, Colors.white, 3, context, _scaffoldKey);
+              showInSnackBar(
+                  'Oops, Your email is not verified, Please verify your email',
+                  Colors.amber[800]!,
+                  Colors.white,
+                  3,
+                  context,
+                  _scaffoldKey);
             }).then((metaData) async {
-              await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).get().then((userDataInfo) {
+              await FirebaseFirestore.instance
+                  .collection('Users')
+                  .doc(userCredentials.user!.uid)
+                  .get()
+                  .then((userDataInfo) {
                 setState(() {
                   sUserID = userCredentials.user!.uid;
                   sUserEmail = userDataInfo.data()!['sUserEmail'];
                   uniqueUserName = userDataInfo.data()!['uniqueUserName'];
                   sUserPhoneNumber = userDataInfo.data()!['sUserPhoneNumber'];
-                  sUserNotificationToken = userDataInfo.data()!['sUserNotificationToken'];
+                  sUserNotificationToken =
+                      userDataInfo.data()!['sUserNotificationToken'];
                 });
               });
             });
           } else {
-            await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user?.uid).get().then((userDoc) {
+            await FirebaseFirestore.instance
+                .collection('Users')
+                .doc(userCredentials.user?.uid)
+                .get()
+                .then((userDoc) {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (BuildContext context) => Auth()));
+              Navigator.of(context).pushReplacement(CupertinoPageRoute(
+                  builder: (BuildContext context) => Auth()));
             });
           }
         }
@@ -328,13 +373,17 @@ SizedBox(height: 25),
 
         if (userSnapshot.docs.isNotEmpty) {
           String userEmail = userSnapshot.docs[0].get('sUserEmail');
-          UserCredential userCredentials = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          UserCredential userCredentials =
+              await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: userEmail,
             password: _passwordController.text,
           );
 
           if (userCredentials.user?.uid != null) {
-            await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).update({
+            await FirebaseFirestore.instance
+                .collection('Users')
+                .doc(userCredentials.user!.uid)
+                .update({
               'FBNotificationToken': notificationToken,
             });
 
@@ -342,22 +391,38 @@ SizedBox(height: 25),
               clearControllers();
               await userCredentials.user?.sendEmailVerification();
               await FirebaseAuth.instance.signOut().then((value) {
-                showInSnackBar('Oops, Your email is not verified, Please verify your email', Colors.amber[800]!, Colors.white, 3, context, _scaffoldKey);
+                showInSnackBar(
+                    'Oops, Your email is not verified, Please verify your email',
+                    Colors.amber[800]!,
+                    Colors.white,
+                    3,
+                    context,
+                    _scaffoldKey);
               }).then((metaData) async {
-                await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user!.uid).get().then((userDataInfo) {
+                await FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(userCredentials.user!.uid)
+                    .get()
+                    .then((userDataInfo) {
                   setState(() {
                     sUserID = userCredentials.user!.uid;
                     sUserEmail = userDataInfo.data()!['sUserEmail'];
                     uniqueUserName = userDataInfo.data()!['uniqueUserName'];
                     sUserPhoneNumber = userDataInfo.data()!['sUserPhoneNumber'];
-                    sUserNotificationToken = userDataInfo.data()!['sUserNotificationToken'];
+                    sUserNotificationToken =
+                        userDataInfo.data()!['sUserNotificationToken'];
                   });
                 });
               });
             } else {
-              await FirebaseFirestore.instance.collection('Users').doc(userCredentials.user?.uid).get().then((userDoc) {
+              await FirebaseFirestore.instance
+                  .collection('Users')
+                  .doc(userCredentials.user?.uid)
+                  .get()
+                  .then((userDoc) {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (BuildContext context) => Auth()));
+                Navigator.of(context).pushReplacement(CupertinoPageRoute(
+                    builder: (BuildContext context) => Auth()));
               });
             }
           }
@@ -369,38 +434,47 @@ SizedBox(height: 25),
       }
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      showInSnackBar('Login failed, incorrect account information.', Colors.red, Colors.white, 3, context, _scaffoldKey);
+      showInSnackBar('Login failed, incorrect account information.', Colors.red,
+          Colors.white, 3, context, _scaffoldKey);
     }
   }
 
-  clearControllers(){
+  clearControllers() {
     _emailController.clear();
     _passwordController.clear();
-
   }
 
-  sendRecoveryPass()async{
-    if(_emailController.text==null||_emailController.text.contains('@')==false||_emailController.text.contains('.com')==false){
-      showInSnackBar('Invalid Email or Username', Colors.red, Colors.white, 2, context, _scaffoldKey);
-    }else {
-      await FirebaseFirestore.instance.collection('Users')
-          .where('sUserEmail',isEqualTo: _emailController.text)
-          .get().then((whereResult) async{
-        if(whereResult==null && whereResult.docs.isEmpty){
-          showInSnackBar('There is no record for this email', Colors.red, Colors.white, 3, context, _scaffoldKey);
+  sendRecoveryPass() async {
+    if (_emailController.text == null ||
+        _emailController.text.contains('@') == false ||
+        _emailController.text.contains('.com') == false) {
+      showInSnackBar('Invalid Email or Username', Colors.red, Colors.white, 2,
+          context, _scaffoldKey);
+    } else {
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .where('sUserEmail', isEqualTo: _emailController.text)
+          .get()
+          .then((whereResult) async {
+        if (whereResult == null && whereResult.docs.isEmpty) {
+          showInSnackBar('There is no record for this email', Colors.red,
+              Colors.white, 3, context, _scaffoldKey);
           _passwordController.clear();
-        }else{
+        } else {
           try {
-            await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text).then((metaData) {
-              showInSnackBar('Reset password email has been sent',  Colors.green, Colors.white, 2, context, _scaffoldKey);
+            await FirebaseAuth.instance
+                .sendPasswordResetEmail(email: _emailController.text)
+                .then((metaData) {
+              showInSnackBar('Reset password email has been sent', Colors.green,
+                  Colors.white, 2, context, _scaffoldKey);
               _passwordController.clear();
             });
           } catch (e) {
-            showInSnackBar('There is no record for this email', Colors.red, Colors.white, 3, context, _scaffoldKey);
+            showInSnackBar('There is no record for this email', Colors.red,
+                Colors.white, 3, context, _scaffoldKey);
           }
         }
       });
     }
   }
 }
-
