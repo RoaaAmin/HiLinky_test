@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 import '../main.dart';
-
-
+import '../screens/home_screen.dart';
 
 class NotificationsPage extends StatefulWidget {
   @override
@@ -18,36 +19,51 @@ class _NotificationsPageState extends State<NotificationsPage> {
     super.initState();
   }
 
-  getNotifications()async{
-   Future.delayed(Duration(seconds: 1),()async{
-     await FirebaseFirestore.instance.collection('Notifications')
-         .where('ToUID',isEqualTo: sUserID)
-         .get().then((value) async{
-       setState(() {
-         notifications=value;
-       });
-     });
-   });
+  getNotifications() async {
+    Future.delayed(Duration(seconds: 1), () async {
+      await FirebaseFirestore.instance
+          .collection('Notifications')
+          .where('ToUID', isEqualTo: sUserID)
+          .get()
+          .then((value) async {
+        setState(() {
+          notifications = value;
+        });
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: notificationFlowList(context),
-    );
+        body: notificationFlowList(context),
+        appBar: AppBar(
+            backgroundColor: Colors.white,
+            leading: IconButton(
+              icon: Icon(
+                LineIcons.arrowLeft,
+                size: 30.0,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(context).pushReplacement(CupertinoPageRoute(
+                  builder: (BuildContext context) => HomeScreen(),
+                ));
+              },
+            )));
   }
 
-  Widget notificationFlowList(BuildContext context){
+  Widget notificationFlowList(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
     final deviceWidth = MediaQuery.of(context).size.width;
-    if(notifications!=null){
+    if (notifications != null) {
       return SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 30.0, bottom: 15.0,left: 15),
+              padding: EdgeInsets.only(top: 30.0, bottom: 15.0, left: 15),
               child: Text(
                 "Notifications",
                 style: TextStyle(
@@ -61,12 +77,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
               flex: 1,
               child: ListView.builder(
                 itemCount: notifications?.docs.length,
-                itemBuilder: (context,i){
+                itemBuilder: (context, i) {
                   return Padding(
-                    padding: const EdgeInsets.only(left:8.0,right: 8.0),
+                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Card(
                       elevation: 3,
-                      color: i%2==0?Colors.grey.shade50:Colors.grey.shade100,
+                      color: i % 2 == 0
+                          ? Colors.grey.shade50
+                          : Colors.grey.shade100,
                       child: ListTile(
                         title: Text(
                           notifications?.docs[i].data()['Title'],
@@ -77,7 +95,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           ),
                         ),
                         subtitle: Padding(
-                          padding: const EdgeInsets.only(left:5,top: 3),
+                          padding: const EdgeInsets.only(left: 5, top: 3),
                           child: Text(
                             notifications?.docs[i].data()['Body'],
                             style: TextStyle(
@@ -96,7 +114,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           ],
         ),
       );
-    }else{
+    } else {
       return Container(
         padding: EdgeInsets.only(
           top: 70.0,
@@ -128,13 +146,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
               children: <Widget>[
                 Image.asset(
                   'assets/images/empty.png',
-                 //"empty.png"
+                  //"empty.png"
                 ),
                 Container(
                   padding: EdgeInsets.only(top: 30.0, bottom: 10.0),
                   child: Text(
                     "No New Notification",
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 24.0),
+                    style:
+                        TextStyle(fontWeight: FontWeight.w700, fontSize: 24.0),
                   ),
                 ),
                 Text(

@@ -156,6 +156,7 @@ bool passwordConfirmed(){
 
       backgroundColor: Colors.grey[200],
       body: SafeArea(
+
         child: Center(
           child: SingleChildScrollView(
             child: Column(

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hilinky_test/screens/create_card.dart';
 
 import 'package:line_icons/line_icons.dart';
 
@@ -43,24 +44,44 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-
-
-        children: [
-          SizedBox(height: 99,),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        actions: [
           IconButton(
-              icon: Icon(LineIcons.bell, size:30.0),
-              onPressed: () {
-                Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (BuildContext context) => NotificationsPage()));
-              }
+            icon: Icon(LineIcons.bell, size: 30.0, color: Colors.black,),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(CupertinoPageRoute(
+                builder: (BuildContext context) => NotificationsPage(),
+              ));
+            },
           ),
         ],
       ),
-      //  body: Container(padding: EdgeInsets.symmetric(horizontal: 355, vertical:77), child: Icon(LineIcons.bell, size:30.0)),
-      drawer: Drawer(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Start your journey by creating your card",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20), // Add some spacing
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacement(CupertinoPageRoute(
+                    builder: (BuildContext context) => CreateCard(),));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber.shade800,
+              ),
+              child: Text("Create Card"),
 
+            ),
+          ],
+        ),
+      ),
+
+      drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -71,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-
             ListTile(
               leading: Icon(
                 LineIcons.home,
