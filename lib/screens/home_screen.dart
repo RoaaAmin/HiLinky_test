@@ -18,6 +18,7 @@ import '../main.dart';
 
 import 'create_post.dart';
 import 'login_screen.dart';
+import 'myCard.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -125,11 +126,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.amber,
                 ),
                 title: Text(
-                  'Settings',
+                  'My card',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                //  Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) => settingPage()));
+                Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) => MyCard()));
                 }),
             ListTile(
 

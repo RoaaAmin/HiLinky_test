@@ -5,6 +5,7 @@ import 'package:hilinky_test/screens/create_card.dart';
 import 'package:hilinky_test/screens/create_post.dart';
 import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:hilinky_test/screens/login_screen.dart';
+import 'package:hilinky_test/screens/myCard.dart';
 import 'package:hilinky_test/screens/signup_screen.dart';
 import 'API/SendUserNotification.dart';
 import 'API/notifications.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
         'feeds': (context) => Feeds(),
         'CreatePost': (context) => CreatePost(),
         'CreateCard': (context) => CreateCard(),
+        'MyCard':(context) => MyCard(),
       },
 
     );

@@ -13,6 +13,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:random_string/random_string.dart';
 import '../main.dart';
 import '../models/SnackBar.dart';
+import 'myCard.dart';
 ////////////////////////////////
 
 class CreateCard extends StatefulWidget {
@@ -137,10 +138,10 @@ class _CreateCardState extends State<CreateCard> {
           "TimeStamp": DateTime.now(),
         }).then((value) async {
           print('Card saved');
-          Navigator.of(context).pop();
+         // Navigator.of(context).pop();
         });
-        // Navigator.of(context).pushReplacement(
-        //     CupertinoPageRoute(builder: (BuildContext context) => myCard()));
+        Navigator.of(context).pushReplacement(
+           CupertinoPageRoute(builder: (BuildContext context) => MyCard()));
       }
     } else {
       showInSnackBar('You have to fill all the fields ', Colors.red, Colors.white, 3,context,_scaffoldKey);
