@@ -191,6 +191,7 @@ class _MyCardState extends State<MyCard> {
                                 ),
                                 // postsDocs[i].data()!['TimeStamp'],
                               ],
+
                             ),
                           ],
                         ),

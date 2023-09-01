@@ -3,12 +3,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:line_icons/line_icons.dart';
-
 import '../auth.dart';
+import '../core/utils/image_constant.dart';
+import '../core/utils/size_utils.dart';
 import '../main.dart';
 import '../models/SnackBar.dart';
+import '../theme/custom_text_style.dart';
+import '../theme/theme_helper.dart';
+import '../widgets/app_bar/appbar_image.dart';
+import '../widgets/app_bar/custom_app_bar.dart';
+import '../widgets/custom_text_form_field.dart';
+import 'package:hilinky_test/widgets/custom_elevated_button.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -57,182 +62,211 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.grey[200],
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-//Title
-                Text(
-                  'SIGN IN',
-                  style: GoogleFonts.robotoCondensed(
-                      fontSize: 40, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  'Welcome back!',
-                  style: GoogleFonts.robotoCondensed(fontSize: 18),
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-// email text
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TextField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Email or userName',
-                          prefixIcon: Icon(
-                            LineIcons.envelope,
-                            color: Colors.grey,
-                          ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        style: TextStyle(color: Colors.black),
-                        cursorColor: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+    mediaQueryData = MediaQuery.of(context);
 
-                SizedBox(height: 10),
-                //pass
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TextField(
-                        controller: _passwordController,
-                        // obscureText: true,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Password',
-                          prefixIcon: Icon(
-                            LineIcons.lock,
-                            color: Colors.grey,
-                          ),
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                obscureText = !obscureText;
-                              });
-                            },
-                            child: Icon(
-                              obscureText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                        ),
-                        keyboardType: TextInputType.text,
-                        style: TextStyle(color: Colors.black),
-                        cursorColor: Colors.white,
-                        obscureText: obscureText,
-                      ),
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: 15),
-// sign in button
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: GestureDetector(
-                    onTap: loginValidation,
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                          color: Colors.amber[900],
-                          borderRadius: BorderRadius.circular(12)),
-                      child: Center(
-                          child: Text(
-                        'Sign in',
-                        style: GoogleFonts.roboto(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      )),
-                    ),
-                  ),
-                ),
-//space between button and text
-                SizedBox(height: 25),
-                Center(
-                  child: GestureDetector(
-                    onTap: () async {
-                      sendRecoveryPass();
-                    },
-                    child: Text(
-                      'Forget Password ?',
-                      style: GoogleFonts.roboto(
-                        color: Colors.black,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                // make text to sign up
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Not a member? ',
-                      style: GoogleFonts.roboto(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: openSignupScreen,
-                      child: Text(
-                        'sign up Now',
-                        style: GoogleFonts.roboto(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              ],
+    return SafeArea(
+      child: Scaffold(
+      backgroundColor: appTheme.gray50,
+        resizeToAvoidBottomInset: false,
+        appBar: CustomAppBar(
+          leadingWidth: double.maxFinite,
+          leading: AppbarImage(
+            svgPath: ImageConstant.imgBack,
+            margin: getMargin(
+              left: 11,
+              top: 12,
+              right: 351,
+              bottom: 12,
             ),
           ),
         ),
-      ),
+        body: Form(
+         //key: _scaffoldKey,
+          child: Container(
+            width: double.maxFinite,
+            padding: getPadding(
+              left: 24,
+              top: 21,
+              right: 24,
+              bottom: 21,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+              Padding(
+              padding: getPadding(
+              left: 1,
+              ),
+              child: Text(
+                "Welcome Back!",
+                style: theme.textTheme.displaySmall,
+              ),
+          ),
+          Container(
+              width: getHorizontalSize(302),
+              margin: getMargin(
+                left: 1,
+                top: 13,
+                right: 41,
+              ),
+              child: Text(
+                "Happy to see you again , enter your account details",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+               style: theme.textTheme.bodyLarge!.copyWith(
+                 height: 1.56,
+               ),
+              ),
+          ),
+          Padding(
+              padding: getPadding(
+                left: 1,
+                top: 25,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "Email or Username",
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  CustomTextFormField(
+                    controller: _emailController,
+                    margin: getMargin(
+                      top: 4,
+                    ),
+                    hintText: "Example@Example.com",
+                    hintStyle: theme.textTheme.titleSmall!,
+                    textInputType: TextInputType.emailAddress,
+                  ),
+                ],
+              ),
+          ),
+                  Container(
+                    height: getVerticalSize(99),
+                    width: getHorizontalSize(344),
+                    margin: getMargin(
+                      top: 23,
+                    ),
+                      child: Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          Align(
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Password",
+                                  style: theme.textTheme.titleMedium,
+                                ),
+                                CustomTextFormField(
+                                  controller: _passwordController,
+                                  obscureText: obscureText,
+                                  margin: getMargin(
+                                    top: 3,
+                                  ),
+                                  hintText: "Your Password",
+                                  hintStyle: CustomTextStyles.titleMediumGray90002,
+                                  textInputType: TextInputType.visiblePassword,
+                                  suffix: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        obscureText = !obscureText;
+                                      });
+                                    },
+                                    child: Icon(
+                                      obscureText
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  contentPadding: getPadding(
+                                    left: 16,
+                                    top: 17,
+                                    bottom: 17,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      sendRecoveryPass();
+                    },
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: getPadding(
+                          top: 17,
+                          right: 4,
+                        ),
+                        child: Text(
+                          "Forgot Password?",
+                          style: CustomTextStyles.labelLargeInterDeeporange300.copyWith(
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  CustomElevatedButton(
+                    text: "Login",
+                    margin: getMargin(
+                      top: 22,
+                    ),
+                  ),
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: getPadding(
+                    top: 25,
+                    bottom: 5,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Don’t have an account",
+                              style: CustomTextStyles.labelLargeInterBluegray300,
+                            ),
+                            TextSpan(
+                              text: "?",
+                              style: CustomTextStyles.bodyMediumInterBluegray300,
+                            ),
+                            TextSpan(
+                              text: " ",
+                              style: CustomTextStyles.bodyMediumInterBluegray300,
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      GestureDetector(
+                        onTap: openSignupScreen,
+                        child: Text(
+                          "Sign up Now",
+                          style: CustomTextStyles.labelLargeInterDeeporange30013.copyWith(
+                            decoration: TextDecoration.underline,
+    ),
+    ),
+    ),
+    ],
+    ),
+    ),)]),
+            ))))
     );
   }
 

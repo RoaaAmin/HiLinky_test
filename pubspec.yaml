@@ -49,6 +49,10 @@ dependencies:
   loading_indicator:
   loader_overlay:
   flutter_local_notifications:
+  cached_network_image: ^3.2.1
+  flutter_svg: ^1.1.6
+  country_pickers: ^2.0.0
+  outline_gradient_button: ^2.0.0+1
 
 dev_dependencies:
   flutter_test:

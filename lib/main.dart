@@ -7,6 +7,7 @@ import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:hilinky_test/screens/login_screen.dart';
 import 'package:hilinky_test/screens/myCard.dart';
 import 'package:hilinky_test/screens/signup_screen.dart';
+import 'package:hilinky_test/theme/theme_helper.dart';
 import 'API/SendUserNotification.dart';
 import 'API/notifications.dart';
 import 'auth.dart';
@@ -31,7 +32,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseConfig.platformOptions,
   );
- // await SendNotification(body: '', title: '').initNotifications();
+
   runApp(const MyApp());
 }
 
