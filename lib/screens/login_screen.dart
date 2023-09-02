@@ -12,6 +12,7 @@ import '../theme/custom_text_style.dart';
 import '../theme/theme_helper.dart';
 import '../widgets/app_bar/appbar_image.dart';
 import '../widgets/app_bar/custom_app_bar.dart';
+import '../widgets/custom_image_view.dart';
 import '../widgets/custom_text_form_field.dart';
 import 'package:hilinky_test/widgets/custom_elevated_button.dart';
 
@@ -147,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
                   Container(
                     height: getVerticalSize(99),
-                    width: getHorizontalSize(344),
+                    width: getHorizontalSize(349),
                     margin: getMargin(
                       top: 23,
                     ),
@@ -180,19 +181,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                         obscureText = !obscureText;
                                       });
                                     },
-                                    child: Icon(
-                                      obscureText
-                                          ? Icons.visibility_off
-                                          : Icons.visibility,
-                                      color: Colors.grey,
+                                    child: Container(
+                                      margin: getMargin(
+                                        left: 30,
+                                        top: 15,
+                                        right: 16,
+                                        bottom: 15,
+                                      ),
+                                    child: CustomImageView(
+                                      svgPath: obscureText
+                                          ? ImageConstant.imgAkariconseyeopen// Closed eye SVG
+                                          : ImageConstant.imgAkariconseyeopen  // Open eye SVG
+                                      /// change to closed eye svg
                                     ),
                                   ),
-                                  contentPadding: getPadding(
-                                    left: 16,
-                                    top: 17,
-                                    bottom: 17,
-                                  ),
                                 ),
+                                )
                               ],
                             ),
                           ),
