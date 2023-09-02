@@ -220,6 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   CustomElevatedButton(
+                    onTap: loginValidation,
                     text: "Login",
                     margin: getMargin(
                       top: 22,
