@@ -193,6 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   MaterialButton(
                     minWidth: 75,
                     onPressed: () {
+                      Navigator.pushNamed(context, 'SearchPagePremuimScreen');
                       setState(() {
                         _currentIndex = 1;
                       });

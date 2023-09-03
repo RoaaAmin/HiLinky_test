@@ -35,6 +35,7 @@ class ImageConstant {
   static String imgFavorite = '$imagePath/img_favorite.svg';
 
   static String imgSearch = '$imagePath/img_search.svg';
+  static String imgSearch1 = '$imagePath/img_search1.svg';
 
   static String imgIcons = '$imagePath/img_icons.svg';
 
@@ -72,4 +73,23 @@ class ImageConstant {
   static String imgIcroundplus = '$imagePath/img_icroundplus.svg';
 
   static String imageNotFound = 'assets/images/image_not_found.png';
+
+  // Search page - premuim images
+  static String imgVector = '$imagePath/img_vector.svg';
+
+  static String imgClose = '$imagePath/img_close.svg';
+
+  static String imgReply = '$imagePath/img_reply.svg';
+
+  static String imgVectorErrorcontainer =
+      '$imagePath/img_vector_errorcontainer.svg';
+
+  static String imgVectorOnsecondarycontainer =
+      '$imagePath/img_vector_onsecondarycontainer.svg';
+
+  static String imgVectorCyan800 = '$imagePath/img_vector_cyan_800.svg';
+
+  // Common images
+
+  static String imgGroup42179 = '$imagePath/img_group_42179.svg';
 }

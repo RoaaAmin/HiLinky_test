@@ -6,6 +6,7 @@ import 'package:hilinky_test/screens/create_post.dart';
 import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:hilinky_test/screens/login_screen.dart';
 import 'package:hilinky_test/screens/myCard.dart';
+import 'package:hilinky_test/screens/search_page_premuim_screen/search_page_premuim_screen.dart';
 import 'package:hilinky_test/screens/signup_screen.dart';
 import 'package:hilinky_test/theme/theme_helper.dart';
 import 'API/SendUserNotification.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
         'CreatePost': (context) => CreatePost(),
         'CreateCard': (context) => CreateCard(),
         'MyCard':(context) => MyCard(),
+        'SearchPagePremuimScreen':(context) =>  SearchPagePremuimScreen(),
       },
 
     );
