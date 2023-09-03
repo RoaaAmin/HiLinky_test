@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hilinky_test/screens/create_card.dart';
+import 'package:hilinky_test/screens/create_card/create_card.dart';
 
 import 'package:line_icons/line_icons.dart';
 

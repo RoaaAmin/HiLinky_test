@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:hilinky_test/screens/create_card.dart';
+import 'package:hilinky_test/screens/create_card/create_card.dart';
 import 'package:hilinky_test/screens/create_post.dart';
 import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:hilinky_test/screens/login_screen.dart';

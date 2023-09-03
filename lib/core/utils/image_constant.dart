@@ -90,6 +90,7 @@ class ImageConstant {
   static String imgVectorCyan800 = '$imagePath/img_vector_cyan_800.svg';
 
   // Common images
-
+  static String imgTablerplus = '$imagePath/img_tablerplus.svg';
   static String imgGroup42179 = '$imagePath/img_group_42179.svg';
+  static String imgFacebook = '$imagePath/img_facebook.png';
 }

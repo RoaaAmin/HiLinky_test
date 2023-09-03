@@ -5,15 +5,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hilinky_test/screens/create_card/widgets/create_card_items_widget.dart';
 import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:random_string/random_string.dart';
-import '../main.dart';
-import '../models/SnackBar.dart';
-import 'myCard.dart';
+import '../../core/utils/image_constant.dart';
+import '../../core/utils/size_utils.dart';
+import '../../main.dart';
+import '../../models/SnackBar.dart';
+import '../../widgets/custom_icon_button.dart';
+import '../../widgets/custom_image_view.dart';
+import '../myCard.dart';
 ////////////////////////////////
 
 class CreateCard extends StatefulWidget {
@@ -560,6 +565,74 @@ class _CreateCardState extends State<CreateCard> {
                       'Choose links to add',
                       style: GoogleFonts.robotoCondensed(
                           fontSize: 25, fontWeight: FontWeight.bold),
+                    ),
+                    Padding(
+                      padding: getPadding(
+                        top: 16,
+                      ),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          mainAxisExtent: getVerticalSize(51),
+                          crossAxisCount: 5,
+                          mainAxisSpacing: getHorizontalSize(24),
+                          crossAxisSpacing: getHorizontalSize(24),
+                        ),
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: 10,
+                        itemBuilder: (context, index) {
+                          return CreateCardItemWidget();
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: getPadding(
+                        top: 16,
+                        right: 74,
+                      ),
+                      child: Row(
+                        children: [
+                          // CustomImageView(
+                          //   imagePath: ImageConstant.imgDribbble,
+                          //   height: getSize(50),
+                          //   width: getSize(50),
+                          // ),
+                          // CustomImageView(
+                          //   imagePath: ImageConstant.imgBehance,
+                          //   height: getSize(50),
+                          //   width: getSize(50),
+                          //   margin: getMargin(
+                          //     left: 24,
+                          //   ),
+                          // ),
+                          // CustomIconButton(
+                          //   height: getSize(50),
+                          //   width: getSize(50),
+                          //   margin: getMargin(
+                          //     left: 24,
+                          //   ),
+                          //   padding: getPadding(
+                          //     all: 8,
+                          //   ),
+                          //   child: CustomImageView(
+                          //     svgPath: ImageConstant.imgLocationmarker,
+                          //   ),
+                          // ),
+                          CustomIconButton(
+                            height: getSize(50),
+                            width: getSize(50),
+                            margin: getMargin(
+                              left: 24,
+                            ),
+                            padding: getPadding(
+                              all: 13,
+                            ),
+                            child: CustomImageView(
+                              svgPath: ImageConstant.imgTablerplus,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 10),
                     Visibility(
