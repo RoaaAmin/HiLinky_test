@@ -55,6 +55,7 @@ class ImageConstant {
   static String imgCheckmark = '$imagePath/img_checkmark.svg';
 
   static String imgAkariconseyeopen = '$imagePath/img_akariconseyeopen.svg';
+  static String imgAkariconseyeClose= '$imagePath/tabler_eye-off.svg';
 
   static String imgGroup42178 = '$imagePath/img_group42178.png';
 

@@ -190,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     child: CustomImageView(
                                       svgPath: obscureText
-                                          ? ImageConstant.imgAkariconseyeopen// Closed eye SVG
+                                          ? ImageConstant.imgAkariconseyeClose// Closed eye SVG
                                           : ImageConstant.imgAkariconseyeopen  // Open eye SVG
                                       /// change to closed eye svg
                                     ),
