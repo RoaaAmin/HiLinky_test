@@ -192,7 +192,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                       svgPath: obscureText
                                           ? ImageConstant.imgAkariconseyeClose// Closed eye SVG
                                           : ImageConstant.imgAkariconseyeopen  // Open eye SVG
-                                      /// change to closed eye svg
                                     ),
                                   ),
                                 ),
