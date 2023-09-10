@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -147,7 +148,7 @@ class _CreateCardState extends State<CreateCard> {
           "CompanyName": companyName,
           "Email": email,
           "PhoneNumber": phoneNumber,
-          "PostedByUID": sUserID,
+          "PostedByUID": FirebaseAuth.instance.currentUser!.uid,
           "TimeStamp": DateTime.now(),
         }).then((value) async {
           print('Card saved');
