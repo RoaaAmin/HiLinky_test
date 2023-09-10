@@ -53,6 +53,7 @@ dependencies:
   flutter_svg: ^1.1.6
   country_pickers: ^2.0.0
   outline_gradient_button: ^2.0.0+1
+  qr_code_scanner:
 
 dev_dependencies:
   flutter_test:

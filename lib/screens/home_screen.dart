@@ -218,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   MaterialButton(
                     minWidth: 1,
                     onPressed: () {
+                      Navigator.pushNamed(context, 'QRScannerPage');
                       setState(() {
                         _currentIndex = 2;
                       });

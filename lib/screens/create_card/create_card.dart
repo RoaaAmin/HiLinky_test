@@ -50,6 +50,7 @@ class _CreateCardState extends State<CreateCard> {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
 
+
   bool editMode = false;
   String editModeImageURL = '';
   String editModeImageURLLogo = '';
@@ -57,6 +58,9 @@ class _CreateCardState extends State<CreateCard> {
   File? selectedImage;
   File? selectedLogo;
   File? selectedPortfolio;
+
+
+
 
   Future getImage(ImageSource source) async {
     var image = await ImagePicker.platform
@@ -66,6 +70,7 @@ class _CreateCardState extends State<CreateCard> {
       selectedImage = File(image!.path);
     });
   }
+
   Future getLogo(ImageSource source) async {
     var image = await ImagePicker.platform
         .getImageFromSource(source: source); //pickImage
@@ -127,6 +132,7 @@ class _CreateCardState extends State<CreateCard> {
         });
 
       } else {
+       // final newDocRef =
         await FirebaseFirestore.instance.collection('Cards').add({
           "ImageURL": imageURL,
           "LogoURL": logoURL,
@@ -145,6 +151,10 @@ class _CreateCardState extends State<CreateCard> {
           print('Card saved');
          // Navigator.of(context).pop();
         });
+        // get the cardID from newDocRef
+        // String cardID = newDocRef.id;
+        // print('Card saved with ID: $cardID');
+
         Navigator.of(context).pushReplacement(
            CupertinoPageRoute(builder: (BuildContext context) => MyCard()));
       }
@@ -153,6 +163,55 @@ class _CreateCardState extends State<CreateCard> {
     }
   }
 
+  String link = ""; // store the user's input
+  Widget bottomSheetLinks() {
+    return Container(
+      height: 150.0,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(
+        horizontal: 95,
+        vertical: 20,
+      ),
+      child: Column(
+        children: <Widget>[
+          TextField(
+            decoration: InputDecoration(
+              labelText: "Enter a link",
+            ),
+            onChanged: (value) {
+              //Update the 'link' variable as the user enters
+              link = value;
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    Navigator.of(context).pop();
+                  });
+                },
+                child: Text("Cancel"),
+              ),
+              SizedBox(width: 10),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    print("Saved link: $link");
+                  });
+                },
+                child: Text("Save"),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget bottomSheet() {
     return Container(
@@ -566,25 +625,43 @@ class _CreateCardState extends State<CreateCard> {
                       style: GoogleFonts.robotoCondensed(
                           fontSize: 25, fontWeight: FontWeight.bold),
                     ),
-                    Padding(
-                      padding: getPadding(
-                        top: 16,
-                      ),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          mainAxisExtent: getVerticalSize(51),
-                          crossAxisCount: 5,
-                          mainAxisSpacing: getHorizontalSize(24),
-                          crossAxisSpacing: getHorizontalSize(24),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: ((builder) => bottomSheetLinks()),
+                        );
+                      },
+                      child: Padding(
+                        padding: getPadding(
+                          top: 16,
                         ),
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: 10,
-                        itemBuilder: (context, index) {
-                          return CreateCardItemWidget();
-                        },
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            mainAxisExtent: getVerticalSize(51),
+                            crossAxisCount: 5,
+                            mainAxisSpacing: getHorizontalSize(24),
+                            crossAxisSpacing: getHorizontalSize(24),
+                          ),
+                         physics: NeverScrollableScrollPhysics(),
+                         itemCount: 10,
+                         itemBuilder: (context, index) {
+                         return CreateCardItemWidget(
+                         onPressed: () {
+    // Handle the selection of the item with a link here
+    // You can use a modal bottom sheet or any other method to apply the link
+                        showModalBottomSheet(
+                        context: context,
+                         builder: ((builder) => bottomSheetLinks()),
+                            );
+                          },
+                        );
+                      },
+                    ),
                       ),
                     ),
+
                     Padding(
                       padding: getPadding(
                         top: 16,
@@ -592,32 +669,6 @@ class _CreateCardState extends State<CreateCard> {
                       ),
                       child: Row(
                         children: [
-                          // CustomImageView(
-                          //   imagePath: ImageConstant.imgDribbble,
-                          //   height: getSize(50),
-                          //   width: getSize(50),
-                          // ),
-                          // CustomImageView(
-                          //   imagePath: ImageConstant.imgBehance,
-                          //   height: getSize(50),
-                          //   width: getSize(50),
-                          //   margin: getMargin(
-                          //     left: 24,
-                          //   ),
-                          // ),
-                          // CustomIconButton(
-                          //   height: getSize(50),
-                          //   width: getSize(50),
-                          //   margin: getMargin(
-                          //     left: 24,
-                          //   ),
-                          //   padding: getPadding(
-                          //     all: 8,
-                          //   ),
-                          //   child: CustomImageView(
-                          //     svgPath: ImageConstant.imgLocationmarker,
-                          //   ),
-                          // ),
                           CustomIconButton(
                             height: getSize(50),
                             width: getSize(50),
@@ -638,14 +689,12 @@ class _CreateCardState extends State<CreateCard> {
                     Visibility(
                       visible: editMode,
                       child: Container(
-                        //margin: EdgeInsets.symmetric(horizontal: 0),
                         height: 150,
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(6),
                             image: DecorationImage(
                                 image: NetworkImage(editModeImageURL))),
-                        // width: MediaQuery.of(context).size.width,
                       ),
                       replacement: GestureDetector(
                         onTap: () {
@@ -656,7 +705,6 @@ class _CreateCardState extends State<CreateCard> {
                         },
                         child: selectedImage != null
                             ? Container(
-                                //margin: EdgeInsets.symmetric(horizontal: 0),
                                 height: 150,
                                 width: MediaQuery.of(context).size.width,
                                 child: ClipRRect(
