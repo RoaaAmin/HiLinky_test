@@ -18,6 +18,7 @@ class _SocialMediaState extends State<SocialMedia> {
     'linkedin' : '',
     'twitter' : '',
     'github' : '',
+    'instagram' : '',
   };
   // icons
   List<Widget> socialMediaIcons = [
@@ -25,6 +26,8 @@ class _SocialMediaState extends State<SocialMedia> {
     const FaIcon(FontAwesomeIcons.linkedin),
     const FaIcon(FontAwesomeIcons.twitter),
     const FaIcon(FontAwesomeIcons.github),
+    const FaIcon(FontAwesomeIcons.instagram),
+
   ];
 
   var entredLink = TextEditingController();
