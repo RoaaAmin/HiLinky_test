@@ -46,7 +46,7 @@ class _MyCardState extends State<MyCard> {
   }
 
   getUserData() async {
-    await FirebaseFirestore.instance.collection('Users').doc(sUserID).get().then((value) {
+    await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).get().then((value) {
       setState(() {
         userData = value;
         getMyCards();
@@ -150,7 +150,7 @@ class _MyCardState extends State<MyCard> {
                               decoration: BoxDecoration(
                                 color: Color(0xFF495592),
                                 borderRadius: BorderRadius.circular(12),
-                                image: DecorationImage(image: NetworkImage(cardsDocs[i].data()!['LogoURL']), fit: BoxFit.fill),
+                                image: DecorationImage(image: NetworkImage(cardsDocs[i].data()!['ImageURL']), fit: BoxFit.fill),
                               ),
                             ),
                             SizedBox(
