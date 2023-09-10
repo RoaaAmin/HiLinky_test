@@ -31,6 +31,10 @@ class CreateCard extends StatefulWidget {
 
 class _CreateCardState extends State<CreateCard> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  int selectedCardIndex = -1; //no selection item
+  int customItemIndex1= 1;
+  int customItemIndex2= 2;
+
   String? prefix;
   String? firstName;
   String? middleName;
@@ -179,7 +183,7 @@ class _CreateCardState extends State<CreateCard> {
               labelText: "Enter a link",
             ),
             onChanged: (value) {
-              //Update the 'link' variable as the user enters
+
               link = value;
             },
           ),
@@ -644,28 +648,28 @@ class _CreateCardState extends State<CreateCard> {
                             mainAxisSpacing: getHorizontalSize(24),
                             crossAxisSpacing: getHorizontalSize(24),
                           ),
-                         physics: NeverScrollableScrollPhysics(),
-                         itemCount: 10,
-                         itemBuilder: (context, index) {
-                         return CreateCardItemWidget(
-                         onPressed: () {
-    // Handle the selection of the item with a link here
-    // You can use a modal bottom sheet or any other method to apply the link
-                        showModalBottomSheet(
-                        context: context,
-                         builder: ((builder) => bottomSheetLinks()),
-                            );
-                          },
-                        );
-                      },
-                    ),
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: 3,
+                          itemBuilder: (context, index) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(ImageConstant.imgFacebook),
+                                  ),
+                                ),
+                                height: getSize(50),
+                                width: getSize(50),
+                              );
+                            }
+                        ),
                       ),
+
                     ),
 
                     Padding(
                       padding: getPadding(
                         top: 16,
-                        right: 74,
+                       // right: 74,
                       ),
                       child: Row(
                         children: [
