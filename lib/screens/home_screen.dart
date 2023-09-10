@@ -32,15 +32,29 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;  Widget currentScreen = HomeScreen();
   late DocumentSnapshot<Map<String, dynamic>> userData;
   late QuerySnapshot<Map<String, dynamic>> postsDocs;
-  @override
 
-  getUserData() async {
-    await FirebaseFirestore.instance.collection('Users').doc(sUserID).get().then((value) {
-      setState(() {
-        userData = value;
-      });
+
+  var userId = FirebaseAuth.instance.currentUser!.uid;
+
+  var name = '';
+
+
+  void getuser() async{
+    var user = await FirebaseFirestore.instance.collection('Users').doc(userId).get();
+    setState(() {
+      name = user.data()!['sUserName'];
     });
   }
+
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    getuser();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
             DrawerHeader(
               padding: const EdgeInsets.fromLTRB(16.0, 30.0, 16.0, 50.0),
               child: Text(
-                " Hi " + sUserName + "\n"+ sUserEmail,
+                " Hi " + name + "\n"+ FirebaseAuth.instance.currentUser!.email!,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
