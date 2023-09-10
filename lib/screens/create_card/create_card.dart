@@ -23,13 +23,13 @@ import '../myCard.dart';
 
 class CreateCard extends StatefulWidget {
   CreateCard({Key? key}) : super(key: key);
-
   @override
   State<CreateCard> createState() => _CreateCardState();
   late DocumentSnapshot<Map<String, dynamic>> card;
 }
 
 class _CreateCardState extends State<CreateCard> {
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   int selectedCardIndex = -1; //no selection item
   int customItemIndex1= 1;
@@ -168,51 +168,57 @@ class _CreateCardState extends State<CreateCard> {
   }
 
   String link = ""; // store the user's input
-  Widget bottomSheetLinks() {
-    return Container(
-      height: 150.0,
-      width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(
-        horizontal: 95,
-        vertical: 20,
-      ),
-      child: Column(
-        children: <Widget>[
-          TextField(
-            decoration: InputDecoration(
-              labelText: "Enter a link",
-            ),
-            onChanged: (value) {
 
-              link = value;
-            },
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    Navigator.of(context).pop();
-                  });
-                },
-                child: Text("Cancel"),
+
+  Widget bottomSheetLinks() {
+    return Padding(
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Container(
+        height: 150.0,
+        width: MediaQuery.of(context).size.width,
+        margin: EdgeInsets.symmetric(
+          horizontal: 95,
+          vertical: 20,
+        ),
+        child: Column(
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                labelText: "Enter a link",
               ),
-              SizedBox(width: 10),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    print("Saved link: $link");
-                  });
-                },
-                child: Text("Save"),
-              ),
-            ],
-          ),
-        ],
+              onChanged: (value) {
+
+                link = value;
+              },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      Navigator.of(context).pop();
+                    });
+                  },
+                  child: Text("Cancel"),
+                ),
+                SizedBox(width: 10),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      print("Saved link: $link");
+                    });
+                  },
+                  child: Text("Save"),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -746,6 +752,7 @@ class _CreateCardState extends State<CreateCard> {
                     SizedBox(height: 10),
 
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Visibility(
                           visible: editMode,
@@ -790,7 +797,7 @@ class _CreateCardState extends State<CreateCard> {
                                       width: 2,
                                     ),
                                     borderRadius: BorderRadius.circular(6)),
-                                width: 170,
+                                width: 160,
                                 child: Column(
                                   children: [
                                     SizedBox(height: 30),
@@ -842,7 +849,6 @@ class _CreateCardState extends State<CreateCard> {
                               ),
                             )
                                 : Container(
-
                               margin: EdgeInsets.symmetric(horizontal: 5),
                                 height: 170,
                                 decoration: BoxDecoration(
@@ -852,7 +858,7 @@ class _CreateCardState extends State<CreateCard> {
                                       width: 2,
                                     ),
                                     borderRadius: BorderRadius.circular(6)),
-                                width:170,
+                                width:160,
                                 child: Column(
                                   children: [
                                     SizedBox(height: 30),

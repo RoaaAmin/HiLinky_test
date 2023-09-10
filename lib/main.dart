@@ -60,7 +60,6 @@ class MyApp extends StatelessWidget {
         'NotificationsPage': (context) =>  NotificationsPage(),
         'feeds': (context) => Feeds(),
         'CreatePost': (context) => CreatePost(),
-        'CreateCard': (context) => CreateCard(),
         'MyCard':(context) => MyCard(),
         'SearchPagePremuimScreen':(context) =>  SearchPagePremuimScreen(),
         'QRScannerPage' :(context) =>  QRScannerPage(),
