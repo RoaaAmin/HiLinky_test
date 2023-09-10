@@ -750,7 +750,6 @@ class _CreateCardState extends State<CreateCard> {
                       ),
                     ),
                     SizedBox(height: 10),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -797,7 +796,7 @@ class _CreateCardState extends State<CreateCard> {
                                       width: 2,
                                     ),
                                     borderRadius: BorderRadius.circular(6)),
-                                width: 160,
+                                width: (MediaQuery.of(context).size.width/2) -30,
                                 child: Column(
                                   children: [
                                     SizedBox(height: 30),
@@ -811,9 +810,7 @@ class _CreateCardState extends State<CreateCard> {
                             ),
                           ),
                         ),
-
                  SizedBox(width: 10,),
-
                         Visibility(
                           visible: editMode,
                           child: Container(
@@ -858,7 +855,7 @@ class _CreateCardState extends State<CreateCard> {
                                       width: 2,
                                     ),
                                     borderRadius: BorderRadius.circular(6)),
-                                width:160,
+                                width:(MediaQuery.of(context).size.width/2) -30,
                                 child: Column(
                                   children: [
                                     SizedBox(height: 30),
