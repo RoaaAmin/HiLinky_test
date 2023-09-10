@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hilinky_test/screens/create_card/widgets/create_card_items_widget.dart';
+import 'package:hilinky_test/screens/create_card/widgets/socialMedia.dart';
 import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icons.dart';
@@ -23,17 +24,19 @@ import '../myCard.dart';
 
 class CreateCard extends StatefulWidget {
   CreateCard({Key? key}) : super(key: key);
+
   @override
   State<CreateCard> createState() => _CreateCardState();
   late DocumentSnapshot<Map<String, dynamic>> card;
 }
 
 class _CreateCardState extends State<CreateCard> {
+  Map<String, String> links = {};
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   int selectedCardIndex = -1; //no selection item
-  int customItemIndex1= 1;
-  int customItemIndex2= 2;
+  int customItemIndex1 = 1;
+  int customItemIndex2 = 2;
 
   String? prefix;
   String? firstName;
@@ -44,7 +47,6 @@ class _CreateCardState extends State<CreateCard> {
   String? email;
   String? phoneNumber;
 
-
   TextEditingController prefixController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
   TextEditingController middleNameController = TextEditingController();
@@ -54,7 +56,6 @@ class _CreateCardState extends State<CreateCard> {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
 
-
   bool editMode = false;
   String editModeImageURL = '';
   String editModeImageURLLogo = '';
@@ -62,9 +63,6 @@ class _CreateCardState extends State<CreateCard> {
   File? selectedImage;
   File? selectedLogo;
   File? selectedPortfolio;
-
-
-
 
   Future getImage(ImageSource source) async {
     var image = await ImagePicker.platform
@@ -83,6 +81,7 @@ class _CreateCardState extends State<CreateCard> {
       selectedLogo = File(image!.path);
     });
   }
+
   Future getPortfolio(ImageSource source) async {
     var image = await ImagePicker.platform
         .getImageFromSource(source: source); //pickImage
@@ -134,46 +133,45 @@ class _CreateCardState extends State<CreateCard> {
           "LogoURL": logoURL,
           "PortfolioURL": portfolioURL,
         });
-
       } else {
-       // final newDocRef =
+        // final newDocRef =
         await FirebaseFirestore.instance.collection('Cards').add({
           "ImageURL": imageURL,
           "LogoURL": logoURL,
           "PortfolioURL": portfolioURL,
-           "Prefix": prefix,
-           "FirstName": firstName,
-           "MiddleName": middleName,
-           "LastName":  lastName,
-           "Position":  position,
-           "CompanyName": companyName,
-           "Email": email,
-           "PhoneNumber": phoneNumber,
+          "Prefix": prefix,
+          "FirstName": firstName,
+          "MiddleName": middleName,
+          "LastName": lastName,
+          "Position": position,
+          "CompanyName": companyName,
+          "Email": email,
+          "PhoneNumber": phoneNumber,
           "PostedByUID": sUserID,
           "TimeStamp": DateTime.now(),
         }).then((value) async {
           print('Card saved');
-         // Navigator.of(context).pop();
+          // Navigator.of(context).pop();
         });
         // get the cardID from newDocRef
         // String cardID = newDocRef.id;
         // print('Card saved with ID: $cardID');
 
         Navigator.of(context).pushReplacement(
-           CupertinoPageRoute(builder: (BuildContext context) => MyCard()));
+            CupertinoPageRoute(builder: (BuildContext context) => MyCard()));
       }
     } else {
-      showInSnackBar('You have to fill all the fields ', Colors.red, Colors.white, 3,context,_scaffoldKey);
+      showInSnackBar('You have to fill all the fields ', Colors.red,
+          Colors.white, 3, context, _scaffoldKey);
     }
   }
 
   String link = ""; // store the user's input
 
-
   Widget bottomSheetLinks() {
     return Padding(
-      padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         height: 150.0,
         width: MediaQuery.of(context).size.width,
@@ -188,7 +186,6 @@ class _CreateCardState extends State<CreateCard> {
                 labelText: "Enter a link",
               ),
               onChanged: (value) {
-
                 link = value;
               },
             ),
@@ -244,26 +241,25 @@ class _CreateCardState extends State<CreateCard> {
           ),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
             TextButton.icon(
-              icon: Icon(Icons.camera,color: Colors.amber[800]),
-
+              icon: Icon(Icons.camera, color: Colors.amber[800]),
               onPressed: () {
                 getImage(ImageSource.camera);
               },
               label: Text("Camera"),
             ),
             TextButton.icon(
-              icon: Icon(Icons.image,color: Colors.amber[800]),
+              icon: Icon(Icons.image, color: Colors.amber[800]),
               onPressed: () {
                 getImage(ImageSource.gallery);
               },
               label: Text("Gallery"),
             ),
-          ]
-          )
+          ])
         ],
       ),
     );
   }
+
   Widget bottomSheetLogo() {
     return Container(
       height: 100.0,
@@ -285,26 +281,25 @@ class _CreateCardState extends State<CreateCard> {
           ),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
             TextButton.icon(
-              icon: Icon(Icons.camera,color: Colors.amber[800]),
-
+              icon: Icon(Icons.camera, color: Colors.amber[800]),
               onPressed: () {
                 getLogo(ImageSource.camera);
               },
               label: Text("Camera"),
             ),
             TextButton.icon(
-              icon: Icon(Icons.image,color: Colors.amber[800]),
+              icon: Icon(Icons.image, color: Colors.amber[800]),
               onPressed: () {
                 getLogo(ImageSource.gallery);
               },
               label: Text("Gallery"),
             ),
-          ]
-          )
+          ])
         ],
       ),
     );
   }
+
   Widget bottomSheetPortfolio() {
     return Container(
       height: 100.0,
@@ -326,22 +321,20 @@ class _CreateCardState extends State<CreateCard> {
           ),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
             TextButton.icon(
-              icon: Icon(Icons.camera,color: Colors.amber[800]),
-
+              icon: Icon(Icons.camera, color: Colors.amber[800]),
               onPressed: () {
                 getPortfolio(ImageSource.camera);
               },
               label: Text("Camera"),
             ),
             TextButton.icon(
-              icon: Icon(Icons.image,color: Colors.amber[800]),
+              icon: Icon(Icons.image, color: Colors.amber[800]),
               onPressed: () {
                 getPortfolio(ImageSource.gallery);
               },
               label: Text("Gallery"),
             ),
-          ]
-          )
+          ])
         ],
       ),
     );
@@ -412,7 +405,7 @@ class _CreateCardState extends State<CreateCard> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: TextField(
-                             controller: prefixController,
+                            controller: prefixController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Prefix (optional)',
@@ -440,7 +433,7 @@ class _CreateCardState extends State<CreateCard> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: TextField(
-                             controller: firstNameController,
+                            controller: firstNameController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'First name',
@@ -464,7 +457,6 @@ class _CreateCardState extends State<CreateCard> {
                             width: 2, // Border width
                           ),
                         ),
-
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: TextField(
@@ -492,11 +484,10 @@ class _CreateCardState extends State<CreateCard> {
                             width: 2, // Border width
                           ),
                         ),
-
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: TextField(
-                             controller: lastNameController,
+                            controller: lastNameController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Last name',
@@ -552,7 +543,7 @@ class _CreateCardState extends State<CreateCard> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: TextField(
-                              controller: companyNameController,
+                            controller: companyNameController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Company name (optional)',
@@ -586,7 +577,7 @@ class _CreateCardState extends State<CreateCard> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: TextField(
-                             controller: emailController,
+                            controller: emailController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Email',
@@ -614,7 +605,7 @@ class _CreateCardState extends State<CreateCard> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: TextField(
-                             controller: phoneNumberController,
+                            controller: phoneNumberController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Phone number',
@@ -635,47 +626,15 @@ class _CreateCardState extends State<CreateCard> {
                       style: GoogleFonts.robotoCondensed(
                           fontSize: 25, fontWeight: FontWeight.bold),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: ((builder) => bottomSheetLinks()),
-                        );
-                      },
-                      child: Padding(
-                        padding: getPadding(
-                          top: 16,
-                        ),
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            mainAxisExtent: getVerticalSize(51),
-                            crossAxisCount: 5,
-                            mainAxisSpacing: getHorizontalSize(24),
-                            crossAxisSpacing: getHorizontalSize(24),
-                          ),
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage(ImageConstant.imgFacebook),
-                                  ),
-                                ),
-                                height: getSize(50),
-                                width: getSize(50),
-                              );
-                            }
-                        ),
-                      ),
-
+                    SocialMedia(
+                      saved: links,
+                      paddin: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
                     ),
-
                     Padding(
                       padding: getPadding(
                         top: 16,
-                       // right: 74,
+                        // right: 74,
                       ),
                       child: Row(
                         children: [
@@ -736,17 +695,15 @@ class _CreateCardState extends State<CreateCard> {
                                     ),
                                     borderRadius: BorderRadius.circular(6)),
                                 width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              children: [
-                                SizedBox(height: 30),
-                                Icon(Icons.account_box, size: 50.0),
-                                Text(
-                                  'Upload your photo',
-                                ),
-                              ],
-                            )
-
-                        ),
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 30),
+                                    Icon(Icons.account_box, size: 50.0),
+                                    Text(
+                                      'Upload your photo',
+                                    ),
+                                  ],
+                                )),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -774,53 +731,56 @@ class _CreateCardState extends State<CreateCard> {
                             },
                             child: selectedLogo != null
                                 ? Container(
-                              //margin: EdgeInsets.symmetric(horizontal: 0),
-                              height: 170,
-                              width: 170,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: Image.file(
-                                  selectedLogo as File,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            )
+                                    //margin: EdgeInsets.symmetric(horizontal: 0),
+                                    height: 170,
+                                    width: 170,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(6),
+                                      child: Image.file(
+                                        selectedLogo as File,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  )
                                 : Container(
 
-                              // margin: EdgeInsets.symmetric(horizontal: 50),
-                                height: 170,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(6)),
-                                width: (MediaQuery.of(context).size.width/2) -30,
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: 30),
-                                    Icon(Icons.upload, size: 50.0),
-                                    Text(
-                                      'Upload logo',
-                                    ),
-                                  ],
-                                )
-
-                            ),
+                                    // margin: EdgeInsets.symmetric(horizontal: 50),
+                                    height: 170,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                          color: Colors.black,
+                                          width: 2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(6)),
+                                    width: (MediaQuery.of(context).size.width /
+                                            2) -
+                                        30,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: 30),
+                                        Icon(Icons.upload, size: 50.0),
+                                        Text(
+                                          'Upload logo',
+                                        ),
+                                      ],
+                                    )),
                           ),
                         ),
-                 SizedBox(width: 10,),
+                        SizedBox(
+                          width: 10,
+                        ),
                         Visibility(
                           visible: editMode,
                           child: Container(
                             margin: EdgeInsets.symmetric(horizontal: 12),
-                             height: 170,
+                            height: 170,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(6),
                                 image: DecorationImage(
-                                    image: NetworkImage(editModeImageURLPortfilio))),
+                                    image: NetworkImage(
+                                        editModeImageURLPortfilio))),
                             // width: MediaQuery.of(context).size.width,
                           ),
                           replacement: GestureDetector(
@@ -830,52 +790,52 @@ class _CreateCardState extends State<CreateCard> {
                                 builder: ((builder) => bottomSheetPortfolio()),
                               );
                             },
-                            child: selectedPortfolio
-                                != null
+                            child: selectedPortfolio != null
                                 ? Container(
-                              margin: EdgeInsets.symmetric(horizontal: 6),
-                              height: 170,
-                              width: 170,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: Image.file(
-                                  selectedPortfolio
-                                  as File,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            )
+                                    margin: EdgeInsets.symmetric(horizontal: 6),
+                                    height: 170,
+                                    width: 170,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(6),
+                                      child: Image.file(
+                                        selectedPortfolio as File,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  )
                                 : Container(
-                              margin: EdgeInsets.symmetric(horizontal: 5),
-                                height: 170,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(6)),
-                                width:(MediaQuery.of(context).size.width/2) -30,
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: 30),
-                                    Icon(Icons.upload, size: 50.0),
-                                    Text(
-                                      'Upload portfolio',
-                                    ),
-                                  ],
-                                )
-
-                            ),
+                                    margin: EdgeInsets.symmetric(horizontal: 5),
+                                    height: 170,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                          color: Colors.black,
+                                          width: 2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(6)),
+                                    width: (MediaQuery.of(context).size.width /
+                                            2) -
+                                        30,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: 30),
+                                        Icon(Icons.upload, size: 50.0),
+                                        Text(
+                                          'Upload portfolio',
+                                        ),
+                                      ],
+                                    )),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 0),
                       child: GestureDetector(
-                          onTap: uploadCard,
+                        onTap: uploadCard,
                         child: Container(
                           padding: EdgeInsets.all(16),
                           decoration: BoxDecoration(
