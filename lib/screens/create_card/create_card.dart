@@ -154,6 +154,7 @@ class _CreateCardState extends State<CreateCard> {
           "CompanyName": companyName,
           "Email": email,
           "PhoneNumber": phoneNumber,
+          "Links":links,
           "cardId": uuid.v4(),
           "PostedByUID": FirebaseAuth.instance.currentUser!.uid,
           "TimeStamp": DateTime.now(),
@@ -161,73 +162,14 @@ class _CreateCardState extends State<CreateCard> {
           print('Card saved');
           // Navigator.of(context).pop();
         });
-        // get the cardID from newDocRef
-        // String cardID = newDocRef.id;
-        // print('Card saved with ID: $cardID');
-
         Navigator.of(context).pushReplacement(
             CupertinoPageRoute(builder: (BuildContext context) => MyCard()));
       }
     } else {
-      showInSnackBar('You have to fill all the fields ', Colors.red,
-          Colors.white, 3, context, _scaffoldKey);
+     showInSnackBar('You have to fill all the fields ', Colors.red,
+         Colors.white, 3, context, _scaffoldKey);
     }
   }
-
-  String link = ""; // store the user's input
-
-  Widget bottomSheetLinks() {
-    return Padding(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Container(
-        height: 150.0,
-        width: MediaQuery.of(context).size.width,
-        margin: EdgeInsets.symmetric(
-          horizontal: 95,
-          vertical: 20,
-        ),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                labelText: "Enter a link",
-              ),
-              onChanged: (value) {
-                link = value;
-              },
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      Navigator.of(context).pop();
-                    });
-                  },
-                  child: Text("Cancel"),
-                ),
-                SizedBox(width: 10),
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      print("Saved link: $link");
-                    });
-                  },
-                  child: Text("Save"),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget bottomSheet() {
     return Container(
       height: 100.0,
