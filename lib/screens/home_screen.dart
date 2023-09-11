@@ -12,10 +12,6 @@ import 'package:line_icons/line_icons.dart';
 
 import '../API/notifications.dart';
 import '../auth.dart';
-
-import '../main.dart';
-
-
 import 'create_post.dart';
 import 'login_screen.dart';
 import 'myCard.dart';
@@ -268,7 +264,6 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.amber.shade800,
           onPressed: () {
-            //if(userData.data()!['UserType']=='Driver'){
             Navigator.of(context).push(CupertinoPageRoute(
                 builder: (BuildContext context) => CreatePost()));
           }

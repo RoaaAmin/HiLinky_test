@@ -11,16 +11,17 @@ class SearchPagePremiumScreen extends StatefulWidget {
 class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
   TextEditingController searchController = TextEditingController();
   List<QueryDocumentSnapshot<Map<String, dynamic>>> cardsDocs = [];
+  String? valueChoose ;
   List<String> dropdownItemList = [
     'City 1',
     'City 2',
     'City 3',
   ];
-
   Future<void> searchFromFirebase(String query) async {
+
     final result = await FirebaseFirestore.instance
         .collection('Cards')
-        .where('CompanyName', isEqualTo: query)
+        .where('CompanyName', isEqualTo: query )
         .get();
 
     setState(() {
@@ -37,53 +38,58 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
         body: Container(
           width: double.maxFinite,
           padding: EdgeInsets.fromLTRB(16, 86, 16, 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: TextField(
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    prefixIcon: Icon(Icons.search),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        searchController.clear();
-                        setState(() {
-                          cardsDocs.clear();
-                        });
-                      },
-                      icon: Icon(
-                        Icons.clear,
-                        color: Colors.grey.shade600,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      prefixIcon: Icon(Icons.search),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          searchController.clear();
+                          setState(() {
+                            cardsDocs.clear();
+                          });
+                        },
+                        icon: Icon(
+                          Icons.clear,
+                          color: Colors.grey.shade600,
+                        ),
                       ),
                     ),
+                    onChanged: (query) {
+                      if (query.length >= 1) {
+                        searchFromFirebase(query);
+                      }
+                    },
                   ),
-                  onChanged: (query) {
-                    if (query.length >= 1) {
-                      searchFromFirebase(query);
-                    }
-                  },
                 ),
-              ),
-              DropdownButton(
-                value: dropdownItemList[0], // You can set an initial value here
-                onChanged: (value) {
-                  setState(() {
-                    // Handle dropdown selection
-                  });
-                },
-                items: dropdownItemList.map((item) {
-                  return DropdownMenuItem(
-                    value: item,
-                    child: Text(item),
-                  );
-                }).toList(),
-              ),
-              SizedBox(height: 100),
-              flowList(context),
-            ],
+                DropdownButton(
+                  value: valueChoose, // control the selected value
+                  onChanged: (newValue) {
+                    setState(() {
+                      valueChoose = newValue!; // Update the selected value
+                      ///perform actions based on the selected value
+
+                    });
+                  },
+                  items: dropdownItemList.map((item) {
+                    return DropdownMenuItem(
+                      value: item,
+                      child: Text(item),
+                    );
+                  }).toList(),
+                ),
+
+               SizedBox(height: 5),
+                flowList(context),
+              ],
+            ),
           ),
         ),
       ),
