@@ -20,7 +20,7 @@ import '../../core/utils/size_utils.dart';
 import '../../models/SnackBar.dart';
 import '../../widgets/custom_icon_button.dart';
 import '../../widgets/custom_image_view.dart';
-import '../myCard.dart';
+import '../my_card/myCard.dart';
 
 ////////////////////////////////
 

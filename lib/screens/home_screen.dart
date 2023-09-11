@@ -14,7 +14,7 @@ import '../API/notifications.dart';
 import '../auth.dart';
 import 'create_post.dart';
 import 'login_screen.dart';
-import 'myCard.dart';
+import 'my_card/myCard.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
