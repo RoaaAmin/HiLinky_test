@@ -55,6 +55,7 @@ dependencies:
   outline_gradient_button: ^2.0.0+1
   qr_code_scanner:
   font_awesome_flutter: ^10.5.0
+  uuid: ^4.0.0
 
 dev_dependencies:
   flutter_test:
