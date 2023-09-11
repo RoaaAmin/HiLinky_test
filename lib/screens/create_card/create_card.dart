@@ -13,6 +13,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:random_string/random_string.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/size_utils.dart';
@@ -20,7 +21,10 @@ import '../../models/SnackBar.dart';
 import '../../widgets/custom_icon_button.dart';
 import '../../widgets/custom_image_view.dart';
 import '../myCard.dart';
+
 ////////////////////////////////
+
+var uuid = Uuid();
 
 class CreateCard extends StatefulWidget {
   CreateCard({Key? key}) : super(key: key);
@@ -135,7 +139,10 @@ class _CreateCardState extends State<CreateCard> {
         });
       } else {
         // final newDocRef =
-        await FirebaseFirestore.instance.collection('Cards').add({
+        await FirebaseFirestore.instance
+            .collection('Cards')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .set({
           "ImageURL": imageURL,
           "LogoURL": logoURL,
           "PortfolioURL": portfolioURL,
@@ -147,6 +154,7 @@ class _CreateCardState extends State<CreateCard> {
           "CompanyName": companyName,
           "Email": email,
           "PhoneNumber": phoneNumber,
+          "cardId": uuid.v4(),
           "PostedByUID": FirebaseAuth.instance.currentUser!.uid,
           "TimeStamp": DateTime.now(),
         }).then((value) async {
