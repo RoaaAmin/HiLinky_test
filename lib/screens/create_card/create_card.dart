@@ -1,12 +1,11 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hilinky_test/screens/create_card/widgets/create_card_items_widget.dart';
 import 'package:hilinky_test/screens/create_card/widgets/socialMedia.dart';
 import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,9 +13,9 @@ import 'package:line_icons/line_icons.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:random_string/random_string.dart';
+
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/size_utils.dart';
-import '../../main.dart';
 import '../../models/SnackBar.dart';
 import '../../widgets/custom_icon_button.dart';
 import '../../widgets/custom_image_view.dart';
@@ -130,7 +129,7 @@ class _CreateCardState extends State<CreateCard> {
 
       if (editMode) {
         await widget.card.reference.update({
-          "ImageURL": imageURL,
+          "ImaسgeURL": imageURL,
           "LogoURL": logoURL,
           "PortfolioURL": portfolioURL,
         });
@@ -650,6 +649,10 @@ class _CreateCardState extends State<CreateCard> {
                             ),
                             child: CustomImageView(
                               svgPath: ImageConstant.imgTablerplus,
+                              onTap: () {
+                                print('tst');
+                                print(links);
+                              },
                             ),
                           ),
                         ],

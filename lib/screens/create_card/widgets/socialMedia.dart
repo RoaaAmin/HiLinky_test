@@ -4,8 +4,9 @@ import 'package:hilinky_test/core/utils/size_utils.dart';
 
 class SocialMedia extends StatefulWidget {
   SocialMedia({super.key, required this.paddin, required this.saved});
+
   var paddin;
-  Map<String,String> saved;
+  Map<String, String> saved;
 
   @override
   State<SocialMedia> createState() => _SocialMediaState();
@@ -13,13 +14,14 @@ class SocialMedia extends StatefulWidget {
 
 class _SocialMediaState extends State<SocialMedia> {
   //links save
-  Map<String,String> links = {
-    'facebook' : '',
-    'linkedin' : '',
-    'twitter' : '',
-    'github' : '',
-    'instagram' : '',
+  Map<String, String> links = {
+    'facebook': '',
+    'linkedin': '',
+    'twitter': '',
+    'github': '',
+    'instagram': '',
   };
+
   // icons
   List<Widget> socialMediaIcons = [
     const FaIcon(FontAwesomeIcons.facebook),
@@ -27,7 +29,6 @@ class _SocialMediaState extends State<SocialMedia> {
     const FaIcon(FontAwesomeIcons.twitter),
     const FaIcon(FontAwesomeIcons.github),
     const FaIcon(FontAwesomeIcons.instagram),
-
   ];
 
   var entredLink = TextEditingController();
@@ -38,13 +39,11 @@ class _SocialMediaState extends State<SocialMedia> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
-      gridDelegate:
-      SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         mainAxisExtent: getVerticalSize(51),
         crossAxisCount: 5,
         mainAxisSpacing: getHorizontalSize(24),
@@ -54,40 +53,44 @@ class _SocialMediaState extends State<SocialMedia> {
       itemCount: socialMediaIcons.length,
       itemBuilder: (context, index) {
         var name;
-        if(index == 0){
+        if (index == 0) {
           name = 'facebook';
-        };
-        if(index == 1){
+        }
+        ;
+        if (index == 1) {
           name = 'linkedin';
-        };
-        if(index == 2){
+        }
+        ;
+        if (index == 2) {
           name = 'twitter';
-        };
-        if(index == 3){
+        }
+        ;
+        if (index == 3) {
           name = 'github';
+        };
+        if (index == 4) {
+          name = 'instagram';
         };
         return IconButton(
           onPressed: () {
             showModalBottomSheet(
               context: context,
               builder: ((builder) => Padding(
-                padding: widget.paddin,
-                child: bottomSheetLinks(index,name),
-              )),
+                    padding: widget.paddin,
+                    child: bottomSheetLinks(index, name),
+                  )),
             );
           },
           icon: socialMediaIcons[index],
         );
       },
     );
-
-
-
   }
-  Widget bottomSheetLinks(index,name) {
+
+  Widget bottomSheetLinks(index, name) {
     return Padding(
       padding:
-      EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         height: 150.0,
         width: MediaQuery.of(context).size.width,
@@ -119,9 +122,9 @@ class _SocialMediaState extends State<SocialMedia> {
                 ),
                 const SizedBox(width: 10),
                 TextButton(
-                  onPressed: (){
+                  onPressed: () {
                     links["$name"] = entredLink.text;
-                    widget.saved = links;
+                    widget.saved.addAll(links);
                     print(links);
                     Navigator.of(context).pop();
                     entredLink.clear();
