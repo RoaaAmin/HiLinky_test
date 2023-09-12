@@ -399,7 +399,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 //SizedBox(height: 15),
 
-                /// Radio buttons
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: Container(

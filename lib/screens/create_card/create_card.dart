@@ -94,7 +94,27 @@ class _CreateCardState extends State<CreateCard> {
       selectedPortfolio = File(image!.path);
     });
   }
+  Future<String> getuser() async {
+    String userCity = '';
 
+    try {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      // Check
+      if (userSnapshot.exists && userSnapshot.data() != null) {
+        Map<String, dynamic> userData =
+        userSnapshot.data() as Map<String, dynamic>;
+        userCity = userData['sCity'] ?? '';
+      }
+    } catch (e) {
+      print('Error retrieving user city: $e');
+    }
+
+    return userCity; // Return the user's city
+  }
   uploadCard() async {
     if (selectedImage != null) {
       String imageURL = editMode ? editModeImageURL : '';
@@ -133,12 +153,13 @@ class _CreateCardState extends State<CreateCard> {
 
       if (editMode) {
         await widget.card.reference.update({
-          "ImaسgeURL": imageURL,
+          "ImageURL": imageURL,
           "LogoURL": logoURL,
           "PortfolioURL": portfolioURL,
         });
       } else {
-        // final newDocRef =
+        // Fetch the selected city from getuser function
+        String selectedCity = await getuser();
         await FirebaseFirestore.instance
             .collection('Cards')
             .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -157,6 +178,7 @@ class _CreateCardState extends State<CreateCard> {
           "Links":links,
           "cardId": uuid.v4(),
           "PostedByUID": FirebaseAuth.instance.currentUser!.uid,
+          "City" :selectedCity,
           "TimeStamp": DateTime.now(),
         }).then((value) async {
           print('Card saved');
@@ -165,7 +187,8 @@ class _CreateCardState extends State<CreateCard> {
         Navigator.of(context).pushReplacement(
             CupertinoPageRoute(builder: (BuildContext context) => MyCard()));
       }
-    } else {
+    }
+    else {
      showInSnackBar('You have to fill all the fields ', Colors.red,
          Colors.white, 3, context, _scaffoldKey);
     }

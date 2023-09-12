@@ -19,16 +19,19 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
     'City 3',
   ];
   Future<void> searchFromFirebase(String query) async {
-
     final result = await FirebaseFirestore.instance
         .collection('Cards')
-        .where('Position', isEqualTo: query )
+        .where('City', isEqualTo: valueChoose)
+        .where('Position', isEqualTo: query)
         .get();
 
     setState(() {
       cardsDocs = result.docs;
     });
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
