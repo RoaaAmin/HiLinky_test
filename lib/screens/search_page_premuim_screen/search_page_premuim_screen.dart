@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SearchPagePremiumScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
 
     final result = await FirebaseFirestore.instance
         .collection('Cards')
-        .where('CompanyName', isEqualTo: query )
+        .where('Position', isEqualTo: query )
         .get();
 
     setState(() {

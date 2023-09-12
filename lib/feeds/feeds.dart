@@ -11,7 +11,8 @@ import 'package:line_icons/line_icons.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
-import 'main.dart';
+import '../main.dart';
+import 'Comment/CommentPage.dart';
 
 class Feeds extends StatefulWidget {
   @override
@@ -230,10 +231,35 @@ class _FeedsState extends State<Feeds> {
                             ),
                           ],
                         ),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => CommentPage()),
+                          );
+                        },
+                  child: Icon(Icons.comment),
+                        ),
+
+                      IconButton(
+                        icon: Icon(Icons.thumb_up),
+                        onPressed: () {
+                          // Handle like action
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.share),
+                        onPressed: () {
+                          // Handle share action
+                        },
+                      ),
                       ],
                     ),
-                  ),
+                  ])
                 ),
+                )
               );
             });
       } else {

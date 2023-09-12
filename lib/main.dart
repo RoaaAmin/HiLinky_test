@@ -13,7 +13,7 @@ import 'package:hilinky_test/theme/theme_helper.dart';
 import 'API/SendUserNotification.dart';
 import 'API/notifications.dart';
 import 'auth.dart';
-import 'feeds.dart';
+import 'feeds/feeds.dart';
 import 'firebase_options/firebase_options.dart';
 
 

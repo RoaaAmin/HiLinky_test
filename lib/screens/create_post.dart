@@ -12,7 +12,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:random_string/random_string.dart';
 import '../API/SendUserNotification.dart';
-import '../feeds.dart';
+import '../feeds/feeds.dart';
 import '../main.dart';
 
 class CreatePost extends StatefulWidget {
