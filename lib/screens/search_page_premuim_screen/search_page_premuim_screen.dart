@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../my_card/widget/qr_code.dart';
+
 class SearchPagePremiumScreen extends StatefulWidget {
   SearchPagePremiumScreen({Key? key}) : super(key: key);
 
@@ -187,6 +189,7 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
                         ),
                       ],
                     ),
+                    QrCode(),
                   ],
                 ),
               ),

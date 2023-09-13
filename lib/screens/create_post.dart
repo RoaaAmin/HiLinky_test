@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class _CreatePostState extends State<CreatePost> {
             "ImageURL": link,
             "Description": description,
             "Status": 'OPEN',
-            "PostedByUID": sUserID,
+            "PostedByUID": FirebaseAuth.instance.currentUser!.uid,
             "TimeStamp": DateTime.now(),
           }).then((value) async {
           print('saved');

@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hilinky_test/screens/create_card/create_card.dart';
+import 'package:hilinky_test/screens/profilePage/ProfilePage.dart';
 
 import 'package:line_icons/line_icons.dart';
 
@@ -142,6 +143,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                 Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) => MyCard()));
                 }),
+
+            ListTile(
+                leading: Icon(
+                  LineIcons.cogs,
+                  color: Colors.amber,
+                ),
+                title: Text(
+                  'My profile',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) => ProfilePage()));
+                }),
             ListTile(
 
                 leading: Icon(LineIcons.user, color: Colors.amber),
@@ -250,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                  ), // Add missing closing parenthesis here
+                  ),
                 ],
               ),
             ],

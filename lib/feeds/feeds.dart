@@ -112,28 +112,8 @@ class _FeedsState extends State<Feeds> {
 
                         Container(
                           padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                          //height: 50.0,
-                          //width: deviceWidth,
-                          //decoration: BoxDecoration(
-                          //  color: Colors.grey.withOpacity(0.3),
-                          //  borderRadius: BorderRadius.circular(12.0),
+
                         ),
-                        //  child: TextField(
-                        // decoration: InputDecoration(
-                        //    border: InputBorder.none,
-                        //  prefixIcon: Icon(
-                        //   Icons.search,
-                        // color: Colors.grey,
-                        //  ),
-                        // contentPadding: EdgeInsets.only(top: 15.0),
-                        // hintText: 'Search for active cases...',
-                        // hintStyle: TextStyle(
-                        //   color: Colors.grey.withOpacity(0.6),
-                        // fontWeight: FontWeight.w600,
-                        //  ),
-                        // ),
-                        //  ),
-                        // ),
                       ],
                     ),
                   )
@@ -146,7 +126,6 @@ class _FeedsState extends State<Feeds> {
         floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.amber.shade800,
             onPressed: () {
-              //if(userData.data()!['UserType']=='Driver'){
               Navigator.of(context).push(CupertinoPageRoute(
                   builder: (BuildContext context) => CreatePost()));
             }
