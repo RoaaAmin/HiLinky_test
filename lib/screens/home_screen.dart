@@ -15,6 +15,7 @@ import '../API/notifications.dart';
 import '../auth.dart';
 import 'create_post.dart';
 import 'login_screen.dart';
+import 'myProfile/myProfile.dart';
 import 'my_card/myCard.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -154,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) => ProfilePage()));
+                  Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) => MyProfile()));
                 }),
             ListTile(
 

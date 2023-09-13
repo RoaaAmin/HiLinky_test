@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hilinky_test/screens/profilePage/ProfilePage.dart';
 
 import '../my_card/widget/qr_code.dart';
 
@@ -80,7 +81,6 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
                   onChanged: (newValue) {
                     setState(() {
                       valueChoose = newValue!; // Update the selected value
-                      ///perform actions based on the selected value
 
                     });
                   },
@@ -112,7 +112,14 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
         itemBuilder: (context, i) {
           return InkWell(
             onTap: () async {
-              //  showUserBottomSheet(postsDocs[i]);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(
+                  ),
+                ),
+              );
+              // ProfilePage(postsDocs[i]);
             },
             child: Card(
               color: Colors.white,

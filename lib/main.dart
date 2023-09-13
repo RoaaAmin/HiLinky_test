@@ -6,6 +6,7 @@ import 'package:hilinky_test/screens/create_card/create_card.dart';
 import 'package:hilinky_test/screens/create_post.dart';
 import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:hilinky_test/screens/login_screen.dart';
+import 'package:hilinky_test/screens/myProfile/myProfile.dart';
 import 'package:hilinky_test/screens/my_card/myCard.dart';
 import 'package:hilinky_test/screens/profilePage/ProfilePage.dart';
 import 'package:hilinky_test/screens/search_page_premuim_screen/search_page_premuim_screen.dart';
@@ -64,7 +65,8 @@ class MyApp extends StatelessWidget {
         'MyCard':(context) => MyCard(),
         'SearchPagePremiumScreen':(context) =>  SearchPagePremiumScreen(),
         'QRScannerPage' :(context) =>  QRScannerPage(),
-        'ProfilePage' :(context) =>  ProfilePage(),
+        'ProfilePage' :(context) =>   ProfilePage(),
+        'MyProfile' :(context) =>  MyProfile(),
       },
 
     );

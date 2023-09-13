@@ -5,19 +5,19 @@ import 'package:hilinky_test/main.dart';
 
 import '../../feeds/Comment/CommentPage.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class MyProfile extends StatefulWidget {
+  const MyProfile({Key? key}) : super(key: key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<MyProfile> createState() => _MyProfileState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _MyProfileState extends State<MyProfile> {
   List<DocumentSnapshot<Map<String, dynamic>>> postsDocs = [];
   bool postsFetched = false;
   DocumentSnapshot<Map<String, dynamic>>? userData;
-  late final String firstName;
-  late final String logoUrl;
+
+
 
   getPosts() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -61,12 +61,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
     });}
 
-    void getUserInfo() async{
-      var user = await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).get();
-      setState(() {
-        uniqueUserName = user.data()!['uniqueUserName'];
+  void getUserInfo() async{
+    var user = await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).get();
+    setState(() {
+      uniqueUserName = user.data()!['uniqueUserName'];
 
-      });
+    });
 
   }
   getUserData() async {
@@ -139,11 +139,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                         ),
-                       SizedBox(height: 20,),
+                        SizedBox(height: 20,),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                             Text(
+                            Text(
                               '$FirstName '+ '$LastName',
                               style: TextStyle(
                                 fontSize: 16,
@@ -214,8 +214,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,),),
                     Text('@$uniqueUserName',  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey
+                        fontSize: 14,
+                        color: Colors.grey
 
                     ),),
                     Row(
