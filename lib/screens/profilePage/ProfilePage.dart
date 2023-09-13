@@ -38,6 +38,25 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
   }
+  var FirstName = '';
+  var LastName = '';
+  var Position = '';
+  var CompanyName = '';
+  Map<String, String> Links = {};
+
+
+
+  void getuser() async{
+    var user = await FirebaseFirestore.instance.collection('Cards').doc(FirebaseAuth.instance.currentUser!.uid).get();
+    setState(() {
+      FirstName = user.data()!['FirstName'];
+      LastName = user.data()!['LastName'];
+      Position = user.data()!['Position'];
+      CompanyName = user.data()!['CompanyName'];
+      Links = user.data()!['Links'];
+
+    });
+  }
   getUserData() async {
     await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).get().then((value) {
       setState(() {
@@ -51,6 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     getUserData();
+    getuser();
     super.initState();
   }
 
@@ -112,7 +132,14 @@ class _ProfilePageState extends State<ProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                              Text(
-                              'Your Text', // Replace with the user's name
+                              '$FirstName '+ '$LastName',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              '$Position - '+ '$CompanyName',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -133,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             IconButton(
                               icon: Icon(Icons.facebook),
                               onPressed: () {
-                                // Handle Facebook icon press
+
                               },
                             ),
 
