@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hilinky_test/main.dart';
 
 import '../../feeds/Comment/CommentPage.dart';
 
@@ -43,10 +44,12 @@ class _ProfilePageState extends State<ProfilePage> {
   var Position = '';
   var CompanyName = '';
   Map<String, String> Links = {};
+  var uniqueUserName = '';
 
 
 
-  void getuser() async{
+
+  void getCardInfo() async{
     var user = await FirebaseFirestore.instance.collection('Cards').doc(FirebaseAuth.instance.currentUser!.uid).get();
     setState(() {
       FirstName = user.data()!['FirstName'];
@@ -55,7 +58,15 @@ class _ProfilePageState extends State<ProfilePage> {
       CompanyName = user.data()!['CompanyName'];
       Links = user.data()!['Links'];
 
-    });
+    });}
+
+    void getUserInfo() async{
+      var user = await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).get();
+      setState(() {
+        uniqueUserName = user.data()!['uniqueUserName'];
+
+      });
+
   }
   getUserData() async {
     await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).get().then((value) {
@@ -70,7 +81,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     getUserData();
-    getuser();
+    getCardInfo();
+    getUserInfo();
     super.initState();
   }
 
@@ -120,11 +132,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   color: Colors.blueGrey.withOpacity(0.5),
                                   spreadRadius: 5,
                                   blurRadius: 7,
-                                  offset: Offset(0, 3), // changes position of shadow
+                                  offset: Offset(0, 3),
                                 ),
                               ],
                             ),
-
                           ),
                         ),
                        SizedBox(height: 20,),
@@ -148,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ElevatedButton(
                               onPressed: () {
                               },
-                              child: Text('Button 1'),
+                              child: Text('Edit profile'),
                             ),
 
                           ],
@@ -197,6 +208,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(FirstName, style:
+                    TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,),),
+                    Text('@$uniqueUserName',  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey
+
+                    ),),
                     Row(
                       children: [
                         Container(
