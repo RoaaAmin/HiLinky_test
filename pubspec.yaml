@@ -60,6 +60,9 @@ dependencies:
   url_launcher: ^6.1.14
   intl: ^0.18.1
   adaptive_action_sheet:
+  logger:
+  flutter_secure_storage:
+
 
 
 dev_dependencies:

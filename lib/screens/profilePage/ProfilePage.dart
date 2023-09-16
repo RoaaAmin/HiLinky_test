@@ -16,8 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
   List<DocumentSnapshot<Map<String, dynamic>>> postsDocs = [];
   bool postsFetched = false;
   DocumentSnapshot<Map<String, dynamic>>? userData;
-  late final String firstName;
-  late final String logoUrl;
+
 
   getPosts() async {
     final user = FirebaseAuth.instance.currentUser;

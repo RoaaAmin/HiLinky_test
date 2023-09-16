@@ -546,6 +546,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 'sNationality': selectedNationality,
                 'sCity': selectedCity,
                 'AccountCreatedDateTime': DateTime.now(),
+                'UserProfileImage':'https://www.sketchappsources.com/resources/source-image/profile-illustration-gunaldi-yunus.png'
               }).then((value) async {
                 await FirebaseFirestore.instance
                     .collection('Users')
