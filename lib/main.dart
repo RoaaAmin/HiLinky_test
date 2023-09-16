@@ -1,6 +1,8 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hilinky_test/screens/EditProfile/EditUserProfile.dart';
 import 'package:hilinky_test/screens/QRScannerPage.dart';
 import 'package:hilinky_test/screens/create_card/create_card.dart';
 import 'package:hilinky_test/screens/create_post.dart';
@@ -18,6 +20,8 @@ import 'auth.dart';
 import 'feeds/feeds.dart';
 import 'firebase_options/firebase_options.dart';
 
+final user = FirebaseAuth.instance.currentUser;
+final userId = user!.uid;
 
 // did it work?
 
@@ -65,8 +69,9 @@ class MyApp extends StatelessWidget {
         'MyCard':(context) => MyCard(),
         'SearchPagePremiumScreen':(context) =>  SearchPagePremiumScreen(),
         'QRScannerPage' :(context) =>  QRScannerPage(),
-        'ProfilePage' :(context) =>   ProfilePage(),
+        'ProfilePage' :(context) =>  ProfilePage(),
         'MyProfile' :(context) =>  MyProfile(),
+       'EditUserProfile' :(context) =>  EditUserProfile(),
       },
 
     );

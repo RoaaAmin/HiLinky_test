@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hilinky_test/main.dart';
 
-import '../../feeds/Comment/CommentPage.dart';
+import '../EditProfile/EditUserProfile.dart';
+
 
 class MyProfile extends StatefulWidget {
   const MyProfile({Key? key}) : super(key: key);
@@ -65,7 +67,6 @@ class _MyProfileState extends State<MyProfile> {
     var user = await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).get();
     setState(() {
       uniqueUserName = user.data()!['uniqueUserName'];
-
     });
 
   }
@@ -159,8 +160,10 @@ class _MyProfileState extends State<MyProfile> {
                             ),
                             ElevatedButton(
                               onPressed: () {
+                                Navigator.of(context).pushReplacement(
+                                    CupertinoPageRoute(builder: (BuildContext context) => EditUserProfile()));
                               },
-                              child: Text('Follow'),
+                              child: Text('Edit my profile'),
                             ),
 
                           ],
@@ -183,8 +186,6 @@ class _MyProfileState extends State<MyProfile> {
                   ),
                 ],
               ),
-
-              flowList(context),
             ],
           ),
         ),
@@ -192,121 +193,5 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
-  Widget flowList(BuildContext context) {
-    if (postsDocs != null) {
-      if (postsDocs.length != 0) {
-        return ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.only(left: 10.0, right: 10, top: 10, bottom: 75),
-          itemCount: postsDocs.length,
-          shrinkWrap: true,
-          itemBuilder: (context, i) {
-            return Card(
-              elevation: 3,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(FirstName, style:
-                    TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,),),
-                    Text('@$uniqueUserName',  style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey
 
-                    ),),
-                    Row(
-                      children: [
-                        Container(
-                          height: 110,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            color: Color(0xFF495592),
-                            borderRadius: BorderRadius.circular(12),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    postsDocs[i].data()!['ImageURL']),
-                                fit: BoxFit.fill),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-
-
-                          ],
-                        ),
-                      ],
-                    ),
-                    Divider(
-                      color: Color(0xFF495592).withOpacity(0.9),
-                    ),
-                    Row(
-                      children: [
-
-                        Text(
-                          '${postsDocs[i].data()!['Description']}',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-
-
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CommentPage()),
-                                );
-                              },
-                              child: Icon(Icons.comment),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.thumb_up),
-                              onPressed: () {
-                                // Handle like action
-                              },
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.share),
-                              onPressed: () {
-                                // Handle share action
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      } else {
-        return Center(
-            child: CircularProgressIndicator(backgroundColor: Colors.transparent));
-      }
-    } else {
-      return Center(
-          child: CircularProgressIndicator(backgroundColor: Colors.transparent));
-    }
-  }
 }
