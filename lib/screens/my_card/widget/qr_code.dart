@@ -17,7 +17,9 @@ class _QrCodeState extends State<QrCode> {
   void getId() async {
     FirebaseFirestore.instance.collection('Cards').doc(
         FirebaseAuth.instance.currentUser!.uid).get().then((value) {
-      cardId = value.data()!['cardId'];
+          setState(() {
+            cardId = value.data()!['cardId'];
+          });
     }
     );
   }
