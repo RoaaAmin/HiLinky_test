@@ -1,16 +1,9 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hilinky_test/screens/create_card/create_card.dart';
-import 'package:hilinky_test/screens/profilePage/ProfilePage.dart';
-
 import 'package:line_icons/line_icons.dart';
-
-
 import '../API/notifications.dart';
 import '../auth.dart';
 import 'create_post.dart';
@@ -23,28 +16,25 @@ class HomeScreen extends StatefulWidget {
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
-
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;  Widget currentScreen = HomeScreen();
+  int _currentIndex = 0;
+  Widget currentScreen = HomeScreen();
   late DocumentSnapshot<Map<String, dynamic>> userData;
   late QuerySnapshot<Map<String, dynamic>> postsDocs;
-
 
   var userId = FirebaseAuth.instance.currentUser!.uid;
 
   var name = '';
 
-
-  void getuser() async{
-    var user = await FirebaseFirestore.instance.collection('Users').doc(userId).get();
+  void getuser() async {
+    var user =
+        await FirebaseFirestore.instance.collection('Users').doc(userId).get();
     setState(() {
       name = user.data()!['sUserName'];
     });
   }
-
-
 
   @override
   void initState() {
@@ -53,7 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
     getuser();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         actions: [
           IconButton(
-            icon: Icon(LineIcons.bell, size: 30.0, color: Colors.black,),
+            icon: Icon(
+              LineIcons.bell,
+              size: 30.0,
+              color: Colors.black,
+            ),
             onPressed: () {
               Navigator.of(context).pushReplacement(CupertinoPageRoute(
                 builder: (BuildContext context) => NotificationsPage(),
@@ -82,13 +75,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pushReplacement(CupertinoPageRoute(
-                    builder: (BuildContext context) => CreateCard(),));
+                  builder: (BuildContext context) => CreateCard(),
+                ));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.amber.shade800,
               ),
               child: Text("Create Card"),
-
             ),
           ],
         ),
@@ -101,7 +94,10 @@ class _HomeScreenState extends State<HomeScreen> {
             DrawerHeader(
               padding: const EdgeInsets.fromLTRB(16.0, 30.0, 16.0, 50.0),
               child: Text(
-                " Hi " + name + "\n"+ FirebaseAuth.instance.currentUser!.email!,
+                " Hi " +
+                    name +
+                    "\n" +
+                    FirebaseAuth.instance.currentUser!.email!,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
@@ -115,7 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               onTap: () {
-                Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (BuildContext context) => Auth()));
+                Navigator.of(context).pushReplacement(CupertinoPageRoute(
+                    builder: (BuildContext context) => Auth()));
               },
             ),
             ListTile(
@@ -129,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onTap: () {
                 // Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (BuildContext context) => Feeds()));
-                Navigator.pushNamed(context,'feeds');
+                Navigator.pushNamed(context, 'feeds');
               },
             ),
             ListTile(
@@ -142,9 +139,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) => MyCard()));
+                  Navigator.of(context).push(CupertinoPageRoute(
+                      builder: (BuildContext context) => MyCard()));
                 }),
-
             ListTile(
                 leading: Icon(
                   LineIcons.cogs,
@@ -155,10 +152,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) => MyProfile()));
+                  Navigator.of(context).push(CupertinoPageRoute(
+                      builder: (BuildContext context) => MyProfile()));
                 }),
             ListTile(
-
                 leading: Icon(LineIcons.user, color: Colors.amber),
                 title: Text(
                   "Logout",
@@ -169,14 +166,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   try {
                     await FirebaseAuth.instance.signOut().then((metaData) {
                       print('SignOut Completed...');
-                      Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (BuildContext context) => LoginScreen()));
+                      Navigator.of(context).pushReplacement(CupertinoPageRoute(
+                          builder: (BuildContext context) => LoginScreen()));
                     });
                   } catch (e) {
                     print('An error occur during signing user out.');
                   }
                 }),
           ],
-
         ),
       ),
 
@@ -204,12 +201,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: <Widget>[
                         Icon(
                           LineIcons.home,
-                          color: _currentIndex == 0 ? Colors.amber[500] : Colors.grey,
+                          color: _currentIndex == 0
+                              ? Colors.amber[500]
+                              : Colors.grey,
                         ),
                         Text(
                           'Home',
                           style: TextStyle(
-                            color: _currentIndex == 0 ? Colors.amber[500] : Colors.grey,
+                            color: _currentIndex == 0
+                                ? Colors.amber[500]
+                                : Colors.grey,
                           ),
                         ),
                       ],
@@ -229,12 +230,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: <Widget>[
                         Icon(
                           LineIcons.search,
-                          color: _currentIndex == 1 ? Colors.amber[500] : Colors.grey,
+                          color: _currentIndex == 1
+                              ? Colors.amber[500]
+                              : Colors.grey,
                         ),
                         Text(
                           'Search',
                           style: TextStyle(
-                            color: _currentIndex == 1 ? Colors.amber[500] : Colors.grey,
+                            color: _currentIndex == 1
+                                ? Colors.amber[500]
+                                : Colors.grey,
                           ),
                         ),
                       ],
@@ -255,12 +260,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: <Widget>[
                         Icon(
                           LineIcons.qrcode,
-                          color: _currentIndex == 2 ? Colors.amber[500] : Colors.grey,
+                          color: _currentIndex == 2
+                              ? Colors.amber[500]
+                              : Colors.grey,
                         ),
                         Text(
                           'Scan',
                           style: TextStyle(
-                            color: _currentIndex == 2 ? Colors.amber[500] : Colors.grey,
+                            color: _currentIndex == 2
+                                ? Colors.amber[500]
+                                : Colors.grey,
                           ),
                         ),
                       ],
@@ -283,11 +292,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (BuildContext context) => CreatePost()));
           }
 
-        //  },
-      ),
-
+          //  },
+          ),
     );
-
   }
-
 }

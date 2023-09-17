@@ -67,10 +67,12 @@ class _SocialMediaState extends State<SocialMedia> {
         ;
         if (index == 3) {
           name = 'github';
-        };
+        }
+        ;
         if (index == 4) {
           name = 'instagram';
-        };
+        }
+        ;
         return IconButton(
           onPressed: () {
             showModalBottomSheet(
