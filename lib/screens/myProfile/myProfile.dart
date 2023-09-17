@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hilinky_test/main.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hilinky_test/screens/myProfile/links.dart';
 
 import '../EditProfile/EditUserProfile.dart';
-
 
 class MyProfile extends StatefulWidget {
   const MyProfile({Key? key}) : super(key: key);
@@ -19,7 +19,13 @@ class _MyProfileState extends State<MyProfile> {
   bool postsFetched = false;
   DocumentSnapshot<Map<String, dynamic>>? userData;
 
-
+  List<Widget> socialMediaIcons = [
+    const FaIcon(FontAwesomeIcons.facebook),
+    const FaIcon(FontAwesomeIcons.linkedin),
+    const FaIcon(FontAwesomeIcons.twitter),
+    const FaIcon(FontAwesomeIcons.github),
+    const FaIcon(FontAwesomeIcons.instagram),
+  ];
 
   getPosts() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -42,36 +48,63 @@ class _MyProfileState extends State<MyProfile> {
       });
     }
   }
+
   var FirstName = '';
   var LastName = '';
   var Position = '';
   var CompanyName = '';
-  Map<String, String> Links = {};
+  Map<String, dynamic> Links = {};
   var uniqueUserName = '';
 
+  void getCardInfo() async {
+    await FirebaseFirestore.instance
+        .collection('Cards')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (value) {
+        setState(() {
+          FirstName = value.data()!['FirstName'];
+          LastName = value.data()!['LastName'];
+          Position = value.data()!['Position'];
+          CompanyName = value.data()!['CompanyName'];
+          Links.addAll(
+              value.data()!['Links'] = value.data()!['Links']['linkedin']);
+        });
+      },
+    );
+  }
 
+  void getLinks() async {
+      await FirebaseFirestore.instance
+          .collection('Cards')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get()
+          .then(
+            (value){
+          Links.clear();
+          Links = value.data()!['Links'];
+          Links.removeWhere((key, value) => value == '');
+        },
+      );
+    }
 
-
-  void getCardInfo() async{
-    var user = await FirebaseFirestore.instance.collection('Cards').doc(FirebaseAuth.instance.currentUser!.uid).get();
-    setState(() {
-      FirstName = user.data()!['FirstName'];
-      LastName = user.data()!['LastName'];
-      Position = user.data()!['Position'];
-      CompanyName = user.data()!['CompanyName'];
-      Links = user.data()!['Links'];
-
-    });}
-
-  void getUserInfo() async{
-    var user = await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).get();
+  void getUserInfo() async {
+    var user = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
     setState(() {
       uniqueUserName = user.data()!['uniqueUserName'];
     });
-
   }
+
   getUserData() async {
-    await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).get().then((value) {
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
       setState(() {
         userData = value;
         getPosts();
@@ -79,12 +112,12 @@ class _MyProfileState extends State<MyProfile> {
     });
   }
 
-
   @override
   void initState() {
     getUserData();
     getCardInfo();
     getUserInfo();
+    getLinks();
     super.initState();
   }
 
@@ -107,7 +140,6 @@ class _MyProfileState extends State<MyProfile> {
                   ),
                   Container(
                     height: 150.0,
-
                   ),
                   Positioned(
                     top: 0,
@@ -122,6 +154,7 @@ class _MyProfileState extends State<MyProfile> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: Colors.white,
+
                               ///
                               // image: DecorationImage(
                               //   image: NetworkImage(staticUserProfileImage),
@@ -140,19 +173,21 @@ class _MyProfileState extends State<MyProfile> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              '$FirstName '+ '$LastName',
+                              '$FirstName ' + '$LastName',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              '$Position - '+ '$CompanyName',
+                              '$Position - ' + '$CompanyName',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -161,11 +196,12 @@ class _MyProfileState extends State<MyProfile> {
                             ElevatedButton(
                               onPressed: () {
                                 Navigator.of(context).pushReplacement(
-                                    CupertinoPageRoute(builder: (BuildContext context) => EditUserProfile()));
+                                    CupertinoPageRoute(
+                                        builder: (BuildContext context) =>
+                                            EditUserProfile()));
                               },
                               child: Text('Edit my profile'),
                             ),
-
                           ],
                         ),
                         // Add social media icons here
@@ -173,12 +209,15 @@ class _MyProfileState extends State<MyProfile> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             IconButton(
-                              icon: Icon(Icons.facebook),
+                              icon: FaIcon(FontAwesomeIcons.addressCard,size: 30),
                               onPressed: () {
-
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Link(
+                                    Links:Links
+                                  ),
+                                ));
                               },
                             ),
-
                           ],
                         ),
                       ],
