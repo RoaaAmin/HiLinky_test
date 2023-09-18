@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hilinky_test/main.dart';
-
 import '../../feeds/Comment/CommentPage.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  final String ?postedByUID;
+  ProfilePage({Key? key, this.postedByUID}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -16,7 +15,22 @@ class _ProfilePageState extends State<ProfilePage> {
   List<DocumentSnapshot<Map<String, dynamic>>> postsDocs = [];
   bool postsFetched = false;
   DocumentSnapshot<Map<String, dynamic>>? userData;
+  String ?specifiedUserID;
 
+  @override
+  void initState() {
+    print('print widget postedByUID 11 : ${widget.postedByUID}'); // empty
+    super.initState();
+    if (widget.postedByUID == '' || widget.postedByUID==null) {
+      specifiedUserID = FirebaseAuth.instance.currentUser!.uid;
+    }else{
+      specifiedUserID=widget.postedByUID;
+    }
+    getUserData();
+    getCardInfo();
+    getUserInfo();
+    print('print widget postedByUID 22 : ${widget.postedByUID}'); // not empty
+  }
 
   getPosts() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -39,6 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
   }
+
   var FirstName = '';
   var LastName = '';
   var Position = '';
@@ -46,30 +61,46 @@ class _ProfilePageState extends State<ProfilePage> {
   Map<String, String> Links = {};
   var uniqueUserName = '';
 
+  void getCardInfo() async {
+    var user = await FirebaseFirestore.instance
+        .collection('Cards')
+        .doc(specifiedUserID)
+        .get();
+    if (user.exists) {
+      print("Card Data: ${user.data()}");
+      setState(() {
+        FirstName = user.data()!['FirstName'];
+        LastName = user.data()!['LastName'];
+        Position = user.data()!['Position'];
+        CompanyName = user.data()!['CompanyName'];
+        Links = user.data()!['Links'];
+      });
+    } else {
+      print("Card data not found");
+    }
+  }
 
-
-
-  void getCardInfo() async{
-    var user = await FirebaseFirestore.instance.collection('Cards').doc(FirebaseAuth.instance.currentUser!.uid).get();
-    setState(() {
-      FirstName = user.data()!['FirstName'];
-      LastName = user.data()!['LastName'];
-      Position = user.data()!['Position'];
-      CompanyName = user.data()!['CompanyName'];
-      Links = user.data()!['Links'];
-
-    });}
-
-    void getUserInfo() async{
-      var user = await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).get();
+  void getUserInfo() async {
+    var user = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(specifiedUserID)
+        .get();
+    if (user.exists) {
+      print("User Data: ${user.data()}");
       setState(() {
         uniqueUserName = user.data()!['uniqueUserName'];
-
       });
-
+    } else {
+      print("User data not found");
+    }
   }
+
   getUserData() async {
-    await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).get().then((value) {
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(specifiedUserID)
+        .get()
+        .then((value) {
       setState(() {
         userData = value;
         getPosts();
@@ -78,13 +109,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
 
-  @override
-  void initState() {
-    getUserData();
-    getCardInfo();
-    getUserInfo();
-    super.initState();
-  }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +133,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   Container(
                     height: 150.0,
-
                   ),
                   Positioned(
                     top: 0,
@@ -120,12 +147,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: Colors.white,
+
                               ///
-                              // image: DecorationImage(
-                              //   image: NetworkImage(staticUserProfileImage),
-                              //   fit: BoxFit.cover,
-                              //   alignment: Alignment.center,
-                              // ),
+// image: DecorationImage(
+//   image: NetworkImage(UserProfileImage),
+//   fit: BoxFit.cover,
+//   alignment: Alignment.center,
+// ),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
@@ -138,43 +166,44 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                         ),
-                       SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                             Text(
-                              '$FirstName '+ '$LastName',
+                            Text(
+                              '$FirstName ' + '$LastName',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              '$Position - '+ '$CompanyName',
+                              '$Position - ' + '$CompanyName',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                              },
-                              child: Text('Follow'),
-                            ),
-
+// ElevatedButton(
+//   onPressed: () {
+//   },
+//   child: Text('Follow'),
+// ),
+// Follow(
+//   postedByUID: widget.postedByUID,
+// )
                           ],
                         ),
-                        // Add social media icons here
+// Add social media icons here
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             IconButton(
                               icon: Icon(Icons.facebook),
-                              onPressed: () {
-
-                              },
+                              onPressed: () {},
                             ),
-
                           ],
                         ),
                       ],
@@ -182,7 +211,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
-
               flowList(context),
             ],
           ),
@@ -208,15 +236,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(FirstName, style:
-                    TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,),),
-                    Text('@$uniqueUserName',  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey
-
-                    ),),
+                    Text(
+                      FirstName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      '@$uniqueUserName',
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
                     Row(
                       children: [
                         Container(
@@ -236,10 +266,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-
-
-                          ],
+                          children: [],
                         ),
                       ],
                     ),
@@ -248,7 +275,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Row(
                       children: [
-
                         Text(
                           '${postsDocs[i].data()!['Description']}',
                           style: TextStyle(
@@ -259,9 +285,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ],
                     ),
-
-
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -280,13 +303,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             IconButton(
                               icon: Icon(Icons.thumb_up),
                               onPressed: () {
-                                // Handle like action
+// Handle like action
                               },
                             ),
                             IconButton(
                               icon: Icon(Icons.share),
                               onPressed: () {
-                                // Handle share action
+// Handle share action
                               },
                             ),
                           ],
@@ -301,11 +324,13 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       } else {
         return Center(
-            child: CircularProgressIndicator(backgroundColor: Colors.transparent));
+            child:
+            CircularProgressIndicator(backgroundColor: Colors.transparent));
       }
     } else {
       return Center(
-          child: CircularProgressIndicator(backgroundColor: Colors.transparent));
+          child:
+          CircularProgressIndicator(backgroundColor: Colors.transparent));
     }
   }
 }

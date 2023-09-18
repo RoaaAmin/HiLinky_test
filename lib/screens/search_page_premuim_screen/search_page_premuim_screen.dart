@@ -92,7 +92,7 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
                   }).toList(),
                 ),
 
-               SizedBox(height: 5),
+                SizedBox(height: 5),
                 flowList(context),
               ],
             ),
@@ -112,10 +112,12 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
         itemBuilder: (context, i) {
           return InkWell(
             onTap: () async {
+              print('FLOWLIST ID -> ${cardsDocs[i].data()!['PostedByUID']}');
+              print('FLOWLIST CardID -> ${cardsDocs[i].id}');
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfilePage(
+                  builder: (context) => ProfilePage(postedByUID: cardsDocs[i].data()!['PostedByUID'],
                   ),
                 ),
               );
