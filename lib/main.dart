@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
         'SearchPagePremiumScreen':(context) =>  SearchPagePremiumScreen(),
         'QRScannerPage' :(context) =>  QRScannerPage(),
         'ProfilePage' :(context) =>  ProfilePage(),
-        'MyProfile' :(context) =>  MyProfile(),
+        'MyProfile' :(context) =>  MyProfile(Links: {}),
        'EditUserProfile' :(context) =>  EditUserProfile(),
       },
 

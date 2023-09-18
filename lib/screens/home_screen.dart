@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hilinky_test/screens/create_card/create_card.dart';
 import 'package:line_icons/line_icons.dart';
+
 import '../API/notifications.dart';
 import '../auth.dart';
 import 'create_post.dart';
@@ -27,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var userId = FirebaseAuth.instance.currentUser!.uid;
 
   var name = '';
+  Map<String, dynamic> Links = {};
 
   void getuser() async {
     var user =
@@ -39,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
+    getLinks();
     getuser();
   }
 
@@ -152,8 +154,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).push(CupertinoPageRoute(
-                      builder: (BuildContext context) => MyProfile()));
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (BuildContext context) => MyProfile(
+                        Links: Links,
+                      ),
+                    ),
+                  );
                 }),
             ListTile(
                 leading: Icon(LineIcons.user, color: Colors.amber),
@@ -294,6 +301,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
           //  },
           ),
+    );
+  }
+
+  void getLinks() async {
+    await FirebaseFirestore.instance
+        .collection('Cards')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (value) {
+        Links.clear();
+        Links = value.data()!['Links'];
+        Links.removeWhere((key, value) => value == '');
+      },
     );
   }
 }
