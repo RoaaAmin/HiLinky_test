@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CommentPage extends StatefulWidget {
   @override
@@ -7,8 +8,9 @@ class CommentPage extends StatefulWidget {
 }
 
 class _CommentPageState extends State<CommentPage> {
-  List<Comment> comments = []; // List to store comments
-  TextEditingController commentController = TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  CollectionReference _commentsCollection = FirebaseFirestore.instance.collection('comments');
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +21,32 @@ class _CommentPageState extends State<CommentPage> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
-              itemCount: comments.length,
-              itemBuilder: (context, index) {
-                final comment = comments[index];
-                return ListTile(
-                  title: Text(comment.text),
-                  subtitle: Text(
-                      DateFormat('MMM dd, yyyy - hh:mm a').format(comment.date)),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      deleteComment(index);
-                    },
-                  ),
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _commentsCollection.snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator(); // Show loading indicator while fetching data
+                }
+
+                final comments = snapshot.data!.docs.map((doc) => Comment.fromSnapshot(doc)).toList();
+
+                return ListView.builder(
+                  itemCount: comments.length,
+                  itemBuilder: (context, index) {
+                    final comment = comments[index];
+                    return ListTile(
+                      title: Text(comment.text),
+                      subtitle: Text(
+                        DateFormat('MMM dd, yyyy - hh:mm a').format(comment.date),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          deleteComment(comment.id);
+                        },
+                      ),
+                    );
+                  },
                 );
               },
             ),
@@ -44,7 +58,7 @@ class _CommentPageState extends State<CommentPage> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
-                    controller: commentController,
+                    controller: _commentController,
                     decoration: InputDecoration(
                       hintText: 'Add a comment...',
                     ),
@@ -64,33 +78,39 @@ class _CommentPageState extends State<CommentPage> {
     );
   }
 
-  void addComment() {
-    String newCommentText = commentController.text.trim();
+  void addComment() async {
+    String newCommentText = _commentController.text.trim();
     if (newCommentText.isNotEmpty) {
-      setState(() {
-        Comment newComment = Comment(
-          text: newCommentText,
-          date: DateTime.now(),
-        );
-        comments.add(newComment);
-        commentController.clear();
+      await _commentsCollection.add({
+        'text': newCommentText,
+        'date': Timestamp.now(),
       });
+      _commentController.clear();
     }
   }
 
-  void deleteComment(int index) {
-    setState(() {
-      comments.removeAt(index);
-    });
+  void deleteComment(String commentId) async {
+    await _commentsCollection.doc(commentId).delete();
   }
 }
 
 class Comment {
+  final String id;
   final String text;
   final DateTime date;
 
   Comment({
+    required this.id,
     required this.text,
     required this.date,
   });
+
+  factory Comment.fromSnapshot(DocumentSnapshot snapshot) {
+    final data = snapshot.data() as Map<String, dynamic>;
+    return Comment(
+      id: snapshot.id,
+      text: data['text'] ?? '',
+      date: (data['date'] as Timestamp).toDate(),
+    );
+  }
 }
