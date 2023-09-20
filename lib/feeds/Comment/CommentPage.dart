@@ -3,6 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CommentPage extends StatefulWidget {
+  final String PostId; // Pass the postId when navigating to this page
+
+  CommentPage({required this.PostId});
+
   @override
   _CommentPageState createState() => _CommentPageState();
 }
@@ -10,7 +14,9 @@ class CommentPage extends StatefulWidget {
 class _CommentPageState extends State<CommentPage> {
   final TextEditingController _commentController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  CollectionReference _commentsCollection = FirebaseFirestore.instance.collection('comments');
+
+  CollectionReference get _commentsCollection =>
+      _firestore.collection('posts').doc(widget.PostId).collection('comments');
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +28,7 @@ class _CommentPageState extends State<CommentPage> {
         children: <Widget>[
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _commentsCollection.snapshots(),
+              stream: _commentsCollection.orderBy('date').snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return CircularProgressIndicator(); // Show loading indicator while fetching data
@@ -98,11 +104,13 @@ class Comment {
   final String id;
   final String text;
   final DateTime date;
+  final String PostId; // Add postId
 
   Comment({
     required this.id,
     required this.text,
     required this.date,
+    required this.PostId,
   });
 
   factory Comment.fromSnapshot(DocumentSnapshot snapshot) {
@@ -111,6 +119,7 @@ class Comment {
       id: snapshot.id,
       text: data['text'] ?? '',
       date: (data['date'] as Timestamp).toDate(),
+      PostId: data['PostId'] ?? '', // Get postId from Firestore
     );
   }
 }

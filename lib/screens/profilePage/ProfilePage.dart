@@ -295,7 +295,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => CommentPage()),
+                                      builder: (context) => CommentPage(PostId: '',)),
                                 );
                               },
                               child: Icon(Icons.comment),

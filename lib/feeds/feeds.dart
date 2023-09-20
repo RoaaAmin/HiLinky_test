@@ -216,10 +216,10 @@ class _FeedsState extends State<Feeds> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => CommentPage()),
+                            MaterialPageRoute(builder: (context) => CommentPage(PostId: postsDocs[i].data()!['PostId'],)),
                           );
                         },
-                  child: Icon(Icons.comment),
+                    child: Icon(Icons.comment),
                         ),
 
                       IconButton(

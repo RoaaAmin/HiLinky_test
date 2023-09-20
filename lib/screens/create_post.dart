@@ -15,6 +15,7 @@ import 'package:random_string/random_string.dart';
 import '../API/SendUserNotification.dart';
 import '../feeds/feeds.dart';
 import '../main.dart';
+import 'create_card/create_card.dart';
 
 class CreatePost extends StatefulWidget {
   CreatePost({Key? key}) : super(key: key);
@@ -54,6 +55,7 @@ class _CreatePostState extends State<CreatePost> {
             "Description": description,
             "Status": 'OPEN',
             "PostedByUID": FirebaseAuth.instance.currentUser!.uid,
+            "PostId": uuid.v4(),
             "TimeStamp": DateTime.now(),
           }).then((value) async {
           print('saved');
