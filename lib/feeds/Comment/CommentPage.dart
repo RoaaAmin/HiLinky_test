@@ -16,7 +16,7 @@ class _CommentPageState extends State<CommentPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   CollectionReference get _commentsCollection =>
-      _firestore.collection('posts').doc(widget.PostId).collection('comments');
+      _firestore.collection('Posts').doc(widget.PostId).collection('comments');
 
   @override
   Widget build(BuildContext context) {
