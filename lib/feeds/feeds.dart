@@ -11,8 +11,8 @@ import 'package:line_icons/line_icons.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
+import '../Comment/CommentPage.dart';
 import '../main.dart';
-import 'Comment/CommentPage.dart';
 
 class Feeds extends StatefulWidget {
   @override
