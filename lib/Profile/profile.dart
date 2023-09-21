@@ -48,7 +48,7 @@ class profiletestState extends State<profiletest> {
           actions: [
             TextButton(
               onPressed: () {
-                context.pushPage(const HomeScreen());
+                context.pushPage(const Edit());
               },
               child: const Icon(Icons.share),
             ),
@@ -57,6 +57,7 @@ class profiletestState extends State<profiletest> {
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListView(
+            shrinkWrap: true,
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -358,13 +359,13 @@ class profiletestState extends State<profiletest> {
                                     // color: Colors.black),
                                     context: context,
                                     builder: (context) {
-                                      return SizedBox(
+                                      return const SizedBox(
                                         height: 200,
-                                        width:
-                                            MediaQuery.of(context).size.width,
+                                        width: 200,
+                                        //MediaQuery.of(context).size.width,
                                         // *
                                         //     0.8,
-                                        child: const Padding(
+                                        child: Padding(
                                           padding: EdgeInsets.all(20.0),
                                           child: Column(
                                             crossAxisAlignment:
@@ -509,8 +510,8 @@ class profiletestState extends State<profiletest> {
                                               ),
                                               ElevatedButton(
                                                 onPressed: () {
-                                                  context
-                                                      .pushPage(LoginScreen());
+                                                  context.pushPage(
+                                                      const HomeScreen());
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                   // shape: const (),
@@ -568,35 +569,35 @@ class profiletestState extends State<profiletest> {
                                   "Log Out",
                                   style: TextStyle(color: Colors.black),
                                 )),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                ListTile(
-                                  title: const Text('Option 1'),
-                                  leading: Radio(
-                                    value: 1,
-                                    groupValue: selectedOption,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedOption = value!;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                ListTile(
-                                  title: const Text('Option 2'),
-                                  leading: Radio(
-                                    value: 2,
-                                    groupValue: selectedOption,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedOption = value!;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
+                            // Column(
+                            //   mainAxisAlignment: MainAxisAlignment.start,
+                            //   children: <Widget>[
+                            //     ListTile(
+                            //       title: const Text('Option 1'),
+                            //       leading: Radio(
+                            //         value: 1,
+                            //         groupValue: selectedOption,
+                            //         onChanged: (value) {
+                            //           setState(() {
+                            //             selectedOption = value!;
+                            //           });
+                            //         },
+                            //       ),
+                            //     ),
+                            //     ListTile(
+                            //       title: const Text('Option 2'),
+                            //       leading: Radio(
+                            //         value: 2,
+                            //         groupValue: selectedOption,
+                            //         onChanged: (value) {
+                            //           setState(() {
+                            //             selectedOption = value!;
+                            //           });
+                            //         },
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                       ],
