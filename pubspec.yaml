@@ -63,6 +63,9 @@ dependencies:
   logger:
   flutter_secure_storage:
   flutter_image_slideshow: ^0.1.5
+  get: ^4.6.5
+  flutter_switch: ^0.3.2
+  buttons_tabbar: ^1.3.7+1
 
 
 
