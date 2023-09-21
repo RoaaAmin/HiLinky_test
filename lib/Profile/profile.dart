@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hilinky_test/components/context.dart';
 import 'package:hilinky_test/screens/home_screen.dart';
-import 'package:hilinky_test/screens/login_screen.dart';
 
 import 'activity.dart';
 import 'edit.dart';
