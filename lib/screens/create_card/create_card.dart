@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hilinky_test/components/context.dart';
 import 'package:hilinky_test/screens/create_card/widgets/socialMedia.dart';
 import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:image_picker/image_picker.dart';
@@ -94,6 +95,7 @@ class _CreateCardState extends State<CreateCard> {
       selectedPortfolio = File(image!.path);
     });
   }
+
   Future<String> getuser() async {
     String userCity = '';
 
@@ -106,7 +108,7 @@ class _CreateCardState extends State<CreateCard> {
       // Check
       if (userSnapshot.exists && userSnapshot.data() != null) {
         Map<String, dynamic> userData =
-        userSnapshot.data() as Map<String, dynamic>;
+            userSnapshot.data() as Map<String, dynamic>;
         userCity = userData['sCity'] ?? '';
       }
     } catch (e) {
@@ -115,6 +117,7 @@ class _CreateCardState extends State<CreateCard> {
 
     return userCity; // Return the user's city
   }
+
   uploadCard() async {
     if (selectedImage != null) {
       String imageURL = editMode ? editModeImageURL : '';
@@ -175,10 +178,10 @@ class _CreateCardState extends State<CreateCard> {
           "CompanyName": companyName,
           "Email": email,
           "PhoneNumber": phoneNumber,
-          "Links":links,
+          "Links": links,
           "cardId": uuid.v4(),
           "PostedByUID": FirebaseAuth.instance.currentUser!.uid,
-          "City" :selectedCity,
+          "City": selectedCity,
           "TimeStamp": DateTime.now(),
         }).then((value) async {
           print('Card saved');
@@ -187,12 +190,12 @@ class _CreateCardState extends State<CreateCard> {
         Navigator.of(context).pushReplacement(
             CupertinoPageRoute(builder: (BuildContext context) => MyCard()));
       }
-    }
-    else {
-     showInSnackBar('You have to fill all the fields ', Colors.red,
-         Colors.white, 3, context, _scaffoldKey);
+    } else {
+      showInSnackBar('You have to fill all the fields ', Colors.red,
+          Colors.white, 3, context, _scaffoldKey);
     }
   }
+
   Widget bottomSheet() {
     return Container(
       height: 100.0,
@@ -336,9 +339,10 @@ class _CreateCardState extends State<CreateCard> {
                   color: Colors.black,
                 ),
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(CupertinoPageRoute(
-                    builder: (BuildContext context) => HomeScreen(),
-                  ));
+                  // Navigator.of(context).pushReplacement(CupertinoPageRoute(
+                  //   builder: (BuildContext context) => HomeScreen(),
+                  // ));
+                  context.pop();
                 },
               )),
           body: SingleChildScrollView(
