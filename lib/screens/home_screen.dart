@@ -2,26 +2,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hilinky_test/components/context.dart';
 import 'package:hilinky_test/screens/create_card/create_card.dart';
+import 'package:hilinky_test/screens/create_post.dart';
 import 'package:line_icons/line_icons.dart';
 
 import '../API/notifications.dart';
 import '../auth.dart';
-import 'create_post.dart';
+
 import 'login_screen.dart';
 import 'myProfile/myProfile.dart';
 import 'my_card/myCard.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
-  Widget currentScreen = HomeScreen();
+  final int _currentIndex = 0;
+  Widget currentScreen = const HomeScreen();
   late DocumentSnapshot<Map<String, dynamic>> userData;
   late QuerySnapshot<Map<String, dynamic>> postsDocs;
 
@@ -50,9 +52,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        // flexibleSpace: ,
+        elevation: 0,
+        leading: const CircleAvatar(
+          minRadius: 1,
+          backgroundColor: Color.fromARGB(255, 128, 148, 158),
+        ),
+        title: Image.asset(
+          "assets/images/HilinkyLogo.png",
+          scale: 20,
+        ),
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               LineIcons.bell,
               size: 30.0,
               color: Colors.black,
@@ -69,25 +81,62 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               "Start your journey by creating your card",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20), // Add some spacing
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushReplacement(CupertinoPageRoute(
-                  builder: (BuildContext context) => CreateCard(),
-                ));
+                context.pushPage(CreateCard());
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber.shade800,
+                // shape: const (),
+                padding: const EdgeInsets.all(5),
+                backgroundColor: const Color.fromARGB(255, 2, 84, 86),
+                fixedSize: const Size(300, 40),
+                elevation: 0,
               ),
-              child: Text("Create Card"),
+              //  style: const ButtonStyle( B elevation: 0.2, ),
+              child: const Text(
+                'Order your NFC card For 200 S.R',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange,
+        foregroundColor: Colors.white,
+        onPressed: () {
+          context.pushPage(CreatePost());
+        },
+        child: const Icon(Icons.add),
+      ),
+
+      // body: Center(
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: [
+      //       const Text(
+      //         "Start your journey by creating your card",
+      //         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      //       ),
+      //       const SizedBox(height: 20), // Add some spacing
+      //       ElevatedButton(
+      //         onPressed: () {
+      //           Navigator.of(context).pushReplacement(CupertinoPageRoute(
+      //             builder: (BuildContext context) => CreateCard(),
+      //           ));
+      //         },
+      //         style: ElevatedButton.styleFrom(
+      //           backgroundColor: Colors.amber.shade800,
+      //         ),
+      //         child: const Text("Create Card"),
+      //       ),
+      //     ],
+      //   ),
+      // ),
 
       drawer: Drawer(
         child: ListView(
@@ -96,33 +145,31 @@ class _HomeScreenState extends State<HomeScreen> {
             DrawerHeader(
               padding: const EdgeInsets.fromLTRB(16.0, 30.0, 16.0, 50.0),
               child: Text(
-                " Hi " +
-                    name +
-                    "\n" +
-                    FirebaseAuth.instance.currentUser!.email!,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                " Hi $name\n${FirebaseAuth.instance.currentUser!.email!}",
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 LineIcons.home,
                 color: Colors.amber,
               ),
-              title: Text(
+              title: const Text(
                 "Home",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               onTap: () {
                 Navigator.of(context).pushReplacement(CupertinoPageRoute(
-                    builder: (BuildContext context) => Auth()));
+                    builder: (BuildContext context) => const Auth()));
               },
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 LineIcons.edit,
                 color: Colors.amber,
               ),
-              title: Text(
+              title: const Text(
                 "Posts",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
@@ -132,11 +179,11 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             ListTile(
-                leading: Icon(
+                leading: const Icon(
                   LineIcons.cogs,
                   color: Colors.amber,
                 ),
-                title: Text(
+                title: const Text(
                   'My card',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
@@ -145,11 +192,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (BuildContext context) => MyCard()));
                 }),
             ListTile(
-                leading: Icon(
+                leading: const Icon(
                   LineIcons.cogs,
                   color: Colors.amber,
                 ),
-                title: Text(
+                title: const Text(
                   'My profile',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
@@ -163,8 +210,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }),
             ListTile(
-                leading: Icon(LineIcons.user, color: Colors.amber),
-                title: Text(
+                leading: const Icon(LineIcons.user, color: Colors.amber),
+                title: const Text(
                   "Logout",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
@@ -184,123 +231,123 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      /////////////////////
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 8,
-        child: Container(
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = HomeScreen();
-                        _currentIndex = 0;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          LineIcons.home,
-                          color: _currentIndex == 0
-                              ? Colors.amber[500]
-                              : Colors.grey,
-                        ),
-                        Text(
-                          'Home',
-                          style: TextStyle(
-                            color: _currentIndex == 0
-                                ? Colors.amber[500]
-                                : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  MaterialButton(
-                    minWidth: 75,
-                    onPressed: () {
-                      Navigator.pushNamed(context, 'SearchPagePremiumScreen');
-                      setState(() {
-                        _currentIndex = 1;
-                      });
-                    },
-                    padding: EdgeInsets.only(left: 25, right: 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          LineIcons.search,
-                          color: _currentIndex == 1
-                              ? Colors.amber[500]
-                              : Colors.grey,
-                        ),
-                        Text(
-                          'Search',
-                          style: TextStyle(
-                            color: _currentIndex == 1
-                                ? Colors.amber[500]
-                                : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  MaterialButton(
-                    minWidth: 1,
-                    onPressed: () {
-                      Navigator.pushNamed(context, 'QRScannerPage');
-                      setState(() {
-                        _currentIndex = 2;
-                      });
-                      // Navigator.pushNamed(context, 'createPostViewRoute');
-                    },
-                    padding: EdgeInsets.only(left: 50, right: 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          LineIcons.qrcode,
-                          color: _currentIndex == 2
-                              ? Colors.amber[500]
-                              : Colors.grey,
-                        ),
-                        Text(
-                          'Scan',
-                          style: TextStyle(
-                            color: _currentIndex == 2
-                                ? Colors.amber[500]
-                                : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+      // /////////////////////
+      // bottomNavigationBar: BottomAppBar(
+      //   shape: const CircularNotchedRectangle(),
+      //   notchMargin: 8,
+      //   child: SizedBox(
+      //     height: 60,
+      //     child: Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //       children: <Widget>[
+      //         Row(
+      //           children: <Widget>[
+      //             MaterialButton(
+      //               minWidth: 40,
+      //               onPressed: () {
+      //                 setState(() {
+      //                   currentScreen = const HomeScreen();
+      //                   _currentIndex = 0;
+      //                 });
+      //               },
+      //               child: Column(
+      //                 mainAxisAlignment: MainAxisAlignment.center,
+      //                 children: <Widget>[
+      //                   Icon(
+      //                     LineIcons.home,
+      //                     color: _currentIndex == 0
+      //                         ? Colors.amber[500]
+      //                         : Colors.grey,
+      //                   ),
+      //                   Text(
+      //                     'Home',
+      //                     style: TextStyle(
+      //                       color: _currentIndex == 0
+      //                           ? Colors.amber[500]
+      //                           : Colors.grey,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //             MaterialButton(
+      //               minWidth: 75,
+      //               onPressed: () {
+      //                 Navigator.pushNamed(context, 'SearchPagePremiumScreen');
+      //                 setState(() {
+      //                   _currentIndex = 1;
+      //                 });
+      //               },
+      //               padding: const EdgeInsets.only(left: 25, right: 0),
+      //               child: Column(
+      //                 mainAxisAlignment: MainAxisAlignment.center,
+      //                 children: <Widget>[
+      //                   Icon(
+      //                     LineIcons.search,
+      //                     color: _currentIndex == 1
+      //                         ? Colors.amber[500]
+      //                         : Colors.grey,
+      //                   ),
+      //                   Text(
+      //                     'Search',
+      //                     style: TextStyle(
+      //                       color: _currentIndex == 1
+      //                           ? Colors.amber[500]
+      //                           : Colors.grey,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //             MaterialButton(
+      //               minWidth: 1,
+      //               onPressed: () {
+      //                 Navigator.pushNamed(context, 'QRScannerPage');
+      //                 setState(() {
+      //                   _currentIndex = 2;
+      //                 });
+      //                 // Navigator.pushNamed(context, 'createPostViewRoute');
+      //               },
+      //               padding: const EdgeInsets.only(left: 50, right: 0),
+      //               child: Column(
+      //                 mainAxisAlignment: MainAxisAlignment.center,
+      //                 children: <Widget>[
+      //                   Icon(
+      //                     LineIcons.qrcode,
+      //                     color: _currentIndex == 2
+      //                         ? Colors.amber[500]
+      //                         : Colors.grey,
+      //                   ),
+      //                   Text(
+      //                     'Scan',
+      //                     style: TextStyle(
+      //                       color: _currentIndex == 2
+      //                           ? Colors.amber[500]
+      //                           : Colors.grey,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
 
-///////////
+// ///////////
 
-      //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.amber.shade800,
-          onPressed: () {
-            Navigator.of(context).push(CupertinoPageRoute(
-                builder: (BuildContext context) => CreatePost()));
-          }
+//       //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+//       floatingActionButton: FloatingActionButton(
+//           backgroundColor: Colors.amber.shade800,
+//           onPressed: () {
+//             Navigator.of(context).push(CupertinoPageRoute(
+//                 builder: (BuildContext context) => CreatePost()));
+//           }
 
-          //  },
-          ),
+//           //  },
+//           ),
     );
   }
 
