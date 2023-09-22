@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hilinky_test/home.dart';
+import 'package:hilinky_test/nav_bar.dart';
 import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:hilinky_test/screens/login_screen.dart';
 

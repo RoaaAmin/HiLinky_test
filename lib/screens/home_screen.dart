@@ -53,7 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         // flexibleSpace: ,
-        elevation: 0,
+        
+        elevation: 3,
         leading: const CircleAvatar(
           minRadius: 1,
           backgroundColor: Color.fromARGB(255, 128, 148, 158),
@@ -80,11 +81,14 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+       //   crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
               "Start your journey by creating your card",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+
+            SizedBox(height: 20,),
             ElevatedButton(
               onPressed: () {
                 context.pushPage(CreateCard());
@@ -93,12 +97,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 // shape: const (),
                 padding: const EdgeInsets.all(5),
                 backgroundColor: const Color.fromARGB(255, 2, 84, 86),
-                fixedSize: const Size(300, 40),
+                fixedSize: const Size(178, 59),
                 elevation: 0,
               ),
               //  style: const ButtonStyle( B elevation: 0.2, ),
               child: const Text(
-                'Order your NFC card For 200 S.R',
+                'Create Card',
                 style: TextStyle(color: Colors.white),
               ),
             ),

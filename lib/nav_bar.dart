@@ -18,8 +18,8 @@ class _HomeState extends State<Home> {
   int currentIndex = 0;
 
   List myScreenList = [
-    // HomeScreen(),
-     profiletest(),
+     HomeScreen(),
+     //profiletest(),
      SearchPagePremiumScreen(),
     //Notifications(),
      QRScannerPage(),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:hilinky_test/components/context.dart';
 
-import '../home.dart';
+import '../nav_bar.dart';
 
 class cardy extends StatefulWidget {
   const cardy({super.key});
