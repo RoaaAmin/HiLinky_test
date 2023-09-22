@@ -4,10 +4,12 @@ import 'package:hilinky_test/screens/home_screen.dart';
 
 import 'activity.dart';
 import 'edit.dart';
+import 'language.dart';
 import 'notifications.dart';
 
+
 class profiletest extends StatefulWidget {
-  const profiletest({super.key});
+  profiletest({super.key});
 
   @override
   profiletestState createState() {
@@ -24,10 +26,11 @@ class profiletestState extends State<profiletest> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<profiletestState>.
   final _formKey = GlobalKey<FormState>();
-  late int selectedOption = 1;
+   int selectedOption = 1;
 
   @override
   Widget build(BuildContext context) {
+    int selectedOption = 1;
     // Build a Form widget using the _formKey created above.
     return Scaffold(
         appBar: AppBar(
@@ -47,7 +50,7 @@ class profiletestState extends State<profiletest> {
           actions: [
             TextButton(
               onPressed: () {
-                context.pushPage(const Edit());
+                context.pushPage( HomeScreen());
               },
               child: const Icon(Icons.share),
             ),
@@ -229,7 +232,7 @@ class profiletestState extends State<profiletest> {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  context.pushPage(const Edit());
+                                  context.pushPage(Edit());
                                 },
                                 child: const Text(
                                   "Edit Profile Information",
@@ -297,7 +300,9 @@ class profiletestState extends State<profiletest> {
                               ],
                             ),
                             TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.pushPage(language());
+                                },
                                 child: const Text(
                                   "Language",
                                   style: TextStyle(color: Colors.black),
@@ -337,8 +342,8 @@ class profiletestState extends State<profiletest> {
                                 ),
                                 Container(
                                   padding:
-                                      const EdgeInsets.only(left: 11, top: 11),
-                                  child: const Icon(
+                                       EdgeInsets.only(left: 11, top: 11),
+                                  child:  Icon(
                                     Icons.my_library_books_rounded,
                                     size: 20,
                                     color: Colors.orange,
@@ -349,57 +354,111 @@ class profiletestState extends State<profiletest> {
                             TextButton(
                                 onPressed: () {
                                   showBottomSheet(
-                                    // clipBehavior: AboutDialog(applicationName: ,),
+                                    
 
-                                    shape: const Border.symmetric(),
+                                    shape: Border.symmetric(),
                                     // strokeAlign:
                                     //     BorderSide.strokeAlignOutside,
 
                                     // color: Colors.black),
                                     context: context,
                                     builder: (context) {
-                                      return const SizedBox(
-                                        height: 200,
-                                        width: 200,
-                                        //MediaQuery.of(context).size.width,
+                                      return SizedBox(
+                                        height: 250,
+                                        width:  MediaQuery.of(context).size.width,
                                         // *
                                         //     0.8,
                                         child: Padding(
                                           padding: EdgeInsets.all(20.0),
                                           child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: <Widget>[
                                               Text(
                                                 "Theme",
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                style: TextStyle(fontSize: 24),
                                               ),
-                                              SizedBox(
-                                                height: 20,
-                                              ),
-                                              Text(
-                                                "Light Mode",
-                                                style: TextStyle(fontSize: 15),
-                                              ),
-                                              Text(
-                                                "Dark Mode",
-                                                style: TextStyle(fontSize: 15),
-                                              ),
-                                              Text(
-                                                "System Default",
-                                                style: TextStyle(fontSize: 15),
-                                              ),
+                                              ListTile(
+                                                // onTap: () {
+                                                //   context
+                                                //       .pushPage(profiletest());
+                                                // },
+                                                titleAlignment:
+                                                    ListTileTitleAlignment
+                                                        .center,
+                                                // textAlign: TextAlign.end,
+                                                title: const Text(
+                                                  'Light Mode',
+                                                  style:
+                                                      TextStyle(fontSize: 16),
+                                                ),
 
-                                              //                   TextButton(
-                                              // onPressed: () {
-                                              //  context.pop();
-                                              // },
-                                              // child:  Text("Cancel"))
+                                                leading: Radio(
+                                                  value: 1,
+                                                  groupValue: selectedOption,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      selectedOption = value!;
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                              ListTile(
+                                                //    onTap: () {
+                                                //   context
+                                                //       .pushPage(profiletest());
+                                                // },
+                                                titleAlignment:
+                                                    ListTileTitleAlignment
+                                                        .center,
+                                                // textAlign: TextAlign.end,
+                                                title: const Text(
+                                                  'Dark Mode',
+                                                  style:
+                                                      TextStyle(fontSize: 16),
+                                                ),
+
+                                                leading: Radio(
+                                                  value: 2,
+                                                  groupValue: selectedOption,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      selectedOption = value!;
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                              ListTile(
+                                                //    onTap: () {
+                                                //   context
+                                                //       .pushPage(profiletest());
+                                                // },
+                                                titleAlignment:
+                                                    ListTileTitleAlignment
+                                                        .center,
+                                                // textAlign: TextAlign.end,
+                                                title: const Text(
+                                                  'System Default',
+                                                  style:
+                                                      TextStyle(fontSize: 16),
+                                                ),
+
+                                                leading: Radio(
+                                                  value: 3,
+                                                  groupValue: selectedOption,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      selectedOption = value!;
+                                                    });
+                                                  },
+                                                ),
+
+                                                //System Default
+                                              )
                                             ],
                                           ),
+
+                                     
                                         ),
                                       );
                                       // return SelectingSheet(keyword: text);
@@ -476,7 +535,7 @@ class profiletestState extends State<profiletest> {
                                   showBottomSheet(
                                     // clipBehavior: AboutDialog(applicationName: ,),
 
-                                    shape: const Border.symmetric(),
+                                    shape: Border.symmetric(),
                                     // strokeAlign:
                                     //     BorderSide.strokeAlignOutside,
 
@@ -492,6 +551,8 @@ class profiletestState extends State<profiletest> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(20.0),
                                           child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
                                             children: [
                                               const Text(
                                                 "Log Out",
@@ -500,56 +561,74 @@ class profiletestState extends State<profiletest> {
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                              const SizedBox(
-                                                height: 20,
-                                              ),
+                                              // const SizedBox(
+                                              //   height: 20,
+                                              // ),
                                               const Text(
                                                 "Are you sure you want to logout?",
                                                 style: TextStyle(fontSize: 15),
                                               ),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  context.pushPage(
-                                                      const HomeScreen());
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  // shape: const (),
-                                                  padding:
-                                                      const EdgeInsets.all(5),
-                                                  backgroundColor:
-                                                      const Color.fromARGB(
-                                                          255, 2, 84, 86),
-                                                  fixedSize: const Size(70, 40),
-                                                  elevation: 0,
-                                                ),
-                                                //  style: const ButtonStyle( B elevation: 0.2, ),
-                                                child: const Text(
-                                                  'Log Out',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  context.pushPage(
-                                                      const HomeScreen());
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  // shape: const (),
-                                                  padding:
-                                                      const EdgeInsets.all(5),
-                                                  backgroundColor:
-                                                      const Color.fromARGB(
-                                                          255, 2, 84, 86),
-                                                  fixedSize: const Size(70, 40),
-                                                  elevation: 0,
-                                                ),
-                                                //  style: const ButtonStyle( B elevation: 0.2, ),
-                                                child: const Text(
-                                                  'Cancel',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      context.pushPage(
+                                                          profiletest());
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      fixedSize:
+                                                          const Size(170, 48),
+
+                                                      // shape: const (),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5),
+                                                      backgroundColor:
+                                                          Color.fromARGB(255,
+                                                              253, 253, 253),
+
+                                                      elevation: 1,
+                                                    ),
+                                                    //  style: const ButtonStyle( B elevation: 0.2, ),
+                                                    child: const Text(
+                                                      'Cancel',
+                                                      style: TextStyle(
+                                                        color: const Color
+                                                                .fromARGB(
+                                                            255, 2, 84, 86),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      context.pushPage(HomeScreen());
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      // shape: const (),
+                                                      fixedSize:
+                                                          const Size(170, 48),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5),
+                                                      backgroundColor:
+                                                          const Color.fromARGB(
+                                                              255, 2, 84, 86),
+
+                                                      elevation: 1,
+                                                    ),
+                                                    //  style: const ButtonStyle( B elevation: 0.2, ),
+                                                    child: const Text(
+                                                      'Log Out',
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                               //                   TextButton(
                                               // onPressed: () {
@@ -568,35 +647,7 @@ class profiletestState extends State<profiletest> {
                                   "Log Out",
                                   style: TextStyle(color: Colors.black),
                                 )),
-                            // Column(
-                            //   mainAxisAlignment: MainAxisAlignment.start,
-                            //   children: <Widget>[
-                            //     ListTile(
-                            //       title: const Text('Option 1'),
-                            //       leading: Radio(
-                            //         value: 1,
-                            //         groupValue: selectedOption,
-                            //         onChanged: (value) {
-                            //           setState(() {
-                            //             selectedOption = value!;
-                            //           });
-                            //         },
-                            //       ),
-                            //     ),
-                            //     ListTile(
-                            //       title: const Text('Option 2'),
-                            //       leading: Radio(
-                            //         value: 2,
-                            //         groupValue: selectedOption,
-                            //         onChanged: (value) {
-                            //           setState(() {
-                            //             selectedOption = value!;
-                            //           });
-                            //         },
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
+                            
                           ],
                         ),
                       ],

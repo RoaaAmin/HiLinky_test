@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:hilinky_test/Profile/profile.dart';
+import 'package:hilinky_test/components/context.dart';
 
 class Notifications extends StatefulWidget {
   const Notifications({super.key});
@@ -13,15 +15,21 @@ class _NotificationsState extends State<Notifications> {
   bool status_general_notif = false;
   bool status_sound = false;
   bool status_vibrate = false;
-  bool statusA = false;
+  bool status_updates = false;
+  bool status_payment = true;
+  bool status_service = true;
+  bool status_tips = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notification"),
-        leading: const Icon(Icons.arrow_back_ios),
-      ),
+          title: const Text("Notification"),
+          leading: IconButton(
+              onPressed: () {
+                context.pushPage(profiletest());
+              },
+              icon: const Icon(Icons.arrow_back_ios))),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -127,7 +135,7 @@ class _NotificationsState extends State<Notifications> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Vibrate"),
+                const Text("App Updates"),
 //switch
                 FlutterSwitch(
                   //  activeText: "female",
@@ -140,13 +148,13 @@ class _NotificationsState extends State<Notifications> {
                   height: 30.0,
                   valueFontSize: 20.0,
                   toggleSize: 40.0,
-                  value: statusA,
+                  value: status_updates,
                   borderRadius: 30.0,
                   // padding: 5.0,
                   showOnOff: false,
                   onToggle: (val) {
                     setState(() {
-                      statusA = val;
+                      status_updates = val;
                     });
                   },
                 ),
@@ -155,7 +163,7 @@ class _NotificationsState extends State<Notifications> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Vibrate"),
+                const Text("Payment Request"),
 //switch
                 FlutterSwitch(
                   //  activeText: "female",
@@ -168,13 +176,13 @@ class _NotificationsState extends State<Notifications> {
                   height: 30.0,
                   valueFontSize: 20.0,
                   toggleSize: 40.0,
-                  value: statusA,
+                  value: status_payment,
                   borderRadius: 30.0,
                   // padding: 5.0,
                   showOnOff: false,
                   onToggle: (val) {
                     setState(() {
-                      statusA = val;
+                      status_payment = val;
                     });
                   },
                 ),
@@ -191,7 +199,7 @@ class _NotificationsState extends State<Notifications> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Vibrate"),
+                const Text("New Service Available"),
 //switch
                 FlutterSwitch(
                   //  activeText: "female",
@@ -204,13 +212,13 @@ class _NotificationsState extends State<Notifications> {
                   height: 30.0,
                   valueFontSize: 20.0,
                   toggleSize: 40.0,
-                  value: statusA,
+                  value: status_service,
                   borderRadius: 30.0,
                   // padding: 5.0,
                   showOnOff: false,
                   onToggle: (val) {
                     setState(() {
-                      statusA = val;
+                      status_service = val;
                     });
                   },
                 ),
@@ -219,7 +227,7 @@ class _NotificationsState extends State<Notifications> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Vibrate"),
+                const Text("New Tips Available"),
 //switch
                 FlutterSwitch(
                   //  activeText: "female",
@@ -232,13 +240,13 @@ class _NotificationsState extends State<Notifications> {
                   height: 30.0,
                   valueFontSize: 20.0,
                   toggleSize: 40.0,
-                  value: statusA,
+                  value: status_tips,
                   borderRadius: 30.0,
                   // padding: 5.0,
                   showOnOff: false,
                   onToggle: (val) {
                     setState(() {
-                      statusA = val;
+                      status_tips = val;
                     });
                   },
                 ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hilinky_test/Profile/profile.dart';
+import 'package:hilinky_test/components/context.dart';
 
 import 'Activity_tabs/tabs.dart';
 
@@ -14,9 +16,12 @@ class _ActivityState extends State<Activity> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Activity"),
-          leading: const Icon(Icons.arrow_back_ios),
-        ),
-        body:  tabs());
+            title: const Text("Activity"),
+            leading: IconButton(
+                onPressed: () {
+                  context.pushPage( profiletest());
+                },
+                icon: const Icon(Icons.arrow_back_ios))),
+        body: const tabs());
   }
 }
