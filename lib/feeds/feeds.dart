@@ -1,18 +1,18 @@
 
-
-
-
+import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hilinky_test/screens/create_post.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-
+import 'package:social_share/social_share.dart';
 import '../Comment/CommentPage.dart';
 import '../main.dart';
+import '../models/SnackBar.dart';
 
 class Feeds extends StatefulWidget {
   @override
@@ -29,6 +29,73 @@ class _FeedsState extends State<Feeds> {
     getUserData();
     super.initState();
   }
+  void sharePost(DocumentSnapshot<Map<String, dynamic>> post) {
+    String message =
+        'Post,\n' +
+            'Photo Link: ${post.data()!['ImageURL']}\n' +
+            'Description: ${post.data()!['Description']}\n' +
+            'This Message is shared from HiLinky App';
+
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(FontAwesomeIcons.whatsapp, color: Colors.green),
+              title: Text('Share with WhatsApp'),
+              onTap: () async {
+                Navigator.pop(context);
+                try {
+                  await SocialShare.shareWhatsapp(message);
+                } catch (e) {
+                  print('Error sharing on WhatsApp: $e');
+                }
+              },
+            ),
+            ListTile(
+              leading: Icon(FontAwesomeIcons.telegram, color: Colors.blue[400]),
+              title: Text('Share with Telegram'),
+              onTap: () async {
+                Navigator.pop(context);
+                try {
+                  await SocialShare.shareTelegram(message);
+                } catch (e) {
+                  print('Error sharing on Telegram: $e');
+                }
+              },
+            ),
+            ListTile(
+              leading: Icon(FontAwesomeIcons.twitter, color: Colors.lightBlueAccent),
+              title: Text('Share with Twitter'),
+              onTap: () async {
+                Navigator.pop(context);
+                try {
+                  await SocialShare.shareTwitter(message);
+                } catch (e) {
+                  print('Error sharing on Twitter: $e');
+                }
+              },
+            ),
+            ListTile(
+              leading: Icon(FontAwesomeIcons.sms, color: Colors.orange),
+              title: Text('Share with SMS'),
+              onTap: () async {
+                Navigator.pop(context);
+                try {
+                  await SocialShare.shareSms(message);
+                } catch (e) {
+                  print('Error sharing via SMS: $e');
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   getPosts() async {
     await FirebaseFirestore.instance.collection('Posts')
@@ -55,8 +122,6 @@ class _FeedsState extends State<Feeds> {
       });
     });
   }
-
-
 
 
   @override
@@ -231,7 +296,10 @@ class _FeedsState extends State<Feeds> {
                       IconButton(
                         icon: Icon(Icons.share),
                         onPressed: () {
-                          // Handle share action
+                          /// Handle share action
+                          sharePost(postsDocs[i]);
+                          //  Navigator.of(context).pop();
+                        // sharePost(post);
                         },
                       ),
                       ],
@@ -253,8 +321,6 @@ class _FeedsState extends State<Feeds> {
 
     }
   }
-
-
 
 
 }

@@ -23,8 +23,6 @@ import 'firebase_options/firebase_options.dart';
 final user = FirebaseAuth.instance.currentUser;
 final userId = user!.uid;
 
-// did it work?
-
 String sUserID = ' ';
 String sUserName = ' ';
 String sUserEmail = ' ';
@@ -47,14 +45,12 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-
         primarySwatch: Colors.blue,
       ),
       // home: Auth(),
@@ -71,7 +67,7 @@ class MyApp extends StatelessWidget {
         'QRScannerPage' :(context) =>  QRScannerPage(),
         'ProfilePage' :(context) =>  ProfilePage(),
         'MyProfile' :(context) =>  MyProfile(Links: {}),
-       'EditUserProfile' :(context) =>  EditUserProfile(),
+        'EditUserProfile' :(context) =>  EditUserProfile(),
       },
 
     );
