@@ -98,7 +98,7 @@ class _MyProfileState extends State<MyProfile> {
   Map<String, FaIcon> l = {
     'linkedin': const FaIcon(FontAwesomeIcons.linkedin),
     'facebook': const FaIcon(FontAwesomeIcons.facebook),
-    'twitter': const FaIcon(FontAwesomeIcons.twitter),
+    'twitter': const FaIcon(FontAwesomeIcons.twitter,color: Colors.white),
     'github': const FaIcon(FontAwesomeIcons.github),
     'instagram': const FaIcon(FontAwesomeIcons.instagram),
   };
@@ -231,6 +231,7 @@ class _MyProfileState extends State<MyProfile> {
                                               _launchUrl(url);
                                             },
                                             icon: Icon(l[keys[index]]!.icon),
+                                              color: Colors.white,
                                           ),
                                         ),
                                       ),

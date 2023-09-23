@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:hilinky_test/components/context.dart';
 import 'package:hilinky_test/screens/create_card/create_card.dart';
 import 'package:hilinky_test/screens/create_post.dart';
+import 'package:hilinky_test/subscription/my_subscription.dart';
 import 'package:line_icons/line_icons.dart';
 
 import '../API/notifications.dart';
 import '../auth.dart';
-
 import 'login_screen.dart';
 import 'myProfile/myProfile.dart';
 import 'my_card/myCard.dart';
@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         // flexibleSpace: ,
-        
+
         elevation: 3,
         leading: const CircleAvatar(
           minRadius: 1,
@@ -81,14 +81,15 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-       //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
               "Start your journey by creating your card",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             ElevatedButton(
               onPressed: () {
                 context.pushPage(CreateCard());
@@ -211,6 +212,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         Links: Links,
                       ),
                     ),
+                  );
+                }),
+            ListTile(
+                leading: const Icon(
+                  Icons.subscriptions_sharp,
+                  color: Colors.amber,
+                ),
+                title: const Text(
+                  'My Subscription',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                        builder: (BuildContext context) => my_subscription()),
                   );
                 }),
             ListTile(
