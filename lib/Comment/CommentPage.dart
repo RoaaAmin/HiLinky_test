@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../reply/replyScreen.dart';
+
+
 class CommentPage extends StatefulWidget {
   final String PostId; // Pass the postId when navigating to this page
 
@@ -16,7 +19,8 @@ class _CommentPageState extends State<CommentPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   CollectionReference get _commentsCollection =>
-      _firestore.collection('Posts').doc(widget.PostId).collection('comments');
+      _firestore.collection('Comments').doc(widget.PostId).collection('comments');
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,20 +44,38 @@ class _CommentPageState extends State<CommentPage> {
                   itemCount: comments.length,
                   itemBuilder: (context, index) {
                     final comment = comments[index];
-                    return ListTile(
-                      title: Text(comment.text),
-                      subtitle: Text(
-                        DateFormat('MMM dd, yyyy - hh:mm a').format(comment.date),
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          deleteComment(comment.id);
-                        },
-                      ),
+                    return Column(
+                      children: [
+                        ListTile(
+                          title: Text(comment.text),
+                          subtitle: Text(
+                            DateFormat('MMM dd, yyyy - hh:mm a').format(comment.date),
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              deleteComment(comment.id);
+                            },
+                          ),
+                        ),
+                        // Add a "Reply" button under each comment
+                        ElevatedButton(
+                          onPressed: () {
+                            // Navigate to the ReplyScreen with the comment.id
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ReplyScreen(
+                                commentId: comment.id,
+                                postId: widget.PostId, // Pass the postId to the ReplyScreen
+                              ),
+                            ));
+                          },
+                          child: Text('Reply'),
+                        ),
+                      ],
                     );
                   },
                 );
+
               },
             ),
           ),
@@ -90,6 +112,7 @@ class _CommentPageState extends State<CommentPage> {
       await _commentsCollection.add({
         'text': newCommentText,
         'date': Timestamp.now(),
+        'replies': [],
       });
       _commentController.clear();
     }
@@ -105,21 +128,28 @@ class Comment {
   final String text;
   final DateTime date;
   final String PostId; // Add postId
+  final List<Reply> replies;
 
   Comment({
     required this.id,
     required this.text,
     required this.date,
     required this.PostId,
+    required this.replies,
+
   });
 
   factory Comment.fromSnapshot(DocumentSnapshot snapshot) {
     final data = snapshot.data() as Map<String, dynamic>;
+    final replyDocs = data['replies'] as List<dynamic>;
+    final List<Reply> replies =
+    replyDocs.map((replyData) => Reply.fromSnapshot(replyData)).toList();
     return Comment(
       id: snapshot.id,
       text: data['text'] ?? '',
       date: (data['date'] as Timestamp).toDate(),
       PostId: data['PostId'] ?? '', // Get postId from Firestore
+      replies: replies,
     );
   }
 }
