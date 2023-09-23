@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal_checkout/flutter_paypal_checkout.dart';
 import 'package:hilinky_test/components/context.dart';
@@ -12,6 +14,8 @@ class plan extends StatefulWidget {
 }
 
 class _planState extends State<plan> {
+  Map<dynamic, dynamic> billing = {};
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,52 +46,37 @@ class _planState extends State<plan> {
                     transactions: const [
                       {
                         "amount": {
-                          "total": '70',
+                          "total": '20',
                           "currency": "USD",
                           "details": {
-                            "subtotal": '70',
+                            "subtotal": '20',
                             "shipping": '0',
                             "shipping_discount": 0
                           }
                         },
                         "description": "The payment transaction description.",
-                        // "payment_options": {
-                        //   "allowed_payment_method":
-                        //       "INSTANT_FUNDING_SOURCE"
-                        // },
                         "item_list": {
                           "items": [
                             {
-                              "name": "Apple",
-                              "quantity": 4,
-                              "price": '5',
+                              "name": "Premium",
+                              "quantity": 1,
+                              "price": '20',
                               "currency": "USD"
                             },
-                            {
-                              "name": "Pineapple",
-                              "quantity": 5,
-                              "price": '10',
-                              "currency": "USD"
-                            }
                           ],
-
-                          // shipping address is not required though
-                          //   "shipping_address": {
-                          //     "recipient_name": "Raman Singh",
-                          //     "line1": "Delhi",
-                          //     "line2": "",
-                          //     "city": "Delhi",
-                          //     "country_code": "IN",
-                          //     "postal_code": "11001",
-                          //     "phone": "+00000000",
-                          //     "state": "Texas"
-                          //  },
                         }
                       }
                     ],
                     note: "Contact us for any questions on your order.",
                     onSuccess: (Map params) async {
                       print("onSuccess: $params");
+                      setState(() {
+                        billing.addAll(params);
+                      });
+                      FirebaseFirestore.instance
+                          .collection('Users')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .update({'premium': true});
                     },
                     onError: (error) {
                       print("onError: $error");
@@ -138,36 +127,56 @@ class _planState extends State<plan> {
               "Billing information",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(
-              height: 100,
-              width: 400,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                elevation: 3,
-                color: Color.fromARGB(255, 255, 255, 255),
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Start date : 15 - 11 -2020",
-                        style: TextStyle(fontSize: 14),
+            billing.isEmpty
+                ? SizedBox(
+                    child: SizedBox(
+                      height: 100,
+                      width: 400,
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        elevation: 3,
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        child: Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Center(
+                            child: Text('no billing'),
+                          ),
+                        ),
                       ),
-                      Text(
-                        "Start date : 15 - 11 -2020",
-                        style: TextStyle(fontSize: 14),
+                    ),
+                  )
+                : SizedBox(
+                    height: 100,
+                    width: 400,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
-                      Text(
-                        "Start date : 15 - 11 -2020",
-                        style: TextStyle(fontSize: 14),
+                      elevation: 3,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Name : ${billing['data']['payer']['payer_info']['first_name']}',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            Text(
+                              "Start date : 15 - 11 -2020",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            Text(
+                              "Amount: ${billing['data']['transactions'][0]['amount']['total'].toString()}",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
             ElevatedButton(
               onPressed: () {
                 context.pushPage(const cancel());
