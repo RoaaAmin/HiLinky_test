@@ -99,18 +99,18 @@ class _FeedsState extends State<Feeds> {
 
   getPosts() async {
     await FirebaseFirestore.instance.collection('Posts')
-       // .where('Status',isNotEqualTo: 'CLOSED')
+    // .where('Status',isNotEqualTo: 'CLOSED')
         .get().then((value) async{
       if (value.docs.isEmpty == false) {
         for(int i=0;i<value.docs.length;i++){
-            if(!mounted)return;
-            setState(() {
-              postsDocs.add(value.docs[i]);
-              postsFetched = true;
-            });
+          if(!mounted)return;
+          setState(() {
+            postsDocs.add(value.docs[i]);
+            postsFetched = true;
+          });
         }
         postsDocs.sort((a, b) => b.data()!['TimeStamp'].compareTo(a.data()!['TimeStamp']));
-    }});
+      }});
   }
 
 
@@ -211,106 +211,106 @@ class _FeedsState extends State<Feeds> {
             shrinkWrap: true,
             itemBuilder: (context, i) {
               return InkWell(
-                onTap: ()async{
-                //  showUserBottomSheet(postsDocs[i]);
-                },
-                child: Card(
-                  color: Colors.white,
-                  elevation: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              height: 110,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF495592),
-                                borderRadius: BorderRadius.circular(12),
-                                image: DecorationImage(image: NetworkImage(postsDocs[i].data()!['ImageURL']), fit: BoxFit.fill),
+                  onTap: ()async{
+                    //  showUserBottomSheet(postsDocs[i]);
+                  },
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 3,
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 110,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF495592),
+                                      borderRadius: BorderRadius.circular(12),
+                                      image: DecorationImage(image: NetworkImage(postsDocs[i].data()!['ImageURL']), fit: BoxFit.fill),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                                  ),
+                                ],
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              Divider(
+                                color: Color(0xFF495592).withOpacity(0.9),
+                              ),
+                              Text(
+                                'Description:',
+                                style: TextStyle(color: Color(0xFF495592), fontWeight: FontWeight.w600, fontSize: 13),
+                              ),
+                              Text(
+                                postsDocs[i].data()!['Description'],
+                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 13),
+                              ),
+                              Divider(
+                                color: Color(0xFF495592).withOpacity(0.9),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Status: ',
+                                        style: TextStyle(color: Color(0xFF495592), fontWeight: FontWeight.bold, fontSize: 12),
+                                      ),
+                                      Text(
+                                        postsDocs[i].data()!['Status'],
+                                        style: TextStyle(color: Colors.red, fontWeight: FontWeight.w800, fontSize: 14),
+                                      ),
+                                      // postsDocs[i].data()!['TimeStamp'],
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => CommentPage(PostId: postsDocs[i].data()!['PostId'],)),
+                                      );
+                                    },
+                                    child: Icon(Icons.comment),
+                                  ),
 
-                            ),
-                          ],
-                        ),
-                        Divider(
-                          color: Color(0xFF495592).withOpacity(0.9),
-                        ),
-                        Text(
-                          'Description:',
-                          style: TextStyle(color: Color(0xFF495592), fontWeight: FontWeight.w600, fontSize: 13),
-                        ),
-                        Text(
-                          postsDocs[i].data()!['Description'],
-                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 13),
-                        ),
-                        Divider(
-                          color: Color(0xFF495592).withOpacity(0.9),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Status: ',
-                                  style: TextStyle(color: Color(0xFF495592), fontWeight: FontWeight.bold, fontSize: 12),
-                                ),
-                                Text(
-                                  postsDocs[i].data()!['Status'],
-                                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.w800, fontSize: 14),
-                                ),
-                               // postsDocs[i].data()!['TimeStamp'],
-                              ],
-                            ),
-                          ],
-                        ),
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => CommentPage(PostId: postsDocs[i].data()!['PostId'],)),
-                          );
-                        },
-                    child: Icon(Icons.comment),
-                        ),
-
-                      IconButton(
-                        icon: Icon(Icons.thumb_up),
-                        onPressed: () {
-                          // Handle like action
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.share),
-                        onPressed: () {
-                          /// Handle share action
-                          sharePost(postsDocs[i]);
-                          //  Navigator.of(context).pop();
-                        // sharePost(post);
-                        },
-                      ),
-                      ],
+                                  IconButton(
+                                    icon: Icon(Icons.thumb_up),
+                                    onPressed: () {
+                                      // Handle like action
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.share),
+                                    onPressed: () {
+                                      /// Handle share action
+                                      sharePost(postsDocs[i]);
+                                      //  Navigator.of(context).pop();
+                                      // sharePost(post);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ])
                     ),
-                  ])
-                ),
-                )
+                  )
               );
             });
       } else {
-       // print('No post');
+        // print('No post');
         return Center(child: CircularProgressIndicator());
 
       }
