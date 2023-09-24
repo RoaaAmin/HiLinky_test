@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../Comment/CommentPage.dart';
 
 class ProfilePage extends StatefulWidget {
-  final String ?postedByUID;
+  final String? postedByUID;
+
   ProfilePage({Key? key, this.postedByUID}) : super(key: key);
 
   @override
@@ -15,21 +19,78 @@ class _ProfilePageState extends State<ProfilePage> {
   List<DocumentSnapshot<Map<String, dynamic>>> postsDocs = [];
   bool postsFetched = false;
   DocumentSnapshot<Map<String, dynamic>>? userData;
-  String ?specifiedUserID;
+  String? specifiedUserID;
+  Map<String, dynamic> Links = {};
+
+  void getLinks() async {
+    await FirebaseFirestore.instance
+        .collection('Cards')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (value) {
+        Links.clear();
+        setState(() {
+          Links = value.data()!['Links'];
+        });
+        Links.removeWhere((key, value) => value == '');
+      },
+    );
+  }
 
   @override
   void initState() {
+    getLinks();
+    getFollowers();
     print('print widget postedByUID 11 : ${widget.postedByUID}'); // empty
     super.initState();
-    if (widget.postedByUID == '' || widget.postedByUID==null) {
+    if (widget.postedByUID == '' || widget.postedByUID == null) {
       specifiedUserID = FirebaseAuth.instance.currentUser!.uid;
-    }else{
-      specifiedUserID=widget.postedByUID;
+    } else {
+      specifiedUserID = widget.postedByUID;
     }
     getUserData();
     getCardInfo();
     getUserInfo();
     print('print widget postedByUID 22 : ${widget.postedByUID}'); // not empty
+  }
+
+  var following = [];
+
+  void getFollowers() async {
+    final id = await FirebaseAuth.instance.currentUser!.uid;
+    var user =
+        await FirebaseFirestore.instance.collection('Users').doc(id).get();
+
+    following = user.data()!['following'];
+  }
+
+  void makeFollow() async {
+    final id = await FirebaseAuth.instance.currentUser!.uid;
+    var user =
+        await FirebaseFirestore.instance.collection('Users').doc(id).get();
+    following = user.data()!['following'];
+    following.add(specifiedUserID);
+
+    var fire = await FirebaseFirestore.instance.collection('Users').doc(id);
+
+    setState(() {
+      fire.update({'following': following});
+    });
+  }
+
+  void unFollow() async {
+    final id = await FirebaseAuth.instance.currentUser!.uid;
+    var user =
+        await FirebaseFirestore.instance.collection('Users').doc(id).get();
+    following = user.data()!['following'];
+    following.remove(specifiedUserID);
+
+    var fire = await FirebaseFirestore.instance.collection('Users').doc(id);
+
+    setState(() {
+      fire.update({'following': following});
+    });
   }
 
   getPosts() async {
@@ -39,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
       await FirebaseFirestore.instance
           .collection('Posts')
-          .where('PostedByUID', isEqualTo: userUID)
+          .where('PostedByUID', isEqualTo: specifiedUserID)
           .get()
           .then((value) async {
         if (value.docs.isNotEmpty) {
@@ -58,7 +119,6 @@ class _ProfilePageState extends State<ProfilePage> {
   var LastName = '';
   var Position = '';
   var CompanyName = '';
-  Map<String, String> Links = {};
   var uniqueUserName = '';
 
   void getCardInfo() async {
@@ -108,14 +168,19 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-
-
-
-
-
+  //icons
+  Map<String, FaIcon> l = {
+    'linkedin': const FaIcon(FontAwesomeIcons.linkedin),
+    'facebook': const FaIcon(FontAwesomeIcons.facebook),
+    'twitter': const FaIcon(FontAwesomeIcons.twitter, color: Colors.white),
+    'github': const FaIcon(FontAwesomeIcons.github),
+    'instagram': const FaIcon(FontAwesomeIcons.instagram),
+  };
 
   @override
   Widget build(BuildContext context) {
+    List<String> keys = Links.keys.toList();
+    List<dynamic> values = Links.values.toList();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -199,13 +264,65 @@ class _ProfilePageState extends State<ProfilePage> {
 // Add social media icons here
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            IconButton(
-                              icon: Icon(Icons.facebook),
-                              onPressed: () {},
+                            SizedBox(
+                              height: 40,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemCount: Links.length,
+                                itemBuilder: (context, index) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          gradient: LinearGradient(
+                                              colors: [
+                                                Colors.orange,
+                                                Colors.deepOrange
+                                              ],
+                                              end: Alignment.topLeft,
+                                              begin: Alignment.bottomRight),
+                                        ),
+                                        width: 35,
+                                        height: 35,
+                                        child: Center(
+                                          child: IconButton(
+                                            isSelected: true,
+                                            iconSize: 20,
+                                            onPressed: () {
+                                              final Uri url =
+                                                  Uri.parse(values[index]);
+                                              _launchUrl(url);
+                                            },
+                                            icon: Icon(l[keys[index]]!.icon),
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 15,
+                                      )
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         ),
+                        following.contains(specifiedUserID)
+                            ? ElevatedButton(
+                                onPressed: unFollow,
+                                child: const Text('you already follow him'))
+                            : ElevatedButton(
+                                onPressed: makeFollow,
+                                child: const Text('follow'),
+                              ),
                       ],
                     ),
                   ),
@@ -295,7 +412,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => CommentPage(PostId: postsDocs[i].data()!['PostId'],)),
+                                      builder: (context) => CommentPage(
+                                            PostId:
+                                                postsDocs[i].data()!['PostId'],
+                                          )),
                                 );
                               },
                               child: Icon(Icons.comment),
@@ -325,12 +445,18 @@ class _ProfilePageState extends State<ProfilePage> {
       } else {
         return Center(
             child:
-            CircularProgressIndicator(backgroundColor: Colors.transparent));
+                CircularProgressIndicator(backgroundColor: Colors.transparent));
       }
     } else {
       return Center(
           child:
-          CircularProgressIndicator(backgroundColor: Colors.transparent));
+              CircularProgressIndicator(backgroundColor: Colors.transparent));
+    }
+  }
+
+  Future<void> _launchUrl(url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
     }
   }
 }

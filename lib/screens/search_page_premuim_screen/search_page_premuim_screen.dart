@@ -33,7 +33,7 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
     });
   }
 
-
+  Map<String, dynamic> Links = {};
 
 
   @override
@@ -211,5 +211,19 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
         child: Text("No results found"),
       );
     }
+  }
+
+  void getLinks() async {
+    await FirebaseFirestore.instance
+        .collection('Cards')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+          (value) {
+        Links.clear();
+        Links = value.data()!['Links'];
+        Links.removeWhere((key, value) => value == '');
+      },
+    );
   }
 }

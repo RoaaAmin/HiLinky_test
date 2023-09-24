@@ -31,8 +31,6 @@ class _FollowedState extends State<Followed> {
 
       following = user.data()!['following'];
 
-      print('hereeeeeeeeeeeeeeeeeeeeeee');
-      print(following.length);
     getUserData();
   }
 
