@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Comment/CommentPage.dart';
+import '../screens/my_card/widget/qr_code.dart';
 import '../screens/profilePage/ProfilePage.dart';
 
 class CardDetails extends StatefulWidget {
@@ -309,6 +310,7 @@ class _CardDetailsState extends State<CardDetails> {
                                 onPressed: makeFollow,
                                 child: const Text('follow'),
                               ),
+
                             ],
                           ),
                         ),
@@ -319,7 +321,7 @@ class _CardDetailsState extends State<CardDetails> {
               ),
             ),
           ),
-
+        QrCode(),
           Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
