@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hilinky_test/screens/profilePage/ProfilePage.dart';
 
+import '../../cardSearchDetails/cardDetails.dart';
 import '../my_card/widget/qr_code.dart';
 
 class SearchPagePremiumScreen extends StatefulWidget {
@@ -117,11 +118,12 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfilePage(postedByUID: cardsDocs[i].data()!['PostedByUID'],
+                  builder: (context) => CardDetails(postedByUID: cardsDocs[i].data()!['PostedByUID'],),
+
+                     // ProfilePage(postedByUID: cardsDocs[i].data()!['PostedByUID'],
                   ),
-                ),
+
               );
-              // ProfilePage(postsDocs[i]);
             },
             child: Card(
               color: Colors.white,

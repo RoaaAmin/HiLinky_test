@@ -52,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
     getUserData();
     getCardInfo();
     getUserInfo();
-    print('print widget postedByUID 22 : ${widget.postedByUID}'); // not empty
+   // print('print widget postedByUID 22 : ${widget.postedByUID}'); // not empty
   }
 
   var following = [];
