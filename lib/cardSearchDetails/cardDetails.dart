@@ -168,76 +168,75 @@ class _CardDetailsState extends State<CardDetails> {
     ),
     body: GestureDetector(
     onTap: () {
-    Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => ProfilePage(postedByUID: widget.postedByUID,),)
-    );
     },
-    child: Card(
-        child: SingleChildScrollView(
-          child: Container(
-            color: Color(0xffF8F8F8),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: <Widget>[
-                Stack(
+    child: Column(
+      children: [
+
+        Card(
+            child: SingleChildScrollView(
+              child: Container(
+                color: Color(0xffF8F8F8),
+                width: MediaQuery.of(context).size.width,
+                child: Column(
                   children: <Widget>[
-                    Container(
-                      height: 300.0,
-                    ),
-                    Container(
-                      height: 150.0,
-                    ),
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      left: 0,
-                      child: Column(
-                        children: <Widget>[
-                          Center(
-                            child: Container(
-                              height: 130.0,
-                              width: 130.0,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
+                    Stack(
+                      children: <Widget>[
+                        Container(
+                          height: 300.0,
+                        ),
+                        Container(
+                          height: 150.0,
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          left: 0,
+                          child: Column(
+                            children: <Widget>[
+                              Center(
+                                child: Container(
+                                  height: 130.0,
+                                  width: 130.0,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
 // image: DecorationImage(
 //   image: NetworkImage(UserProfileImage),
 //   fit: BoxFit.cover,
 //   alignment: Alignment.center,
 // ),
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.blueGrey.withOpacity(0.5),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: Offset(0, 3),
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.blueGrey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: Offset(0, 3),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                '$FirstName ' + '$LastName',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(
-                                '$Position - ' + '$CompanyName',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              SizedBox(
+                                height: 20,
                               ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    '$FirstName ' + '$LastName',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    '$Position - ' + '$CompanyName',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
 // ElevatedButton(
 //   onPressed: () {
 //   },
@@ -246,80 +245,107 @@ class _CardDetailsState extends State<CardDetails> {
 // Follow(
 //   postedByUID: widget.postedByUID,
 // )
-                            ],
-                          ),
+                                ],
+                              ),
 // Add social media icons here
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              SizedBox(
-                                height: 40,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  shrinkWrap: true,
-                                  itemCount: Links.length,
-                                  itemBuilder: (context, index) {
-                                    return Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.rectangle,
-                                            gradient: LinearGradient(
-                                                colors: [
-                                                  Colors.orange,
-                                                  Colors.deepOrange
-                                                ],
-                                                end: Alignment.topLeft,
-                                                begin: Alignment.bottomRight),
-                                          ),
-                                          width: 35,
-                                          height: 35,
-                                          child: Center(
-                                            child: IconButton(
-                                              isSelected: true,
-                                              iconSize: 20,
-                                              onPressed: () {
-                                                final Uri url =
-                                                Uri.parse(values[index]);
-                                                _launchUrl(url);
-                                              },
-                                              icon: Icon(l[keys[index]]!.icon),
-                                              color: Colors.white,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 40,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      shrinkWrap: true,
+                                      itemCount: Links.length,
+                                      itemBuilder: (context, index) {
+                                        return Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.rectangle,
+                                                gradient: LinearGradient(
+                                                    colors: [
+                                                      Colors.orange,
+                                                      Colors.deepOrange
+                                                    ],
+                                                    end: Alignment.topLeft,
+                                                    begin: Alignment.bottomRight),
+                                              ),
+                                              width: 35,
+                                              height: 35,
+                                              child: Center(
+                                                child: IconButton(
+                                                  isSelected: true,
+                                                  iconSize: 20,
+                                                  onPressed: () {
+                                                    final Uri url =
+                                                    Uri.parse(values[index]);
+                                                    _launchUrl(url);
+                                                  },
+                                                  icon: Icon(l[keys[index]]!.icon),
+                                                  color: Colors.white,
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 15,
-                                        )
-                                      ],
-                                    );
-                                  },
-                                ),
+                                            const SizedBox(
+                                              width: 15,
+                                            )
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              following.contains(specifiedUserID)
+                                  ? ElevatedButton(
+                                  onPressed: unFollow,
+                                  child: const Text('you already follow him'))
+                                  : ElevatedButton(
+                                onPressed: makeFollow,
+                                child: const Text('follow'),
                               ),
                             ],
                           ),
-                          following.contains(specifiedUserID)
-                              ? ElevatedButton(
-                              onPressed: unFollow,
-                              child: const Text('you already follow him'))
-                              : ElevatedButton(
-                            onPressed: makeFollow,
-                            child: const Text('follow'),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+
+          Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+          ElevatedButton(
+          onPressed: () {
+          // Add your action for the first button here
+          },
+          child: Text('Save'),
+          ),
+          SizedBox(width: 10), // Add some spacing between the buttons
+          ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage(postedByUID: widget.postedByUID,),)
+            );
+          },
+          child: Text('View Profile'),
+          ),
+          ],
+          ),
+
+          ],
+    ),
+
+
     )
     );
   }
