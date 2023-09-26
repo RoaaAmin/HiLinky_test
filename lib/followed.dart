@@ -336,7 +336,6 @@ class _FollowedState extends State<Followed> {
                                   IconButton(
                                     icon: Icon(Icons.share),
                                     onPressed: () {
-                                      /// Handle share action
                                       sharePost(postsDocs[i]);
                                       //  Navigator.of(context).pop();
                                       // sharePost(post);
