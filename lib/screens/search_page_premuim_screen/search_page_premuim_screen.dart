@@ -125,86 +125,144 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
 
               );
             },
-            child: Card(
-              color: Colors.white,
-              elevation: 3,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          height: 110,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            color: Color(0xFF495592),
-                            borderRadius: BorderRadius.circular(12),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    cardsDocs[i].data()!['LogoURL']),
-                                fit: BoxFit.fill),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                        ),
-                      ],
-                    ),
-                    Divider(
-                      color: Color(0xFF495592).withOpacity(0.9),
-                    ),
-                    Text(
-                      'name:',
-                      style: TextStyle(
-                          color: Color(0xFF495592),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13),
-                    ),
-                    Text(
-                      cardsDocs[i].data()!['FirstName'],
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13),
-                    ),
-                    Divider(
-                      color: Color(0xFF495592).withOpacity(0.9),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              'Position: ',
-                              style: TextStyle(
-                                  color: Color(0xFF495592),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12),
-                            ),
-                            Text(
-                              cardsDocs[i].data()!['Position'],
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 14),
-                            ),
-                            // postsDocs[i].data()!['TimeStamp'],
-                          ],
-                        ),
-                      ],
-                    ),
-                    QrCode(),
-                  ],
-                ),
-              ),
+        child:    Card(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        elevation: 3,
+        color: const Color.fromARGB(255, 255, 255, 255),
+        child: Padding(
+          padding: const EdgeInsets.all(40.0),
+
+        child: Card(
+           shape: const RoundedRectangleBorder(
+             borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          elevation: 3,
+          //color: const Color.fromARGB(255, 255, 255, 255),
+          child: Stack(
+            alignment :Alignment.centerLeft,
+            children: [
+
+           Image(
+            fit: BoxFit.cover,
+              image: AssetImage("assets/images/bigbig.png"),
+             //    height: 190,
+                // width: context.width,
             ),
+                
+                
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+                    
+                      
+                      children: [
+                   
+                
+                        CircleAvatar(
+                    maxRadius: 30,
+                    backgroundImage: NetworkImage(
+                                    cardsDocs[i].data()!['LogoURL']),
+                  ),
+                
+                        const SizedBox(
+            width: 40,
+                        ),
+                      
+                      ],
+                    ),
+          ),
+            ],
+          )
+            
+          
+            
+        ),
+         
+        ),
+      ),
+            // child: Card(
+            //   color: Colors.white,
+            //   elevation: 3,
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(8.0),
+            //     child: Column(
+            //       mainAxisAlignment: MainAxisAlignment.start,
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         Row(
+            //           children: [
+            //             Container(
+            //               height: 110,
+            //               width: 100,
+            //               decoration: BoxDecoration(
+            //                 color: Color(0xFF495592),
+            //                 borderRadius: BorderRadius.circular(12),
+            //                 image: DecorationImage(
+            //                     image: NetworkImage(
+            //                         cardsDocs[i].data()!['LogoURL']),
+            //                     fit: BoxFit.fill),
+            //               ),
+            //             ),
+            //             SizedBox(
+            //               width: 10,
+            //             ),
+            //             Column(
+            //               crossAxisAlignment: CrossAxisAlignment.start,
+            //             ),
+            //           ],
+            //         ),
+            //         Divider(
+            //           color: Color(0xFF495592).withOpacity(0.9),
+            //         ),
+            //         Text(
+            //           'name:',
+            //           style: TextStyle(
+            //               color: Color(0xFF495592),
+            //               fontWeight: FontWeight.w600,
+            //               fontSize: 13),
+            //         ),
+            //         Text(
+            //           cardsDocs[i].data()!['FirstName'],
+            //           style: TextStyle(
+            //               color: Colors.black,
+            //               fontWeight: FontWeight.w500,
+            //               fontSize: 13),
+            //         ),
+            //         Divider(
+            //           color: Color(0xFF495592).withOpacity(0.9),
+            //         ),
+            //         Row(
+            //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //           children: [
+            //             Row(
+            //               children: [
+            //                 Text(
+            //                   'Position: ',
+            //                   style: TextStyle(
+            //                       color: Color(0xFF495592),
+            //                       fontWeight: FontWeight.bold,
+            //                       fontSize: 12),
+            //                 ),
+            //                 Text(
+            //                   cardsDocs[i].data()!['Position'],
+            //                   style: TextStyle(
+            //                       color: Colors.red,
+            //                       fontWeight: FontWeight.w800,
+            //                       fontSize: 14),
+            //                 ),
+            //                 // postsDocs[i].data()!['TimeStamp'],
+            //               ],
+            //             ),
+            //           ],
+            //         ),
+            //         QrCode(),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           );
         },
       );
