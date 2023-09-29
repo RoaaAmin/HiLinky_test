@@ -3,11 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hilinky_test/screens/tabs/followedScreen/followedScreen.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../Comment/CommentPage.dart';
-import '../followed.dart';
-import '../screens/my_card/widget/qr_code.dart';
 import '../screens/profilePage/ProfilePage.dart';
 import 'CardDetailsData.dart';
 
@@ -60,8 +58,23 @@ class _CardDetailsState extends State<CardDetails> {
     });
   }
 
+  String cardId = '';
+
+  void getId() async {
+    FirebaseFirestore.instance
+        .collection('Cards')
+        .doc(widget.postedByUID)
+        .get()
+        .then((value) {
+      setState(() {
+        cardId = value.data()!['cardId'];
+      });
+    });
+  }
+
   @override
   void initState() {
+    getId();
     getLinks();
     getFollowers();
     print('print widget postedByUID 11 : ${widget.postedByUID}'); // empty
@@ -254,7 +267,6 @@ class _CardDetailsState extends State<CardDetails> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-
                                     ],
                                   ),
 // Add social media icons here
@@ -335,7 +347,14 @@ class _CardDetailsState extends State<CardDetails> {
                   ),
                 ),
               ),
-              QrCode(),
+              SizedBox(
+                width: 150,
+                height: 150,
+                child: QrImageView(
+                  data: cardId,
+                  version: QrVersions.auto,
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[

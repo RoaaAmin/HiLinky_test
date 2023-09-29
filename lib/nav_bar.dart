@@ -3,10 +3,10 @@ import 'package:hilinky_test/screens/QRScannerPage.dart';
 import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:hilinky_test/screens/search_page_premuim_screen/search_page_premuim_screen.dart';
 import 'package:hilinky_test/screens/tabs/followedScreen/followedScreen.dart';
+
 import 'NFC/nfc.dart';
 
 class Home extends StatefulWidget {
-
   const Home({super.key});
 
   @override
@@ -17,16 +17,19 @@ class _HomeState extends State<Home> {
   int currentIndex = 0;
 
   List myScreenList = [
-     HomeScreen(),
-     //profiletest(),
-     SearchPagePremiumScreen(),
+    HomeScreen(),
+    //profiletest(),
+    SearchPagePremiumScreen(),
     //Notifications(),
-     QRScannerPage(),
+    QRScannerPage(),
     //Edit(),
-    FollowedScreen(savedCards: [],),
+    FollowedScreen(
+      savedCards: [],
+    ),
     //terms(),
     const nfc()
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

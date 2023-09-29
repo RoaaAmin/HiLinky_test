@@ -1,27 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hilinky_test/screens/profilePage/ProfilePage.dart';
 
 import '../../cardSearchDetails/cardDetails.dart';
-import '../my_card/widget/qr_code.dart';
 
 class SearchPagePremiumScreen extends StatefulWidget {
   SearchPagePremiumScreen({Key? key}) : super(key: key);
 
   @override
-  State<SearchPagePremiumScreen> createState() => _SearchPagePremiumScreenState();
+  State<SearchPagePremiumScreen> createState() =>
+      _SearchPagePremiumScreenState();
 }
 
 class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
   TextEditingController searchController = TextEditingController();
   List<QueryDocumentSnapshot<Map<String, dynamic>>> cardsDocs = [];
-  String? valueChoose ;
+  String? valueChoose;
+
   List<String> dropdownItemList = [
     'City 1',
     'City 2',
     'City 3',
   ];
+
   Future<void> searchFromFirebase(String query) async {
     final result = await FirebaseFirestore.instance
         .collection('Cards')
@@ -35,7 +36,6 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
   }
 
   Map<String, dynamic> Links = {};
-
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,6 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
                   onChanged: (newValue) {
                     setState(() {
                       valueChoose = newValue!; // Update the selected value
-
                     });
                   },
                   items: dropdownItemList.map((item) {
@@ -92,7 +91,6 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
                     );
                   }).toList(),
                 ),
-
                 SizedBox(height: 5),
                 flowList(context),
               ],
@@ -118,71 +116,57 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CardDetails(postedByUID: cardsDocs[i].data()!['PostedByUID'],),
-
-                     // ProfilePage(postedByUID: cardsDocs[i].data()!['PostedByUID'],
+                  builder: (context) => CardDetails(
+                    postedByUID: cardsDocs[i].data()!['PostedByUID'],
                   ),
 
+                  // ProfilePage(postedByUID: cardsDocs[i].data()!['PostedByUID'],
+                ),
               );
             },
-        child:    Card(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        elevation: 3,
-        color: const Color.fromARGB(255, 255, 255, 255),
-        child: Padding(
-          padding: const EdgeInsets.all(40.0),
-
-        child: Card(
-           shape: const RoundedRectangleBorder(
-             borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          elevation: 3,
-          //color: const Color.fromARGB(255, 255, 255, 255),
-          child: Stack(
-            alignment :Alignment.centerLeft,
-            children: [
-
-           Image(
-            fit: BoxFit.cover,
-              image: AssetImage("assets/images/bigbig.png"),
-             //    height: 190,
-                // width: context.width,
-            ),
-                
-                
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-                    
-                      
-                      children: [
-                   
-                
-                        CircleAvatar(
-                    maxRadius: 30,
-                    backgroundImage: NetworkImage(
-                                    cardsDocs[i].data()!['LogoURL']),
-                  ),
-                
-                        const SizedBox(
-            width: 40,
-                        ),
-                      
-                      ],
+            child: Card(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              elevation: 3,
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Card(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
-          ),
-            ],
-          )
-            
-          
-            
-        ),
-         
-        ),
-      ),
+                    elevation: 3,
+                    //color: const Color.fromARGB(255, 255, 255, 255),
+                    child: Stack(
+                      alignment: Alignment.centerLeft,
+                      children: [
+                        Image(
+                          fit: BoxFit.cover,
+                          image: AssetImage("assets/images/bigbig.png"),
+                          //    height: 190,
+                          // width: context.width,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                maxRadius: 30,
+                                backgroundImage: NetworkImage(
+                                    cardsDocs[i].data()!['LogoURL']),
+                              ),
+                              const SizedBox(
+                                width: 40,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+            ),
             // child: Card(
             //   color: Colors.white,
             //   elevation: 3,
@@ -279,7 +263,7 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get()
         .then(
-          (value) {
+      (value) {
         Links.clear();
         Links = value.data()!['Links'];
         Links.removeWhere((key, value) => value == '');
