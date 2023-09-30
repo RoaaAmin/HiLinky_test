@@ -1,362 +1,415 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hilinky_test/screens/create_post.dart';
-import 'package:line_icons/line_icons.dart';
+import 'package:hilinky_test/screens/profilePage/ProfilePage.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import 'package:social_share/social_share.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import '../../../Comment/CommentPage.dart';
+import '../../../cardSearchDetails/cardDetails.dart';
 
 class FollowedScreen extends StatefulWidget {
+  String? postedByUID;
+
   @override
   State<FollowedScreen> createState() => _FollowedScreenState();
 }
 
 class _FollowedScreenState extends State<FollowedScreen> {
-  bool postsFetched = false;
-  late DocumentSnapshot<Map<String, dynamic>> userData;
-  List<DocumentSnapshot<Map<String, dynamic>>> postsDocs = [];
+  List<DocumentSnapshot<Map<String, dynamic>>> cardsDocs = [];
+  bool myCardFetched = false;
 
   var following = [];
 
-  void getFollowers() async {
+  Future getFollowing() async {
+    print('get foloooooowing');
     final id = await FirebaseAuth.instance.currentUser!.uid;
     var user =
         await FirebaseFirestore.instance.collection('Users').doc(id).get();
+    setState(() {
+      following = user.data()!['followedCards'];
+    });
+    print('-----------------------------------------------------------');
 
-    following = user.data()!['followedCards'];
-
-    getUserData();
+    print(following.length);
+    getId();
+    getLinks();
+    getMyCards(following);
   }
 
-  @override
-  void initState() {
-    getFollowers();
-    super.initState();
-  }
+  Map<String, dynamic> Links = {};
 
-  void sharePost(DocumentSnapshot<Map<String, dynamic>> post) {
-    String message = 'Post,\n' +
-        'Photo Link: ${post.data()!['ImageURL']}\n' +
-        'Description: ${post.data()!['Description']}\n' +
-        'This Message is shared from HiLinky App';
-
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: Icon(FontAwesomeIcons.whatsapp, color: Colors.green),
-              title: Text('Share with WhatsApp'),
-              onTap: () async {
-                Navigator.pop(context);
-                try {
-                  await SocialShare.shareWhatsapp(message);
-                } catch (e) {
-                  print('Error sharing on WhatsApp: $e');
-                }
-              },
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.telegram, color: Colors.blue[400]),
-              title: Text('Share with Telegram'),
-              onTap: () async {
-                Navigator.pop(context);
-                try {
-                  await SocialShare.shareTelegram(message);
-                } catch (e) {
-                  print('Error sharing on Telegram: $e');
-                }
-              },
-            ),
-            ListTile(
-              leading:
-                  Icon(FontAwesomeIcons.twitter, color: Colors.lightBlueAccent),
-              title: Text('Share with Twitter'),
-              onTap: () async {
-                Navigator.pop(context);
-                try {
-                  await SocialShare.shareTwitter(message);
-                } catch (e) {
-                  print('Error sharing on Twitter: $e');
-                }
-              },
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.sms, color: Colors.orange),
-              title: Text('Share with SMS'),
-              onTap: () async {
-                Navigator.pop(context);
-                try {
-                  await SocialShare.shareSms(message);
-                } catch (e) {
-                  print('Error sharing via SMS: $e');
-                }
-              },
-            ),
-          ],
-        );
+  void getLinks() async {
+    await FirebaseFirestore.instance
+        .collection('Cards')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (value) {
+        Links.clear();
+        Links = value.data()!['Links'];
+        Links.removeWhere((key, value) => value == '');
       },
     );
   }
 
-  getPosts() async {
-    for (var i = 0; i <= following.length; i++) {
-      print(following.length.toString());
-      await FirebaseFirestore.instance
-          .collection('Posts')
-          .where('PostedByUID', isEqualTo: following[i])
-          .get()
-          .then((value) async {
-        if (value.docs.isEmpty == false) {
-          for (int i = 0; i < value.docs.length; i++) {
-            if (!mounted) return;
+  getMyCards(data) async {
+    print('card is commmmmming');
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      for (var i = 0; i <= following.length; i++) {
+        await FirebaseFirestore.instance
+            .collection('Cards')
+            .where('PostedByUID', isEqualTo: data[i])
+            .get()
+            .then((value) async {
+          if (value.docs.isNotEmpty) {
+            print('theeeeeeeeen');
             setState(() {
-              postsDocs.add(value.docs[i]);
-              postsFetched = true;
+              cardsDocs = cardsDocs + value.docs.toList();
+              myCardFetched = true;
             });
+            cardsDocs.sort((a, b) =>
+                b.data()!['TimeStamp'].compareTo(a.data()!['TimeStamp']));
           }
-          postsDocs.sort((a, b) =>
-              b.data()!['TimeStamp'].compareTo(a.data()!['TimeStamp']));
-        }
+        });
+      }
+    }
+  }
+
+  String cardId = '';
+
+  void getId() async {
+    for (var i = 0; i <= following.length; i++) {
+      await FirebaseFirestore.instance
+          .collection('Cards')
+          .doc(following[i])
+          .get()
+          .then((value) {
+        setState(() {
+          cardId = value.data()!['cardId'];
+          widget.postedByUID = cardId;
+        });
       });
     }
   }
 
-  getUserData() async {
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get()
-        .then((value) {
-      setState(() {
-        userData = value;
-
-        getPosts();
-      });
-    });
+  @override
+  void initState() {
+    getFollowing();
+    super.initState();
   }
+
+  Map<String, FaIcon> l = {
+    'linkedin': const FaIcon(FontAwesomeIcons.linkedin),
+    'facebook': const FaIcon(FontAwesomeIcons.facebook),
+    'twitter': const FaIcon(FontAwesomeIcons.twitter, color: Colors.white),
+    'github': const FaIcon(FontAwesomeIcons.github),
+    'instagram': const FaIcon(FontAwesomeIcons.instagram),
+  };
 
   @override
   Widget build(BuildContext context) {
+    List<String> keys = Links.keys.toList();
+    List<dynamic> values = Links.values.toList();
+
     final deviceWidth = MediaQuery.of(context).size.width;
     return LoaderOverlay(
       useDefaultLoading: false,
       overlayColor: Color(0xff390B33),
       overlayOpacity: 0.80,
       overlayWidget: Center(
-          child: SizedBox(
-              height: 125,
-              child: LoadingIndicator(
-                indicatorType: Indicator.ballPulse,
-                backgroundColor: Colors.transparent,
-              ))),
+        child: SizedBox(
+          height: 125,
+          child: LoadingIndicator(
+            indicatorType: Indicator.ballPulse,
+            backgroundColor: Colors.transparent,
+          ),
+        ),
+      ),
       child: Scaffold(
-        body: following.isEmpty
-            ? Center(
-                child: Text('you haven\'t save any card yet'),
-              )
-            : ListView(
-                shrinkWrap: true,
-                physics: AlwaysScrollableScrollPhysics(
-                    parent: BouncingScrollPhysics()),
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                          icon: Icon(LineIcons.bell, size: 30.0),
-                          onPressed: () {
-                            // Navigator.pushNamed(context, notificationsViewRoute);
-                          }),
-                    ],
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.only(
-                              top: 0.0, left: 30.0, right: 30.0, bottom: 5.0),
+        body: Column(
+          mainAxisAlignment: cardsDocs.isEmpty
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.start,
+          children: [
+            cardsDocs.isEmpty
+                ? Center(child: CircularProgressIndicator())
+                : Expanded(
+                  child: ListView.builder(
+                      padding: EdgeInsets.only(
+                          left: 10.0, right: 10, top: 10, bottom: 75),
+                      itemCount: cardsDocs.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, i) {
+                        return InkWell(
+                          onTap: () async {
+                            print(
+                                'FLOWLIST ID -> ${cardsDocs[i].data()!['PostedByUID']}');
+                            print('FLOWLIST CardID -> ${cardsDocs[i].id}');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CardDetails(
+                                  postedByUID:
+                                      cardsDocs[i].data()!['PostedByUID'],
+                                ),
+
+                                // ProfilePage(postedByUID: cardsDocs[i].data()!['PostedByUID'],
+                              ),
+                            );
+                          },
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(top: 1.0, bottom: 20.0),
-                                child: Text(
-                                  "Posts",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.0,
-                                  ),
+                            children: [
+                              Card(
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                ),
+                                elevation: 3,
+                                color: const Color.fromARGB(255, 255, 255, 255),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(40.0),
+                                      child: Card(
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.all(Radius.circular(10)),
+                                        ),
+                                        elevation: 3,
+                                        //color: const Color.fromARGB(255, 255, 255, 255),
+                                        child: Stack(
+                                          alignment: Alignment.centerLeft,
+                                          children: [
+                                            Image(
+                                              fit: BoxFit.cover,
+                                              image: AssetImage(
+                                                  "assets/images/bigbig.png"),
+                                              //    height: 190,
+                                              // width: context.width,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  CircleAvatar(
+                                                    maxRadius: 30,
+                                                    backgroundImage: NetworkImage(
+                                                        cardsDocs[i]
+                                                            .data()!['ImageURL']),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 40,
+                                                  ),
+                                                  Column(
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Text(cardsDocs[i]
+                                                              .data()!['FirstName']),
+                                                          SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          Text(cardsDocs[i]
+                                                              .data()!['LastName']),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Text(cardsDocs[i]
+                                                              .data()!['Position']),
+                                                          Text('  -  '),
+                                                          Text(cardsDocs[i].data()![
+                                                                  'CompanyName'] ??
+                                                              ''),
+                                                        ],
+                                                      ),
+                                                      SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment.center,
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          SizedBox(
+                                                            height: 40,
+                                                            child: ListView.builder(
+                                                              scrollDirection:
+                                                                  Axis.horizontal,
+                                                              shrinkWrap: true,
+                                                              itemCount: Links.length,
+                                                              itemBuilder:
+                                                                  (context, index) {
+                                                                return Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Container(
+                                                                      decoration:
+                                                                          const BoxDecoration(
+                                                                        shape: BoxShape
+                                                                            .rectangle,
+                                                                        gradient: LinearGradient(
+                                                                            colors: [
+                                                                              Colors
+                                                                                  .orange,
+                                                                              Colors
+                                                                                  .deepOrange
+                                                                            ],
+                                                                            end: Alignment
+                                                                                .topLeft,
+                                                                            begin: Alignment
+                                                                                .bottomRight),
+                                                                      ),
+                                                                      width: 35,
+                                                                      height: 35,
+                                                                      child: Center(
+                                                                        child:
+                                                                            IconButton(
+                                                                          isSelected:
+                                                                              true,
+                                                                          iconSize:
+                                                                              20,
+                                                                          onPressed:
+                                                                              () {
+                                                                            final Uri
+                                                                                url =
+                                                                                Uri.parse(
+                                                                                    values[index]);
+                                                                            _launchUrl(
+                                                                                url);
+                                                                          },
+                                                                          icon: Icon(
+                                                                              l[keys[index]]!
+                                                                                  .icon),
+                                                                          color: Colors
+                                                                              .white,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      width: 15,
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Column(
+                                      children: [
+                                        SizedBox(
+                                          width: 150,
+                                          height: 150,
+                                          child: QrImageView(
+                                            data: cardId,
+                                            version: QrVersions.auto,
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            following.contains(
+                                                cardsDocs[i].data()!['PostedByUID'])
+                                                ? ElevatedButton(
+                                              onPressed: () => unFollow(i),
+                                              child: const Text('already saved'),
+                                            )
+                                                : ElevatedButton(
+                                              onPressed: () => follow(i),
+                                              child: Text('Save'),
+                                            ),
+                                            SizedBox(width: 10),
+                                            // Add some spacing between the buttons
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) => ProfilePage(
+                                                        postedByUID: cardsDocs[i]
+                                                            .data()!['PostedByUID'],
+                                                      ),
+                                                    ));
+                                              },
+                                              child: Text('View Profile'),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Container(
-                                padding:
-                                    EdgeInsets.only(left: 20.0, right: 20.0),
+
+                              SizedBox(
+                                height: 10,
                               ),
+
                             ],
                           ),
-                        )
-                      ],
+                        );
+                      },
                     ),
-                  ),
-                  flowList(context),
-                ],
-              ),
-        floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.amber.shade800,
-            onPressed: () {
-              Navigator.of(context).push(CupertinoPageRoute(
-                  builder: (BuildContext context) => CreatePost()));
-            }
-
-            //  },
-            ),
+                ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget flowList(BuildContext context) {
-    if (postsDocs != null) {
-      if (postsDocs.length != 0) {
-        return ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            padding:
-                EdgeInsets.only(left: 10.0, right: 10, top: 10, bottom: 75),
-            itemCount: postsDocs.length,
-            shrinkWrap: true,
-            itemBuilder: (context, i) {
-              return InkWell(
-                  onTap: () async {
-                    //  showUserBottomSheet(postsDocs[i]);
-                  },
-                  child: Card(
-                    color: Colors.white,
-                    elevation: 3,
-                    child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 110,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF495592),
-                                      borderRadius: BorderRadius.circular(12),
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                              postsDocs[i].data()!['ImageURL']),
-                                          fit: BoxFit.fill),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                  ),
-                                ],
-                              ),
-                              Divider(
-                                color: Color(0xFF495592).withOpacity(0.9),
-                              ),
-                              Text(
-                                'Description:',
-                                style: TextStyle(
-                                    color: Color(0xFF495592),
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13),
-                              ),
-                              Text(
-                                postsDocs[i].data()!['Description'],
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 13),
-                              ),
-                              Divider(
-                                color: Color(0xFF495592).withOpacity(0.9),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Status: ',
-                                        style: TextStyle(
-                                            color: Color(0xFF495592),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12),
-                                      ),
-                                      Text(
-                                        postsDocs[i].data()!['Status'],
-                                        style: TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 14),
-                                      ),
-                                      // postsDocs[i].data()!['TimeStamp'],
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => CommentPage(
-                                                  PostId: postsDocs[i]
-                                                      .data()!['PostId'],
-                                                )),
-                                      );
-                                    },
-                                    child: Icon(Icons.comment),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.thumb_up),
-                                    onPressed: () {
-                                      // Handle like action
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.share),
-                                    onPressed: () {
-                                      sharePost(postsDocs[i]);
-                                      //  Navigator.of(context).pop();
-                                      // sharePost(post);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ])),
-                  ));
-            });
-      } else {
-        // print('No post');
-        return Center(child: CircularProgressIndicator());
-      }
-    } else {
-      //print('Noo post');
-      return Center(child: CircularProgressIndicator());
+  void follow(i) async {
+    following.add(cardsDocs[i].data()!['PostedByUID']);
+    print('add to local');
+    var fire = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    setState(() {
+      fire.update({'followedCards': following});
+    });
+  }
+
+  void unFollow(i) async {
+    following.remove(cardsDocs[i].data()!['PostedByUID']);
+
+    var fire = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+
+    setState(() {
+      fire.update({'followedCards': following});
+    });
+  }
+
+  Future<void> _launchUrl(url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
     }
   }
 }

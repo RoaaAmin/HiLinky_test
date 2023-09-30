@@ -45,6 +45,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
   }
 
   getMyCards(data) async {
+    print('card is commmmmming');
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       await FirebaseFirestore.instance
