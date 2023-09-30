@@ -365,7 +365,7 @@ class _CardDetailsState extends State<CardDetails> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              FollowedScreen(savedCards: savedCards),
+                              FollowedScreen(),
                         ),
                       );
                     },

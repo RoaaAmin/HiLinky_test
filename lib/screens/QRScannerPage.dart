@@ -1,9 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hilinky_test/cardSearchDetails/CardDetailsData.dart';
+import 'package:hilinky_test/screens/profilePage/ProfilePage.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../cardSearchDetails/cardDetails.dart';
 
 class QRScannerPage extends StatefulWidget {
+  String? postedByUID;
+
+  QRScannerPage({super.key, this.postedByUID});
+
   @override
   _QRScannerPageState createState() => _QRScannerPageState();
 }
@@ -13,9 +24,16 @@ class _QRScannerPageState extends State<QRScannerPage> {
   late QRViewController controller;
   late DocumentSnapshot<Map<String, dynamic>> userData;
   List<DocumentSnapshot<Map<String, dynamic>>> cardsDocs = [];
+  List<CardDetailsData> savedCards = [];
   bool myCardFetched = false;
 
   var following = [];
+
+  var FirstName = '';
+  var LastName = '';
+  var Position = '';
+  var CompanyName = '';
+  var uniqueUserName = '';
 
   void getFollowing() async {
     final id = await FirebaseAuth.instance.currentUser!.uid;
@@ -46,6 +64,51 @@ class _QRScannerPageState extends State<QRScannerPage> {
     }
   }
 
+  Map<String, dynamic> Links = {};
+
+  void getLinks() async {
+    await FirebaseFirestore.instance
+        .collection('Cards')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (value) {
+        Links.clear();
+        Links = value.data()!['Links'];
+        Links.removeWhere((key, value) => value == '');
+      },
+    );
+  }
+
+  void saveCard() {
+    CardDetailsData cardData = CardDetailsData(
+      firstName: FirstName,
+      lastName: LastName,
+      position: Position,
+      companyName: CompanyName,
+      links: Links,
+    );
+
+    setState(() {
+      savedCards.add(cardData);
+    });
+  }
+
+  String cardId = '';
+
+  void getId() async {
+    FirebaseFirestore.instance
+        .collection('Cards')
+        .doc(widget.postedByUID)
+        .get()
+        .then((value) {
+      setState(() {
+        cardId = value.data()!['cardId'];
+        widget.postedByUID = cardId;
+      });
+    });
+  }
+
   @override
   void dispose() {
     controller.dispose();
@@ -54,12 +117,24 @@ class _QRScannerPageState extends State<QRScannerPage> {
 
   @override
   void initState() {
+    getLinks();
     getFollowing();
     super.initState();
   }
 
+  Map<String, FaIcon> l = {
+    'linkedin': const FaIcon(FontAwesomeIcons.linkedin),
+    'facebook': const FaIcon(FontAwesomeIcons.facebook),
+    'twitter': const FaIcon(FontAwesomeIcons.twitter, color: Colors.white),
+    'github': const FaIcon(FontAwesomeIcons.github),
+    'instagram': const FaIcon(FontAwesomeIcons.instagram),
+  };
+
   @override
   Widget build(BuildContext context) {
+    List<String> keys = Links.keys.toList();
+    List<dynamic> values = Links.values.toList();
+
     Widget curent = Column(
       children: <Widget>[
         Expanded(
@@ -80,110 +155,214 @@ class _QRScannerPageState extends State<QRScannerPage> {
     if (cardsDocs != null) {
       if (cardsDocs.length != 0) {
         curent = ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            padding:
-                EdgeInsets.only(left: 10.0, right: 10, top: 10, bottom: 75),
-            itemCount: cardsDocs.length,
-            shrinkWrap: true,
-            itemBuilder: (context, i) {
-              return InkWell(
-                onTap: () async {
-                  //  showUserBottomSheet(postsDocs[i]);
-                },
-                child: Card(
-                  color: Colors.white,
-                  elevation: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+          physics: NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.only(left: 10.0, right: 10, top: 10, bottom: 75),
+          itemCount: cardsDocs.length,
+          shrinkWrap: true,
+          itemBuilder: (context, i) {
+            return InkWell(
+              onTap: () async {
+                print('FLOWLIST ID -> ${cardsDocs[i].data()!['PostedByUID']}');
+                print('FLOWLIST CardID -> ${cardsDocs[i].id}');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CardDetails(
+                      postedByUID: cardsDocs[i].data()!['PostedByUID'],
+                    ),
+
+                    // ProfilePage(postedByUID: cardsDocs[i].data()!['PostedByUID'],
+                  ),
+                );
+              },
+              child: Column(
+                children: [
+                  Card(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    elevation: 3,
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                    child: Padding(
+                      padding: const EdgeInsets.all(40.0),
+                      child: Card(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        elevation: 3,
+                        //color: const Color.fromARGB(255, 255, 255, 255),
+                        child: Stack(
+                          alignment: Alignment.centerLeft,
                           children: [
-                            Container(
-                              height: 110,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF495592),
-                                borderRadius: BorderRadius.circular(12),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        cardsDocs[i].data()!['ImageURL']),
-                                    fit: BoxFit.fill),
+                            Image(
+                              fit: BoxFit.cover,
+                              image: AssetImage("assets/images/bigbig.png"),
+                              //    height: 190,
+                              // width: context.width,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  CircleAvatar(
+                                    maxRadius: 30,
+                                    backgroundImage: NetworkImage(
+                                        cardsDocs[i].data()!['LogoURL']),
+                                  ),
+                                  const SizedBox(
+                                    width: 40,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(cardsDocs[i]
+                                              .data()!['FirstName']),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                              cardsDocs[i].data()!['LastName']),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                              cardsDocs[i].data()!['Position']),
+                                          Text('  -  '),
+                                          Text(cardsDocs[i]
+                                                  .data()!['CompanyName'] ??
+                                              ''),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SizedBox(
+                                            height: 40,
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              shrinkWrap: true,
+                                              itemCount: Links.length,
+                                              itemBuilder: (context, index) {
+                                                return Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        shape:
+                                                            BoxShape.rectangle,
+                                                        gradient: LinearGradient(
+                                                            colors: [
+                                                              Colors.orange,
+                                                              Colors.deepOrange
+                                                            ],
+                                                            end: Alignment
+                                                                .topLeft,
+                                                            begin: Alignment
+                                                                .bottomRight),
+                                                      ),
+                                                      width: 35,
+                                                      height: 35,
+                                                      child: Center(
+                                                        child: IconButton(
+                                                          isSelected: true,
+                                                          iconSize: 20,
+                                                          onPressed: () {
+                                                            final Uri url =
+                                                                Uri.parse(
+                                                                    values[
+                                                                        index]);
+                                                            _launchUrl(url);
+                                                          },
+                                                          icon: Icon(
+                                                              l[keys[index]]!
+                                                                  .icon),
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 15,
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                            ),
-                            following.contains(
-                                    cardsDocs[i].data()!['PostedByUID'])
-                                ? ElevatedButton(
-                                    onPressed: () => unFollow(i),
-                                    child: const Text('you already follow him'))
-                                : ElevatedButton(
-                                    onPressed: () => follow(i),
-                                    child: const Text('follow'),
-                                  ),
-                            // ElevatedButton(
-                            //   onPressed: () => follow(i),
-                            //   child: Text('follow'),
-                            // )
                           ],
                         ),
-                        Divider(
-                          color: Color(0xFF495592).withOpacity(0.9),
-                        ),
-                        Text(
-                          'name:',
-                          style: TextStyle(
-                              color: Color(0xFF495592),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13),
-                        ),
-                        Text(
-                          cardsDocs[i].data()!['FirstName'],
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13),
-                        ),
-                        Divider(
-                          color: Color(0xFF495592).withOpacity(0.9),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Position: ',
-                                  style: TextStyle(
-                                      color: Color(0xFF495592),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12),
-                                ),
-                                Text(
-                                  cardsDocs[i].data()!['Position'],
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 14),
-                                ),
-                                // postsDocs[i].data()!['TimeStamp'],
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            });
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: 150,
+                        height: 150,
+                        child: QrImageView(
+                          data: cardId,
+                          version: QrVersions.auto,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          following
+                                  .contains(cardsDocs[i].data()!['PostedByUID'])
+                              ? ElevatedButton(
+                                  onPressed: () => unFollow(i),
+                                  child: const Text('already saved'),
+                                )
+                              : ElevatedButton(
+                                  onPressed: () => follow(i),
+                                  child: Text('Save'),
+                                ),
+                          SizedBox(width: 10),
+                          // Add some spacing between the buttons
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProfilePage(
+                                      postedByUID:
+                                          cardsDocs[i].data()!['PostedByUID'],
+                                    ),
+                                  ));
+                            },
+                            child: Text('View Profile'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
       }
     }
 
@@ -200,7 +379,6 @@ class _QRScannerPageState extends State<QRScannerPage> {
       if (scanData != null && scanData.code != null) {
         /// Handle the scanned data here.
         getMyCards(scanData.code);
-        print('hereeeeeeeee');
         print(scanData.code);
       }
     });
@@ -212,12 +390,9 @@ class _QRScannerPageState extends State<QRScannerPage> {
     var fire = await FirebaseFirestore.instance
         .collection('Users')
         .doc(FirebaseAuth.instance.currentUser!.uid);
-    print('جبت اليوزر');
-
     setState(() {
       fire.update({'followedCards': following});
     });
-    print('doneeeeeeeeeeeeeeeeee');
   }
 
   void unFollow(i) async {
@@ -230,5 +405,11 @@ class _QRScannerPageState extends State<QRScannerPage> {
     setState(() {
       fire.update({'followedCards': following});
     });
+  }
+
+  Future<void> _launchUrl(url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
 }

@@ -109,7 +109,6 @@ class _FollowedState extends State<Followed> {
 
   getPosts() async {
     for (var i = 0; i <= following.length; i++) {
-      print('hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
       print(following.length.toString());
       await FirebaseFirestore.instance
           .collection('Posts')

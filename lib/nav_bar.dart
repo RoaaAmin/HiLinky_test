@@ -24,7 +24,6 @@ class _HomeState extends State<Home> {
     QRScannerPage(),
     //Edit(),
     FollowedScreen(
-      savedCards: [],
     ),
     //terms(),
     const nfc()

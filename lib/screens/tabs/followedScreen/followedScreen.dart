@@ -1,226 +1,362 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:hilinky_test/screens/create_post.dart';
+import 'package:line_icons/line_icons.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:social_share/social_share.dart';
 
-import '../../../cardSearchDetails/CardDetailsData.dart';
+import '../../../Comment/CommentPage.dart';
 
 class FollowedScreen extends StatefulWidget {
-  final List<CardDetailsData> savedCards;
-  final String? postedByUID;
-
-  FollowedScreen({required this.savedCards, this.postedByUID});
-
   @override
   State<FollowedScreen> createState() => _FollowedScreenState();
 }
 
 class _FollowedScreenState extends State<FollowedScreen> {
-  List<QueryDocumentSnapshot<Map<String, dynamic>>> cardsDocs = [];
-  List<DocumentSnapshot<Map<String, dynamic>>> postsDocs = [];
-  List<CardDetailsData> savedCards = [];
   bool postsFetched = false;
-  DocumentSnapshot<Map<String, dynamic>>? userData;
-  String? specifiedUserID;
-  Map<String, dynamic> Links = {};
+  late DocumentSnapshot<Map<String, dynamic>> userData;
+  List<DocumentSnapshot<Map<String, dynamic>>> postsDocs = [];
 
-  void getLinks() async {
-    await FirebaseFirestore.instance
-        .collection('Cards')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get()
-        .then(
-          (value) {
-        Links.clear();
-        setState(() {
-          Links = value.data()!['Links'];
-        });
-        Links.removeWhere((key, value) => value == '');
+  var following = [];
+
+  void getFollowers() async {
+    final id = await FirebaseAuth.instance.currentUser!.uid;
+    var user =
+        await FirebaseFirestore.instance.collection('Users').doc(id).get();
+
+    following = user.data()!['followedCards'];
+
+    getUserData();
+  }
+
+  @override
+  void initState() {
+    getFollowers();
+    super.initState();
+  }
+
+  void sharePost(DocumentSnapshot<Map<String, dynamic>> post) {
+    String message = 'Post,\n' +
+        'Photo Link: ${post.data()!['ImageURL']}\n' +
+        'Description: ${post.data()!['Description']}\n' +
+        'This Message is shared from HiLinky App';
+
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(FontAwesomeIcons.whatsapp, color: Colors.green),
+              title: Text('Share with WhatsApp'),
+              onTap: () async {
+                Navigator.pop(context);
+                try {
+                  await SocialShare.shareWhatsapp(message);
+                } catch (e) {
+                  print('Error sharing on WhatsApp: $e');
+                }
+              },
+            ),
+            ListTile(
+              leading: Icon(FontAwesomeIcons.telegram, color: Colors.blue[400]),
+              title: Text('Share with Telegram'),
+              onTap: () async {
+                Navigator.pop(context);
+                try {
+                  await SocialShare.shareTelegram(message);
+                } catch (e) {
+                  print('Error sharing on Telegram: $e');
+                }
+              },
+            ),
+            ListTile(
+              leading:
+                  Icon(FontAwesomeIcons.twitter, color: Colors.lightBlueAccent),
+              title: Text('Share with Twitter'),
+              onTap: () async {
+                Navigator.pop(context);
+                try {
+                  await SocialShare.shareTwitter(message);
+                } catch (e) {
+                  print('Error sharing on Twitter: $e');
+                }
+              },
+            ),
+            ListTile(
+              leading: Icon(FontAwesomeIcons.sms, color: Colors.orange),
+              title: Text('Share with SMS'),
+              onTap: () async {
+                Navigator.pop(context);
+                try {
+                  await SocialShare.shareSms(message);
+                } catch (e) {
+                  print('Error sharing via SMS: $e');
+                }
+              },
+            ),
+          ],
+        );
       },
     );
   }
-// Function to save the current card
-  void saveCard() {
-    CardDetailsData cardData = CardDetailsData(
-      firstName: FirstName,
-      lastName: LastName,
-      position: Position,
-      companyName: CompanyName,
-      links: Links,
-    );
-    setState(() {
-      savedCards.add(cardData);
-    });
-  }
-  @override
-  void initState() {
-    getLinks();
-    print('print widget postedByUID 11 : ${widget.postedByUID}'); // empty
-    super.initState();
-    if (widget.postedByUID == '' || widget.postedByUID == null) {
-      specifiedUserID = FirebaseAuth.instance.currentUser!.uid;
-    } else {
-      specifiedUserID = widget.postedByUID;
-    }
-    getUserData();
-    getCardInfo();
-    getUserInfo();
-    print('print widget postedByUID 22 : ${widget.postedByUID}'); // not empty
-  }
 
-  var FirstName = '';
-  var LastName = '';
-  var Position = '';
-  var CompanyName = '';
-  var uniqueUserName = '';
-
-  void getCardInfo() async {
-    var user = await FirebaseFirestore.instance
-        .collection('Cards')
-        .doc(specifiedUserID)
-        .get();
-    if (user.exists) {
-      print("Card Data: ${user.data()}");
-      setState(() {
-        FirstName = user.data()!['FirstName'];
-        LastName = user.data()!['LastName'];
-        Position = user.data()!['Position'];
-        CompanyName = user.data()!['CompanyName'];
-        Links = user.data()!['Links'];
+  getPosts() async {
+    for (var i = 0; i <= following.length; i++) {
+      print(following.length.toString());
+      await FirebaseFirestore.instance
+          .collection('Posts')
+          .where('PostedByUID', isEqualTo: following[i])
+          .get()
+          .then((value) async {
+        if (value.docs.isEmpty == false) {
+          for (int i = 0; i < value.docs.length; i++) {
+            if (!mounted) return;
+            setState(() {
+              postsDocs.add(value.docs[i]);
+              postsFetched = true;
+            });
+          }
+          postsDocs.sort((a, b) =>
+              b.data()!['TimeStamp'].compareTo(a.data()!['TimeStamp']));
+        }
       });
-    } else {
-      print("Card data not found");
-    }
-  }
-
-  void getUserInfo() async {
-    var user = await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(specifiedUserID)
-        .get();
-    if (user.exists) {
-      print("User Data: ${user.data()}");
-      setState(() {
-        uniqueUserName = user.data()!['uniqueUserName'];
-      });
-    } else {
-      print("User data not found");
     }
   }
 
   getUserData() async {
     await FirebaseFirestore.instance
         .collection('Users')
-        .doc(specifiedUserID)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .get()
         .then((value) {
       setState(() {
         userData = value;
+
+        getPosts();
       });
     });
   }
 
-  //icons
-  Map<String, FaIcon> l = {
-    'linkedin': const FaIcon(FontAwesomeIcons.linkedin),
-    'facebook': const FaIcon(FontAwesomeIcons.facebook),
-    'twitter': const FaIcon(FontAwesomeIcons.twitter, color: Colors.white),
-    'github': const FaIcon(FontAwesomeIcons.github),
-    'instagram': const FaIcon(FontAwesomeIcons.instagram),
-  };
-
   @override
   Widget build(BuildContext context) {
-    List<String> keys = Links.keys.toList();
-    List<dynamic> values = Links.values.toList();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Followed Cards'),
-      ),
-      body: ListView.builder(
-        itemCount: widget.savedCards.length,
-        itemBuilder: (context, index) {
-          final cardData = widget.savedCards[index];
-          return Card(
-            // Customize card UI here
-            child: Column(
-              children: <Widget>[
-                // Display card details using cardData
-                Text('First Name: ${cardData.firstName}'),
-                Text('Last Name: ${cardData.lastName}'),
-                Text('Position: ${cardData.position}'),
-                Text('Company Name: ${cardData.companyName}'),
-                // Add social media icons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 40,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemCount: Links.length,
-                        itemBuilder: (context, index) {
-                          return Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.center,
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                decoration:
-                                const BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  gradient: LinearGradient(
-                                      colors: [
-                                        Colors.orange,
-                                        Colors.deepOrange
-                                      ],
-                                      end: Alignment.topLeft,
-                                      begin: Alignment
-                                          .bottomRight),
-                                ),
-                                width: 35,
-                                height: 35,
-                                child: Center(
-                                  child: IconButton(
-                                    isSelected: true,
-                                    iconSize: 20,
-                                    onPressed: () {
-                                      final Uri url =
-                                      Uri.parse(
-                                          values[index]);
-                                      _launchUrl(url);
-                                    },
-                                    icon: Icon(
-                                        l[keys[index]]!.icon),
-                                    color: Colors.white,
+    final deviceWidth = MediaQuery.of(context).size.width;
+    return LoaderOverlay(
+      useDefaultLoading: false,
+      overlayColor: Color(0xff390B33),
+      overlayOpacity: 0.80,
+      overlayWidget: Center(
+          child: SizedBox(
+              height: 125,
+              child: LoadingIndicator(
+                indicatorType: Indicator.ballPulse,
+                backgroundColor: Colors.transparent,
+              ))),
+      child: Scaffold(
+        body: following.isEmpty
+            ? Center(
+                child: Text('you haven\'t save any card yet'),
+              )
+            : ListView(
+                shrinkWrap: true,
+                physics: AlwaysScrollableScrollPhysics(
+                    parent: BouncingScrollPhysics()),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                          icon: Icon(LineIcons.bell, size: 30.0),
+                          onPressed: () {
+                            // Navigator.pushNamed(context, notificationsViewRoute);
+                          }),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(
+                              top: 0.0, left: 30.0, right: 30.0, bottom: 5.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(top: 1.0, bottom: 20.0),
+                                child: Text(
+                                  "Posts",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0,
                                   ),
                                 ),
                               ),
-                              const SizedBox(
-                                width: 15,
-                              )
+                              Container(
+                                padding:
+                                    EdgeInsets.only(left: 20.0, right: 20.0),
+                              ),
                             ],
-                          );
-                        },
-                      ),
+                          ),
+                        )
+                      ],
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  flowList(context),
+                ],
+              ),
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.amber.shade800,
+            onPressed: () {
+              Navigator.of(context).push(CupertinoPageRoute(
+                  builder: (BuildContext context) => CreatePost()));
+            }
+
+            //  },
             ),
-          );
-        },
       ),
     );
   }
 
-}
-Future<void> _launchUrl(url) async {
-  if (!await launchUrl(url)) {
-    throw Exception('Could not launch $url');
+  Widget flowList(BuildContext context) {
+    if (postsDocs != null) {
+      if (postsDocs.length != 0) {
+        return ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            padding:
+                EdgeInsets.only(left: 10.0, right: 10, top: 10, bottom: 75),
+            itemCount: postsDocs.length,
+            shrinkWrap: true,
+            itemBuilder: (context, i) {
+              return InkWell(
+                  onTap: () async {
+                    //  showUserBottomSheet(postsDocs[i]);
+                  },
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 3,
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 110,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF495592),
+                                      borderRadius: BorderRadius.circular(12),
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                              postsDocs[i].data()!['ImageURL']),
+                                          fit: BoxFit.fill),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                color: Color(0xFF495592).withOpacity(0.9),
+                              ),
+                              Text(
+                                'Description:',
+                                style: TextStyle(
+                                    color: Color(0xFF495592),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13),
+                              ),
+                              Text(
+                                postsDocs[i].data()!['Description'],
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13),
+                              ),
+                              Divider(
+                                color: Color(0xFF495592).withOpacity(0.9),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Status: ',
+                                        style: TextStyle(
+                                            color: Color(0xFF495592),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12),
+                                      ),
+                                      Text(
+                                        postsDocs[i].data()!['Status'],
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 14),
+                                      ),
+                                      // postsDocs[i].data()!['TimeStamp'],
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CommentPage(
+                                                  PostId: postsDocs[i]
+                                                      .data()!['PostId'],
+                                                )),
+                                      );
+                                    },
+                                    child: Icon(Icons.comment),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.thumb_up),
+                                    onPressed: () {
+                                      // Handle like action
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.share),
+                                    onPressed: () {
+                                      sharePost(postsDocs[i]);
+                                      //  Navigator.of(context).pop();
+                                      // sharePost(post);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ])),
+                  ));
+            });
+      } else {
+        // print('No post');
+        return Center(child: CircularProgressIndicator());
+      }
+    } else {
+      //print('Noo post');
+      return Center(child: CircularProgressIndicator());
+    }
   }
 }
