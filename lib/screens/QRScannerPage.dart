@@ -81,20 +81,6 @@ class _QRScannerPageState extends State<QRScannerPage> {
     );
   }
 
-  void saveCard() {
-    CardDetailsData cardData = CardDetailsData(
-      firstName: FirstName,
-      lastName: LastName,
-      position: Position,
-      companyName: CompanyName,
-      links: Links,
-    );
-
-    setState(() {
-      savedCards.add(cardData);
-    });
-  }
-
   String cardId = '';
 
   void getId() async {
@@ -333,11 +319,11 @@ class _QRScannerPageState extends State<QRScannerPage> {
                           following
                                   .contains(cardsDocs[i].data()!['PostedByUID'])
                               ? ElevatedButton(
-                                  onPressed: () => unFollow(i),
+                                  onPressed: () => unSave(i),
                                   child: const Text('already saved'),
                                 )
                               : ElevatedButton(
-                                  onPressed: () => follow(i),
+                                  onPressed: () => save(i),
                                   child: Text('Save'),
                                 ),
                           SizedBox(width: 10),
@@ -385,7 +371,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
     });
   }
 
-  void follow(i) async {
+  void save(i) async {
     following.add(cardsDocs[i].data()!['PostedByUID']);
     print('add to local');
     var fire = await FirebaseFirestore.instance
@@ -396,7 +382,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
     });
   }
 
-  void unFollow(i) async {
+  void unSave(i) async {
     following.remove(cardsDocs[i].data()!['PostedByUID']);
 
     var fire = await FirebaseFirestore.instance

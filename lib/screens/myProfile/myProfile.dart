@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hilinky_test/screens/EditProfile/EditUserProfile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyProfile extends StatefulWidget {
@@ -179,11 +181,10 @@ class _MyProfileState extends State<MyProfile> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                print(widget.Links);
-                                // Navigator.of(context).pushReplacement(
-                                //     CupertinoPageRoute(
-                                //         builder: (BuildContext context) =>
-                                //             EditUserProfile()));
+                                Navigator.of(context).pushReplacement(
+                                    CupertinoPageRoute(
+                                        builder: (BuildContext context) =>
+                                            EditUserProfile()));
                               },
                               child: const Text('Edit my profile'),
                             ),
