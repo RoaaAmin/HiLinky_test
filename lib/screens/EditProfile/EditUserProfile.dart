@@ -50,7 +50,7 @@ class _UpdateUserProfileState extends State<EditUserProfile> {
     setState(() {
       isLoading = true;
     });
-    DocumentSnapshot doc = await FirebaseFirestore.instance.collection("Users").doc(userID).get();
+    DocumentSnapshot doc = await FirebaseFirestore.instance.collection("Users").doc(fbAuth.FirebaseAuth.instance.currentUser!.uid).get();
     user = User.fromDocument(doc);
     _name.text = user!.username;
     //_email.text = user.email;
