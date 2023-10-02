@@ -39,9 +39,10 @@ class _CardDetailsState extends State<CardDetails> {
   }
 
   getMyCards() async {
+    getLinks();
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      for(var i =0; i<following.length; i++){
+      for (var i = 0; i < following.length; i++) {
         await FirebaseFirestore.instance
             .collection('Cards')
             .where('PostedByUID', isEqualTo: following[i])
@@ -57,19 +58,19 @@ class _CardDetailsState extends State<CardDetails> {
           }
         });
       }
-      }
-
+    }
   }
 
   Map<String, dynamic> Links = {};
 
   void getLinks() async {
+    print('get linksssssssssssssssssssssssssssss');
     await FirebaseFirestore.instance
         .collection('Cards')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .doc(specifiedUserID)
         .get()
         .then(
-      (value) {
+          (value) {
         Links.clear();
         setState(() {
           Links = value.data()!['Links'];
@@ -112,7 +113,6 @@ class _CardDetailsState extends State<CardDetails> {
   void initState() {
     getFollowing();
     getId();
-    getLinks();
     print('print widget postedByUID 11 : ${widget.postedByUID}'); // empty
     super.initState();
     if (widget.postedByUID == '' || widget.postedByUID == null) {
@@ -132,7 +132,7 @@ class _CardDetailsState extends State<CardDetails> {
   void makeFollow() async {
     final id = await FirebaseAuth.instance.currentUser!.uid;
     var user =
-        await FirebaseFirestore.instance.collection('Users').doc(id).get();
+    await FirebaseFirestore.instance.collection('Users').doc(id).get();
     followList = user.data()!['following'];
     followList.add(specifiedUserID);
 
@@ -146,7 +146,7 @@ class _CardDetailsState extends State<CardDetails> {
   void unFollow() async {
     final id = await FirebaseAuth.instance.currentUser!.uid;
     var user =
-        await FirebaseFirestore.instance.collection('Users').doc(id).get();
+    await FirebaseFirestore.instance.collection('Users').doc(id).get();
     followList = user.data()!['following'];
     followList.remove(specifiedUserID);
 
@@ -175,7 +175,6 @@ class _CardDetailsState extends State<CardDetails> {
         LastName = user.data()!['LastName'];
         Position = user.data()!['Position'];
         CompanyName = user.data()!['CompanyName'];
-        Links = user.data()!['Links'];
       });
     } else {
       print("Card data not found");
@@ -232,7 +231,10 @@ class _CardDetailsState extends State<CardDetails> {
               child: SingleChildScrollView(
                 child: Container(
                   color: Color(0xffF8F8F8),
-                  width: MediaQuery.of(context).size.width,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
                   child: Column(
                     children: <Widget>[
                       Stack(
@@ -310,13 +312,13 @@ class _CardDetailsState extends State<CardDetails> {
                                         itemBuilder: (context, index) {
                                           return Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               Container(
                                                 decoration:
-                                                    const BoxDecoration(
+                                                const BoxDecoration(
                                                   shape: BoxShape.rectangle,
                                                   gradient: LinearGradient(
                                                       colors: [
@@ -335,8 +337,8 @@ class _CardDetailsState extends State<CardDetails> {
                                                     iconSize: 20,
                                                     onPressed: () {
                                                       final Uri url =
-                                                          Uri.parse(
-                                                              values[index]);
+                                                      Uri.parse(
+                                                          values[index]);
                                                       _launchUrl(url);
                                                     },
                                                     icon: Icon(
@@ -357,13 +359,13 @@ class _CardDetailsState extends State<CardDetails> {
                                 ),
                                 followList.contains(specifiedUserID)
                                     ? ElevatedButton(
-                                        onPressed: unFollow,
-                                        child: const Text(
-                                            'you already follow him'))
+                                    onPressed: unFollow,
+                                    child: const Text(
+                                        'you already follow him'))
                                     : ElevatedButton(
-                                        onPressed: makeFollow,
-                                        child: const Text('follow'),
-                                      ),
+                                  onPressed: makeFollow,
+                                  child: const Text('follow'),
+                                ),
                                 SizedBox(
                                   width: 150,
                                   height: 150,
@@ -394,9 +396,9 @@ class _CardDetailsState extends State<CardDetails> {
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   ProfilePage(
-                                                postedByUID:
+                                                    postedByUID:
                                                     widget.postedByUID,
-                                              ),
+                                                  ),
                                             ));
                                       },
                                       child: Text('View Profile'),
