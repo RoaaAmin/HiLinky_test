@@ -32,16 +32,15 @@ class _FollowedScreenState extends State<FollowedScreen> {
       following = user.data()!['followedCards'];
     });
     print('-----------------------------------------------------------');
-
     print(following.length);
     getId();
-    getLinks();
-    getMyCards(following);
+    await getLinks();
+    await getMyCards(following);
   }
 
   Map<String, dynamic> Links = {};
 
-  void getLinks() async {
+  getLinks() async {
     await FirebaseFirestore.instance
         .collection('Cards')
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -59,41 +58,48 @@ class _FollowedScreenState extends State<FollowedScreen> {
     print('card is commmmmming');
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      for (var i = 0; i <= following.length; i++) {
-        await FirebaseFirestore.instance
-            .collection('Cards')
-            .where('PostedByUID', isEqualTo: data[i])
-            .get()
-            .then((value) async {
-          if (value.docs.isNotEmpty) {
-            print('theeeeeeeeen');
-            setState(() {
-              cardsDocs = cardsDocs + value.docs.toList();
-              myCardFetched = true;
-            });
-            cardsDocs.sort((a, b) =>
-                b.data()!['TimeStamp'].compareTo(a.data()!['TimeStamp']));
-          }
-        });
+      if(following.isNotEmpty){
+        for (var i = 0; i < following.length; i++) {
+
+          await FirebaseFirestore.instance
+              .collection('Cards')
+              .where('PostedByUID', isEqualTo: data[i])
+              .get()
+              .then((value) async {
+            if (value.docs.isNotEmpty) {
+              print('theeeeeeeeen');
+              setState(() {
+                cardsDocs = cardsDocs + value.docs.toList();
+                myCardFetched = true;
+              });
+              cardsDocs.sort((a, b) =>
+                  b.data()!['TimeStamp'].compareTo(a.data()!['TimeStamp']));
+            }
+          });
+        }
       }
+
     }
   }
 
   String cardId = '';
 
   void getId() async {
-    for (var i = 0; i <= following.length; i++) {
-      await FirebaseFirestore.instance
-          .collection('Cards')
-          .doc(following[i])
-          .get()
-          .then((value) {
-        setState(() {
-          cardId = value.data()!['cardId'];
-          widget.postedByUID = cardId;
+    if(following.isNotEmpty){
+      for (var i = 0; i < following.length; i++) {
+        await FirebaseFirestore.instance
+            .collection('Cards')
+            .doc(following[i])
+            .get()
+            .then((value) {
+          setState(() {
+            cardId = value.data()!['cardId'];
+            widget.postedByUID = cardId;
+          });
         });
-      });
+      }
     }
+
   }
 
   @override
@@ -136,7 +142,7 @@ class _FollowedScreenState extends State<FollowedScreen> {
               : MainAxisAlignment.start,
           children: [
             cardsDocs.isEmpty
-                ? Center(child: CircularProgressIndicator())
+                ? Center(child: Text('you haven\'t save any card'))
                 : Expanded(
                   child: ListView.builder(
                       padding: EdgeInsets.only(
@@ -390,8 +396,10 @@ class _FollowedScreenState extends State<FollowedScreen> {
     var fire = await FirebaseFirestore.instance
         .collection('Users')
         .doc(FirebaseAuth.instance.currentUser!.uid);
+
     setState(() {
       fire.update({'followedCards': following});
+
     });
   }
 
@@ -404,6 +412,7 @@ class _FollowedScreenState extends State<FollowedScreen> {
 
     setState(() {
       fire.update({'followedCards': following});
+      
     });
   }
 
