@@ -5,6 +5,7 @@ import 'package:hilinky_test/screens/search_page_premuim_screen/search_page_prem
 import 'package:hilinky_test/screens/tabs/followedScreen/followedScreen.dart';
 
 import 'NFC/nfc.dart';
+import 'Profile/profile.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,8 +18,8 @@ class _HomeState extends State<Home> {
   int currentIndex = 0;
 
   List myScreenList = [
-    HomeScreen(),
-    //profiletest(),
+    //HomeScreen(),
+    profiletest(),
     SearchPagePremiumScreen(),
     //Notifications(),
     QRScannerPage(),
