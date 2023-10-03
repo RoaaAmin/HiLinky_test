@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hilinky_test/components/context.dart';
 import 'package:intl/intl.dart';
@@ -219,8 +220,10 @@ class _CommentPageState extends State<CommentPage> {
     if (newCommentText.isNotEmpty) {
       await _commentsCollection.add({
         'text': newCommentText,
+        "PostedByUID": FirebaseAuth.instance.currentUser!.uid,
         'date': Timestamp.now(),
         'replies': [],
+
       });
       _commentController.clear();
     }

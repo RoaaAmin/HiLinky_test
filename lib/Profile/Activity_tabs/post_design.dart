@@ -36,8 +36,6 @@ class _post_designState extends State<post_design> {
   getPosts() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final userUID = user.uid;
-
       await FirebaseFirestore.instance
           .collection('Posts')
          .where('PostedByUID', isEqualTo: specifiedUserID)
@@ -114,16 +112,16 @@ class _post_designState extends State<post_design> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ListTile(
-                      trailing: CircleAvatar(
+                      leading: CircleAvatar(
                         backgroundImage: AssetImage(widget.profileImage),
                       ),
                       title: Text(
                         '$sUserName',
-                        textAlign: TextAlign.end,
+                        textAlign: TextAlign.start,
                       ),
                       subtitle: Text(
                         '@$uniqueUserName',
-                        textAlign: TextAlign.end,
+                        textAlign: TextAlign.start,
                       ),
                     ),
                     Text(
@@ -181,12 +179,12 @@ class _post_designState extends State<post_design> {
         );
       } else {
         return Center(
-          child: CircularProgressIndicator(backgroundColor: Colors.transparent),
+       //   child: CircularProgressIndicator(backgroundColor: Colors.transparent),
         );
       }
     } else {
       return Center(
-        child: CircularProgressIndicator(backgroundColor: Colors.transparent),
+      //  child: CircularProgressIndicator(backgroundColor: Colors.transparent),
       );
     }
   }
