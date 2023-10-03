@@ -414,7 +414,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   MaterialPageRoute(
                                       builder: (context) => CommentPage(
                                             PostId:
-                                                postsDocs[i].data()!['PostId'],
+                                            postsDocs[i].data()!['PostId'],
                                           )),
                                 );
                               },
