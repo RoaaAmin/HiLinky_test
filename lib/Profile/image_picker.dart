@@ -11,6 +11,7 @@ class imagePicker extends GetxController {
 
     if (image != null) {
       imagePath.value = image.path.toString();
+      return image;
     }
   }
 }
