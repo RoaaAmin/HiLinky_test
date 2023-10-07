@@ -16,19 +16,35 @@ class _SocialMediaState extends State<SocialMedia> {
   //links save
   Map<String, String> links = {
     'facebook': '',
-    'linkedin': '',
     'twitter': '',
-    'github': '',
+    'linkedin': '',
+    'youtube': '',
     'instagram': '',
+    'telegram': '',
+    'whatsapp': '',
+    'github': '',
+    'discord': '',
+    'figma': '',
+    'dribbble': '',
+    'behance': '',
+    'location': '',
   };
 
   // icons
   List<Widget> socialMediaIcons = [
     const FaIcon(FontAwesomeIcons.facebook),
-    const FaIcon(FontAwesomeIcons.linkedin),
     const FaIcon(FontAwesomeIcons.twitter),
-    const FaIcon(FontAwesomeIcons.github),
+    const FaIcon(FontAwesomeIcons.linkedin),
+    const FaIcon(FontAwesomeIcons.youtube),
     const FaIcon(FontAwesomeIcons.instagram),
+    const FaIcon(FontAwesomeIcons.telegram),
+    const FaIcon(FontAwesomeIcons.whatsapp),
+    const FaIcon(FontAwesomeIcons.github),
+    const FaIcon(FontAwesomeIcons.discord),
+    const FaIcon(FontAwesomeIcons.figma),
+    const FaIcon(FontAwesomeIcons.dribbble),
+    const FaIcon(FontAwesomeIcons.behance),
+    const FaIcon(FontAwesomeIcons.location),
   ];
 
   var entredLink = TextEditingController();
@@ -53,26 +69,74 @@ class _SocialMediaState extends State<SocialMedia> {
       itemCount: socialMediaIcons.length,
       itemBuilder: (context, index) {
         var name;
+
+        ///  'facebook': '',0
+        //     'twitter': '',1
+        //     'linkedin': '',2
+        //     'youtube': '',3
+        //     'instagram': '',4
+        //     'telegram': '',5
+        //     'whatsapp': '',6
+        //     'github': '',7
+        //     'discord': '',8
+        //     'figma': '',9
+        //     'dribbble': '',10
+        //     'behance': '',11
+        //     'location': '',12
+
         if (index == 0) {
           name = 'facebook';
         }
         ;
         if (index == 1) {
-          name = 'linkedin';
-        }
-        ;
-        if (index == 2) {
           name = 'twitter';
         }
         ;
+        if (index == 2) {
+          name = 'linkedin';
+        }
+        ;
         if (index == 3) {
-          name = 'github';
+          name = 'youtube';
         }
         ;
         if (index == 4) {
           name = 'instagram';
         }
         ;
+        if (index == 5) {
+          name = 'telegram';
+        }
+        ;
+        if (index == 6) {
+          name = 'whatsapp';
+        }
+        ;
+        if (index == 7) {
+          name = 'github';
+        }
+        ;
+        if (index == 8) {
+          name = 'discord';
+        }
+        ;
+        if (index == 9) {
+          name = 'figma';
+        }
+        ;
+        if (index == 10) {
+          name = 'dribbble';
+        }
+        ;
+        if (index == 11) {
+          name = 'behance';
+        }
+        ;
+        if (index == 12) {
+          name = 'location';
+        }
+        ;
+
         return IconButton(
           onPressed: () {
             showModalBottomSheet(
@@ -90,9 +154,7 @@ class _SocialMediaState extends State<SocialMedia> {
   }
 
   Widget bottomSheetLinks(index, name) {
-    return Padding(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+    return SingleChildScrollView(
       child: Container(
         height: 150.0,
         width: MediaQuery.of(context).size.width,
@@ -106,6 +168,7 @@ class _SocialMediaState extends State<SocialMedia> {
               decoration: const InputDecoration(
                 labelText: "Enter a link",
               ),
+              maxLines: 1 ,
               controller: entredLink,
             ),
             const SizedBox(

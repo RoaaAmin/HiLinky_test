@@ -109,11 +109,19 @@ class _FollowedScreenState extends State<FollowedScreen> {
   }
 
   Map<String, FaIcon> l = {
-    'linkedin': const FaIcon(FontAwesomeIcons.linkedin),
     'facebook': const FaIcon(FontAwesomeIcons.facebook),
-    'twitter': const FaIcon(FontAwesomeIcons.twitter, color: Colors.white),
-    'github': const FaIcon(FontAwesomeIcons.github),
+    'twitter': const FaIcon(FontAwesomeIcons.twitter),
+    'linkedin': const FaIcon(FontAwesomeIcons.linkedin),
+    'youtube': const FaIcon(FontAwesomeIcons.youtube),
     'instagram': const FaIcon(FontAwesomeIcons.instagram),
+    'telegram': const FaIcon(FontAwesomeIcons.telegram),
+    'whatsapp': const FaIcon(FontAwesomeIcons.whatsapp),
+    'github': const FaIcon(FontAwesomeIcons.github),
+    'discord': const FaIcon(FontAwesomeIcons.discord),
+    'figma': const FaIcon(FontAwesomeIcons.figma),
+    'dribbble': const FaIcon(FontAwesomeIcons.dribbble),
+    'behance': const FaIcon(FontAwesomeIcons.behance),
+    'location': const FaIcon(FontAwesomeIcons.location),
   };
 
   @override

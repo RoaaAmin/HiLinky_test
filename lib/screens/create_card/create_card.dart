@@ -613,27 +613,6 @@ class _CreateCardState extends State<CreateCard> {
                         top: 16,
                         // right: 74,
                       ),
-                      child: Row(
-                        children: [
-                          CustomIconButton(
-                            height: getSize(50),
-                            width: getSize(50),
-                            margin: getMargin(
-                              left: 24,
-                            ),
-                            padding: getPadding(
-                              all: 13,
-                            ),
-                            child: CustomImageView(
-                              svgPath: ImageConstant.imgTablerplus,
-                              onTap: () {
-                                print('tst');
-                                print(links);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
                     SizedBox(height: 10),
                     Visibility(
