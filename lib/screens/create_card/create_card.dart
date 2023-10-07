@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hilinky_test/components/context.dart';
 import 'package:hilinky_test/screens/create_card/widgets/socialMedia.dart';
-import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:loader_overlay/loader_overlay.dart';
@@ -16,11 +15,8 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:random_string/random_string.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../core/utils/image_constant.dart';
 import '../../core/utils/size_utils.dart';
 import '../../models/SnackBar.dart';
-import '../../widgets/custom_icon_button.dart';
-import '../../widgets/custom_image_view.dart';
 import '../my_card/myCard.dart';
 
 ////////////////////////////////
@@ -692,8 +688,8 @@ class _CreateCardState extends State<CreateCard> {
                             child: selectedLogo != null
                                 ? Container(
                                     //margin: EdgeInsets.symmetric(horizontal: 0),
-                                    height: 170,
-                                    width: 170,
+                                    height: 150,
+                                    width: 150,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(6),
                                       child: Image.file(
@@ -753,8 +749,8 @@ class _CreateCardState extends State<CreateCard> {
                             child: selectedPortfolio != null
                                 ? Container(
                                     margin: EdgeInsets.symmetric(horizontal: 6),
-                                    height: 170,
-                                    width: 170,
+                                    height: 150,
+                                    width: 150,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(6),
                                       child: Image.file(
