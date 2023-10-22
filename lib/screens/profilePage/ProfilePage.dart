@@ -22,6 +22,8 @@ class _ProfilePageState extends State<ProfilePage> {
   String? specifiedUserID;
   Map<String, dynamic> Links = {};
 
+  var UserProfileImage;
+
   void getLinks() async {
     await FirebaseFirestore.instance
         .collection('Cards')
@@ -29,6 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
         .get()
         .then(
       (value) {
+        UserProfileImage = value.data()!['UserProfileImage'];
         Links.clear();
         setState(() {
           Links = value.data()!['Links'];
@@ -52,7 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
     getUserData();
     getCardInfo();
     getUserInfo();
-   // print('print widget postedByUID 22 : ${widget.postedByUID}'); // not empty
+    // print('print widget postedByUID 22 : ${widget.postedByUID}'); // not empty
   }
 
   var following = [];
@@ -219,13 +222,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: Colors.white,
-
-                              ///
-// image: DecorationImage(
-//   image: NetworkImage(UserProfileImage),
-//   fit: BoxFit.cover,
-//   alignment: Alignment.center,
-// ),
+                              image: DecorationImage(
+                                image: NetworkImage(UserProfileImage),
+                                fit: BoxFit.cover,
+                                alignment: Alignment.center,
+                              ),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
@@ -275,7 +276,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: <Widget>[
                             SizedBox(
                               height: 40,
-                              width: MediaQuery.of(context).size.width *0.5,
+                              width: MediaQuery.of(context).size.width * 0.5,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 shrinkWrap: true,
@@ -422,7 +423,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   MaterialPageRoute(
                                       builder: (context) => CommentPage(
                                             PostId:
-                                            postsDocs[i].data()!['PostId'],
+                                                postsDocs[i].data()!['PostId'],
                                           )),
                                 );
                               },

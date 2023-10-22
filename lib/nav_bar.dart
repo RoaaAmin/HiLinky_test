@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
 
   List myScreenList = [
     //HomeScreen(),
-    profiletest(),
+    HomeScreen(),
     SearchPagePremiumScreen(),
     //Notifications(),
     QRScannerPage(),

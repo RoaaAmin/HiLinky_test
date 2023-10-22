@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hilinky_test/Profile/profile.dart';
 import 'package:hilinky_test/screens/EditProfile/EditUserProfile.dart';
 import 'package:hilinky_test/screens/QRScannerPage.dart';
 import 'package:hilinky_test/screens/create_card/create_card.dart';
@@ -66,7 +67,7 @@ class MyApp extends StatelessWidget {
         'SearchPagePremiumScreen':(context) => SearchPagePremiumScreen(),
         'QRScannerPage' :(context) =>  QRScannerPage(),
         'ProfilePage' :(context) =>  ProfilePage(),
-        'MyProfile' :(context) =>  MyProfile(Links: {}),
+        'MyProfile' :(context) =>  profiletest(),
         'EditUserProfile' :(context) =>  EditUserProfile(),
       },
 

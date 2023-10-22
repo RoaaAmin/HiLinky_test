@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hilinky_test/Profile/profile.dart';
 import 'package:hilinky_test/components/context.dart';
 import 'package:hilinky_test/screens/create_card/create_card.dart';
 import 'package:hilinky_test/screens/create_post.dart';
@@ -208,9 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.of(context).push(
                     CupertinoPageRoute(
-                      builder: (BuildContext context) => MyProfile(
-                        Links: Links,
-                      ),
+                      builder: (BuildContext context) => profiletest(),
                     ),
                   );
                 }),
