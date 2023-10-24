@@ -36,6 +36,8 @@ class _FollowedScreenState extends State<FollowedScreen> {
     getId();
     await getLinks();
     await getMyCards(following);
+    await getMyCards(following);
+
   }
 
   Map<String, dynamic> Links = {};

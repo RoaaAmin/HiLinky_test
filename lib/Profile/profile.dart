@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hilinky_test/auth.dart';
 import 'package:hilinky_test/components/context.dart';
+import 'package:hilinky_test/nav_bar.dart';
 import 'package:hilinky_test/screens/home_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -12,9 +14,9 @@ import 'language.dart';
 import 'notifications.dart';
 
 class profiletest extends StatefulWidget {
-  profiletest({super.key,});
-
-
+  profiletest({
+    super.key,
+  });
 
   @override
   profiletestState createState() {
@@ -25,37 +27,29 @@ class profiletest extends StatefulWidget {
 // Create a corresponding State class.
 // This class holds data related to the form.
 class profiletestState extends State<profiletest> {
-
-  Map<String, dynamic> Links={};
+  Map<String, dynamic> Links = {};
   var UserProfileImage;
 
   void getLinks() async {
-
     await FirebaseFirestore.instance
         .collection('Cards')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get()
         .then(
-          (value) {
-
-            setState(() {
-              UserProfileImage = value.data()!['ImageURL'];
-              print('-----------------------------------------------');
-              print(UserProfileImage);
-              Links.clear();
-              Links = value.data()!['Links'];
-              Links.removeWhere((key, value) => value == '');
-            });
+      (value) {
+        setState(() {
+          UserProfileImage = value.data()!['ImageURL'];
+          print('-----------------------------------------------');
+          print(UserProfileImage);
+          Links.clear();
+          Links = value.data()!['Links'];
+          Links.removeWhere((key, value) => value == '');
+        });
       },
     );
     print('end');
     print(Links.length);
   }
-
-
-
-
-
 
   List<DocumentSnapshot<Map<String, dynamic>>> postsDocs = [];
   bool postsFetched = false;
@@ -183,7 +177,11 @@ class profiletestState extends State<profiletest> {
                   color: Colors.black),
             ),
           ),
-          leading: const Icon(Icons.arrow_back_ios_new),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_new),
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Home(),
+                  ))),
           actions: [
             TextButton(
               onPressed: () {
@@ -243,54 +241,55 @@ class profiletestState extends State<profiletest> {
                     children: [
                       SizedBox(
                         height: 40,
-                        child: Links.isEmpty ? Text('No links') : ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemCount: Links.length,
-                          itemBuilder: (context, index) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    gradient: LinearGradient(
-                                        colors: [
-                                          Colors.orange,
-                                          Colors.deepOrange
-                                        ],
-                                        end: Alignment.topLeft,
-                                        begin: Alignment.bottomRight),
-                                  ),
-                                  width: 35,
-                                  height: 35,
-                                  child: Center(
-                                    child: IconButton(
-                                      isSelected: true,
-                                      iconSize: 20,
-                                      onPressed: () {
-                                        final Uri url =
-                                        Uri.parse(values[index]);
-                                        _launchUrl(url);
-                                      },
-                                      icon: Icon(l[keys[index]]!.icon),
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                )
-                              ],
-                            );
-                          },
-                        ),
+                        child: Links.isEmpty
+                            ? Text('No links')
+                            : ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemCount: Links.length,
+                                itemBuilder: (context, index) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          gradient: LinearGradient(
+                                              colors: [
+                                                Colors.orange,
+                                                Colors.deepOrange
+                                              ],
+                                              end: Alignment.topLeft,
+                                              begin: Alignment.bottomRight),
+                                        ),
+                                        width: 35,
+                                        height: 35,
+                                        child: Center(
+                                          child: IconButton(
+                                            isSelected: true,
+                                            iconSize: 20,
+                                            onPressed: () {
+                                              final Uri url =
+                                                  Uri.parse(values[index]);
+                                              _launchUrl(url);
+                                            },
+                                            icon: Icon(l[keys[index]]!.icon),
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 15,
+                                      )
+                                    ],
+                                  );
+                                },
+                              ),
                       ),
                     ],
                   ),
-
                   const SizedBox(
                     height: 20,
                   ),
@@ -627,117 +626,10 @@ class profiletestState extends State<profiletest> {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  showBottomSheet(
-                                    // clipBehavior: AboutDialog(applicationName: ,),
-
-                                    shape: Border.symmetric(),
-                                    // strokeAlign:
-                                    //     BorderSide.strokeAlignOutside,
-
-                                    // color: Colors.black),
-                                    context: context,
-                                    builder: (context) {
-                                      return SizedBox(
-                                        height: 200,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        // *
-                                        //     0.8,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(20.0),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              const Text(
-                                                "Log Out",
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              // const SizedBox(
-                                              //   height: 20,
-                                              // ),
-                                              const Text(
-                                                "Are you sure you want to logout?",
-                                                style: TextStyle(fontSize: 15),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  ElevatedButton(
-                                                    onPressed: () {
-                                                      context.pushPage(
-                                                          profiletest());
-                                                    },
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      fixedSize:
-                                                          const Size(170, 48),
-
-                                                      // shape: const (),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5),
-                                                      backgroundColor:
-                                                          Color.fromARGB(255,
-                                                              253, 253, 253),
-
-                                                      elevation: 1,
-                                                    ),
-                                                    //  style: const ButtonStyle( B elevation: 0.2, ),
-                                                    child: const Text(
-                                                      'Cancel',
-                                                      style: TextStyle(
-                                                        color: const Color
-                                                            .fromARGB(
-                                                            255, 2, 84, 86),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  ElevatedButton(
-                                                    onPressed: () {
-                                                      context.pushPage(
-                                                          HomeScreen());
-                                                    },
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      // shape: const (),
-                                                      fixedSize:
-                                                          const Size(170, 48),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5),
-                                                      backgroundColor:
-                                                          const Color.fromARGB(
-                                                              255, 2, 84, 86),
-
-                                                      elevation: 1,
-                                                    ),
-                                                    //  style: const ButtonStyle( B elevation: 0.2, ),
-                                                    child: const Text(
-                                                      'Log Out',
-                                                      style: TextStyle(
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              //                   TextButton(
-                                              // onPressed: () {
-                                              //  context.pop();
-                                              // },
-                                              // child:  Text("Cancel"))
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                      // return SelectingSheet(keyword: text);
-                                    },
-                                  );
+                                  FirebaseAuth.instance.signOut();
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => Auth(),
+                                  ));
                                 },
                                 child: const Text(
                                   "Log Out",
@@ -759,6 +651,7 @@ class profiletestState extends State<profiletest> {
           ),
         ));
   }
+
   Future<void> _launchUrl(url) async {
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');

@@ -1,8 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hilinky_test/components/context.dart';
 import 'package:intl/intl.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../reply/replyScreen.dart';
 
@@ -17,6 +16,53 @@ class CommentPage extends StatefulWidget {
 }
 
 class _CommentPageState extends State<CommentPage> {
+  var UserProfileImage;
+
+  void getLinks() async {
+    await FirebaseFirestore.instance
+        .collection('Cards')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (value) {
+        setState((){
+          UserProfileImage = value.data()!['ImageURL'];
+          print(UserProfileImage);
+        });
+      },
+    );
+  }
+
+  var FirstName = '';
+  var LastName = '';
+  var Position = '';
+  var CompanyName = '';
+  var uniqueUserName = '';
+
+  void getCardInfo() async {
+    await FirebaseFirestore.instance
+        .collection('Cards')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (value) {
+        setState(() {
+          FirstName = value.data()!['FirstName'];
+          LastName = value.data()!['LastName'];
+          Position = value.data()!['Position'];
+          CompanyName = value.data()!['CompanyName'];
+        });
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    getLinks();
+    getCardInfo();
+    super.initState();
+  }
+
   final TextEditingController _commentController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -40,11 +86,9 @@ class _CommentPageState extends State<CommentPage> {
                 if (!snapshot.hasData) {
                   return CircularProgressIndicator(); // Show loading indicator while fetching data
                 }
-
                 final comments = snapshot.data!.docs
                     .map((doc) => Comment.fromSnapshot(doc))
                     .toList();
-
                 return ListView.builder(
                   itemCount: comments.length,
                   itemBuilder: (context, index) {
@@ -54,16 +98,15 @@ class _CommentPageState extends State<CommentPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                const CircleAvatar(
+                                CircleAvatar(
                                     maxRadius: 20,
-                                    backgroundImage: NetworkImage(
-                                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMxYwhyb-ZYPd3tHeJo3odrNh7GsYjPYGXsA&usqp=CAU")
-                                    //AssetImage(profileImageperson),
-                                    ),
+                                    backgroundImage:
+                                        NetworkImage(UserProfileImage ?? "")),
                                 const SizedBox(
                                   width: 10,
                                 ),
@@ -71,39 +114,41 @@ class _CommentPageState extends State<CommentPage> {
                                   //  mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      "NEMA",
+                                    Text(
+                                      "$FirstName $LastName",
                                       style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold),
                                       textAlign: TextAlign.start,
                                     ),
                                     Text(
-                                      "@nema",
+                                      "$CompanyName $Position",
                                       textAlign: TextAlign.start,
                                     ),
                                   ],
                                 ),
                                 const SizedBox(
-                                  width: 100,
+                                  width: 50,
                                 ),
                                 Text(
                                   DateFormat('MMM dd, yyyy - hh:mm a')
                                       .format(comment.date),
                                   style: TextStyle(fontSize: 12),
                                 ),
-
                                 IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () {
-                                deleteComment(comment.id);
-                              },
-                            ),
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () {
+                                    deleteComment(comment.id);
+                                  },
+                                ),
                               ],
                             ),
-                            Text(
-                              comment.text,
-                              style: TextStyle(fontSize: 20),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                comment.text,
+                                style: TextStyle(fontSize: 20),
+                              ),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -111,17 +156,6 @@ class _CommentPageState extends State<CommentPage> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    //    ElevatedButton(
-                                    //       onPressed: () {
-                                    //         // Navigate to the ReplyScreen with the comment.id
-                                    //         Navigator.of(context).push(MaterialPageRoute(
-                                    //           builder: (context) => ReplyScreen(
-                                    //             commentId: comment.id,
-                                    //             postId: widget.PostId, // Pass the postId to the ReplyScreen
-                                    //           ),
-                                    //         ));
-                                    //       },
-                                    //       child: Text('Reply'),
                                     TextButton(
                                         onPressed: () {
                                           Navigator.of(context)
@@ -136,13 +170,12 @@ class _CommentPageState extends State<CommentPage> {
                                           "Replay",
                                           style: TextStyle(color: Colors.blue),
                                         )),
-
                                     TextButton(
                                         onPressed: () {
                                           // context.pushPage( home2());
                                         },
                                         child: Text(
-                                          "_____ View All Replies",
+                                          "View All Replies",
                                           style: TextStyle(
                                               fontSize: 12, color: Colors.blue),
                                         )),
@@ -223,7 +256,6 @@ class _CommentPageState extends State<CommentPage> {
         "PostedByUID": FirebaseAuth.instance.currentUser!.uid,
         'date': Timestamp.now(),
         'replies': [],
-
       });
       _commentController.clear();
     }
@@ -258,7 +290,8 @@ class Comment {
       id: snapshot.id,
       text: data['text'] ?? '',
       date: (data['date'] as Timestamp).toDate(),
-      PostId: data['PostId'] ?? '', // Get postId from Firestore
+      PostId: data['PostId'] ?? '',
+      // Get postId from Firestore
       replies: replies,
     );
   }

@@ -12,7 +12,6 @@ import 'package:line_icons/line_icons.dart';
 import '../API/notifications.dart';
 import '../auth.dart';
 import 'login_screen.dart';
-import 'myProfile/myProfile.dart';
 import 'my_card/myCard.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,7 +22,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final int _currentIndex = 0;
+  var UserProfileImage;
   Widget currentScreen = const HomeScreen();
   late DocumentSnapshot<Map<String, dynamic>> userData;
   late QuerySnapshot<Map<String, dynamic>> postsDocs;
@@ -53,12 +52,30 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        // flexibleSpace: ,
-
         elevation: 3,
-        leading: const CircleAvatar(
-          minRadius: 1,
-          backgroundColor: Color.fromARGB(255, 128, 148, 158),
+        leading: Center(
+          child: Container(
+            height: 130.0,
+            width: 130.0,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              image: DecorationImage(
+                image: NetworkImage(UserProfileImage ?? ''),
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
+              ),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blueGrey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+          ),
         ),
         title: Image.asset(
           "assets/images/HilinkyLogo.png",
@@ -119,31 +136,6 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         child: const Icon(Icons.add),
       ),
-
-      // body: Center(
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       const Text(
-      //         "Start your journey by creating your card",
-      //         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      //       ),
-      //       const SizedBox(height: 20), // Add some spacing
-      //       ElevatedButton(
-      //         onPressed: () {
-      //           Navigator.of(context).pushReplacement(CupertinoPageRoute(
-      //             builder: (BuildContext context) => CreateCard(),
-      //           ));
-      //         },
-      //         style: ElevatedButton.styleFrom(
-      //           backgroundColor: Colors.amber.shade800,
-      //         ),
-      //         child: const Text("Create Card"),
-      //       ),
-      //     ],
-      //   ),
-      // ),
-
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -186,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             ListTile(
                 leading: const Icon(
-                  LineIcons.cogs,
+                  Icons.credit_card_sharp,
                   color: Colors.amber,
                 ),
                 title: const Text(
@@ -249,124 +241,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-
-      // /////////////////////
-      // bottomNavigationBar: BottomAppBar(
-      //   shape: const CircularNotchedRectangle(),
-      //   notchMargin: 8,
-      //   child: SizedBox(
-      //     height: 60,
-      //     child: Row(
-      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //       children: <Widget>[
-      //         Row(
-      //           children: <Widget>[
-      //             MaterialButton(
-      //               minWidth: 40,
-      //               onPressed: () {
-      //                 setState(() {
-      //                   currentScreen = const HomeScreen();
-      //                   _currentIndex = 0;
-      //                 });
-      //               },
-      //               child: Column(
-      //                 mainAxisAlignment: MainAxisAlignment.center,
-      //                 children: <Widget>[
-      //                   Icon(
-      //                     LineIcons.home,
-      //                     color: _currentIndex == 0
-      //                         ? Colors.amber[500]
-      //                         : Colors.grey,
-      //                   ),
-      //                   Text(
-      //                     'Home',
-      //                     style: TextStyle(
-      //                       color: _currentIndex == 0
-      //                           ? Colors.amber[500]
-      //                           : Colors.grey,
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //             MaterialButton(
-      //               minWidth: 75,
-      //               onPressed: () {
-      //                 Navigator.pushNamed(context, 'SearchPagePremiumScreen');
-      //                 setState(() {
-      //                   _currentIndex = 1;
-      //                 });
-      //               },
-      //               padding: const EdgeInsets.only(left: 25, right: 0),
-      //               child: Column(
-      //                 mainAxisAlignment: MainAxisAlignment.center,
-      //                 children: <Widget>[
-      //                   Icon(
-      //                     LineIcons.search,
-      //                     color: _currentIndex == 1
-      //                         ? Colors.amber[500]
-      //                         : Colors.grey,
-      //                   ),
-      //                   Text(
-      //                     'Search',
-      //                     style: TextStyle(
-      //                       color: _currentIndex == 1
-      //                           ? Colors.amber[500]
-      //                           : Colors.grey,
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //             MaterialButton(
-      //               minWidth: 1,
-      //               onPressed: () {
-      //                 Navigator.pushNamed(context, 'QRScannerPage');
-      //                 setState(() {
-      //                   _currentIndex = 2;
-      //                 });
-      //                 // Navigator.pushNamed(context, 'createPostViewRoute');
-      //               },
-      //               padding: const EdgeInsets.only(left: 50, right: 0),
-      //               child: Column(
-      //                 mainAxisAlignment: MainAxisAlignment.center,
-      //                 children: <Widget>[
-      //                   Icon(
-      //                     LineIcons.qrcode,
-      //                     color: _currentIndex == 2
-      //                         ? Colors.amber[500]
-      //                         : Colors.grey,
-      //                   ),
-      //                   Text(
-      //                     'Scan',
-      //                     style: TextStyle(
-      //                       color: _currentIndex == 2
-      //                           ? Colors.amber[500]
-      //                           : Colors.grey,
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
-
-// ///////////
-
-//       //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-//       floatingActionButton: FloatingActionButton(
-//           backgroundColor: Colors.amber.shade800,
-//           onPressed: () {
-//             Navigator.of(context).push(CupertinoPageRoute(
-//                 builder: (BuildContext context) => CreatePost()));
-//           }
-
-//           //  },
-//           ),
     );
   }
 
@@ -377,6 +251,8 @@ class _HomeScreenState extends State<HomeScreen> {
         .get()
         .then(
       (value) {
+        UserProfileImage = value.data()!['ImageURL'];
+
         Links.clear();
         Links = value.data()!['Links'];
         Links.removeWhere((key, value) => value == '');

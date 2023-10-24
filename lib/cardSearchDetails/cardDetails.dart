@@ -30,7 +30,7 @@ class _CardDetailsState extends State<CardDetails> {
   void getFollowing() async {
     final id = await FirebaseAuth.instance.currentUser!.uid;
     var user =
-    await FirebaseFirestore.instance.collection('Users').doc(id).get();
+        await FirebaseFirestore.instance.collection('Users').doc(id).get();
     setState(() {
       following = user.data()!['followedCards'];
       followList = user.data()!['following'];
@@ -70,7 +70,7 @@ class _CardDetailsState extends State<CardDetails> {
         .doc(specifiedUserID)
         .get()
         .then(
-          (value) {
+      (value) {
         Links.clear();
         setState(() {
           Links = value.data()!['Links'];
@@ -126,13 +126,12 @@ class _CardDetailsState extends State<CardDetails> {
     print('print widget postedByUID 22 : ${widget.postedByUID}'); // not empty
   }
 
-
   var followList = [];
 
   void makeFollow() async {
     final id = await FirebaseAuth.instance.currentUser!.uid;
     var user =
-    await FirebaseFirestore.instance.collection('Users').doc(id).get();
+        await FirebaseFirestore.instance.collection('Users').doc(id).get();
     followList = user.data()!['following'];
     followList.add(specifiedUserID);
 
@@ -146,7 +145,7 @@ class _CardDetailsState extends State<CardDetails> {
   void unFollow() async {
     final id = await FirebaseAuth.instance.currentUser!.uid;
     var user =
-    await FirebaseFirestore.instance.collection('Users').doc(id).get();
+        await FirebaseFirestore.instance.collection('Users').doc(id).get();
     followList = user.data()!['following'];
     followList.remove(specifiedUserID);
 
@@ -162,6 +161,7 @@ class _CardDetailsState extends State<CardDetails> {
   var Position = '';
   var CompanyName = '';
   var uniqueUserName = '';
+  var UserProfileImage;
 
   void getCardInfo() async {
     var user = await FirebaseFirestore.instance
@@ -171,6 +171,7 @@ class _CardDetailsState extends State<CardDetails> {
     if (user.exists) {
       print("Card Data: ${user.data()}");
       setState(() {
+        UserProfileImage = user.data()!['ImageURL'];
         FirstName = user.data()!['FirstName'];
         LastName = user.data()!['LastName'];
         Position = user.data()!['Position'];
@@ -239,10 +240,7 @@ class _CardDetailsState extends State<CardDetails> {
               child: SingleChildScrollView(
                 child: Container(
                   color: Color(0xffF8F8F8),
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
+                  width: MediaQuery.of(context).size.width,
                   child: Column(
                     children: <Widget>[
                       Stack(
@@ -259,29 +257,27 @@ class _CardDetailsState extends State<CardDetails> {
                             left: 0,
                             child: Column(
                               children: <Widget>[
-                                Center(
-                                  child: Container(
-                                    height: 130.0,
-                                    width: 130.0,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-// image: DecorationImage(
-//   image: NetworkImage(UserProfileImage),
-//   fit: BoxFit.cover,
-//   alignment: Alignment.center,
-// ),
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.blueGrey
-                                              .withOpacity(0.5),
-                                          spreadRadius: 5,
-                                          blurRadius: 7,
-                                          offset: Offset(0, 3),
-                                        ),
-                                      ],
+                                Container(
+                                  height: 130.0,
+                                  width: 130.0,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    image: DecorationImage(
+                                      image:
+                                          NetworkImage(UserProfileImage ?? ''),
+                                      fit: BoxFit.cover,
+                                      alignment: Alignment.center,
                                     ),
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.blueGrey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: Offset(0, 3),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 SizedBox(
@@ -313,7 +309,8 @@ class _CardDetailsState extends State<CardDetails> {
                                   children: <Widget>[
                                     SizedBox(
                                       height: 40,
-                                      width: MediaQuery.of(context).size.width * .5,
+                                      width: MediaQuery.of(context).size.width *
+                                          .5,
                                       child: ListView.builder(
                                         scrollDirection: Axis.horizontal,
                                         shrinkWrap: true,
@@ -321,13 +318,12 @@ class _CardDetailsState extends State<CardDetails> {
                                         itemBuilder: (context, index) {
                                           return Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Container(
-                                                decoration:
-                                                const BoxDecoration(
+                                                decoration: const BoxDecoration(
                                                   shape: BoxShape.rectangle,
                                                   gradient: LinearGradient(
                                                       colors: [
@@ -345,8 +341,7 @@ class _CardDetailsState extends State<CardDetails> {
                                                     isSelected: true,
                                                     iconSize: 20,
                                                     onPressed: () {
-                                                      final Uri url =
-                                                      Uri.parse(
+                                                      final Uri url = Uri.parse(
                                                           values[index]);
                                                       _launchUrl(url);
                                                     },
@@ -368,13 +363,13 @@ class _CardDetailsState extends State<CardDetails> {
                                 ),
                                 followList.contains(specifiedUserID)
                                     ? ElevatedButton(
-                                    onPressed: unFollow,
-                                    child: const Text(
-                                        'you already follow him'))
+                                        onPressed: unFollow,
+                                        child: const Text(
+                                            'you already follow him'))
                                     : ElevatedButton(
-                                  onPressed: makeFollow,
-                                  child: const Text('follow'),
-                                ),
+                                        onPressed: makeFollow,
+                                        child: const Text('follow'),
+                                      ),
                                 SizedBox(
                                   width: 150,
                                   height: 150,
@@ -386,16 +381,15 @@ class _CardDetailsState extends State<CardDetails> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    following
-                                        .contains(specifiedUserID)
+                                    following.contains(specifiedUserID)
                                         ? ElevatedButton(
-                                      onPressed: () => unSave(),
-                                      child: const Text('already saved'),
-                                    )
+                                            onPressed: () => unSave(),
+                                            child: const Text('already saved'),
+                                          )
                                         : ElevatedButton(
-                                      onPressed: () => save(),
-                                      child: Text('Save'),
-                                    ),
+                                            onPressed: () => save(),
+                                            child: Text('Save'),
+                                          ),
                                     SizedBox(width: 10),
                                     // Add some spacing between the buttons
                                     ElevatedButton(
@@ -403,11 +397,9 @@ class _CardDetailsState extends State<CardDetails> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProfilePage(
-                                                    postedByUID:
-                                                    widget.postedByUID,
-                                                  ),
+                                              builder: (context) => ProfilePage(
+                                                postedByUID: widget.postedByUID,
+                                              ),
                                             ));
                                       },
                                       child: Text('View Profile'),
@@ -431,7 +423,7 @@ class _CardDetailsState extends State<CardDetails> {
   void save() async {
     final id = await FirebaseAuth.instance.currentUser!.uid;
     var user =
-    await FirebaseFirestore.instance.collection('Users').doc(id).get();
+        await FirebaseFirestore.instance.collection('Users').doc(id).get();
     following = user.data()!['followedCards'];
     following.add(specifiedUserID);
 
@@ -445,7 +437,7 @@ class _CardDetailsState extends State<CardDetails> {
   void unSave() async {
     final id = await FirebaseAuth.instance.currentUser!.uid;
     var user =
-    await FirebaseFirestore.instance.collection('Users').doc(id).get();
+        await FirebaseFirestore.instance.collection('Users').doc(id).get();
     following = user.data()!['followedCards'];
     following.remove(specifiedUserID);
 

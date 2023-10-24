@@ -150,15 +150,27 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               CircleAvatar(
                                 maxRadius: 30,
                                 backgroundImage: NetworkImage(
-                                    cardsDocs[i].data()!['LogoURL']),
+                                    cardsDocs[i].data()!['ImageURL']),
                               ),
                               const SizedBox(
                                 width: 40,
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                      "${cardsDocs[i].data()!['FirstName']} ${cardsDocs[i].data()!['LastName']}"),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                      "${cardsDocs[i].data()!['CompanyName']} ${cardsDocs[i].data()!['Position']}"),
+                                ],
                               ),
                             ],
                           ),
@@ -167,86 +179,6 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
                     )),
               ),
             ),
-            // child: Card(
-            //   color: Colors.white,
-            //   elevation: 3,
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(8.0),
-            //     child: Column(
-            //       mainAxisAlignment: MainAxisAlignment.start,
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         Row(
-            //           children: [
-            //             Container(
-            //               height: 110,
-            //               width: 100,
-            //               decoration: BoxDecoration(
-            //                 color: Color(0xFF495592),
-            //                 borderRadius: BorderRadius.circular(12),
-            //                 image: DecorationImage(
-            //                     image: NetworkImage(
-            //                         cardsDocs[i].data()!['LogoURL']),
-            //                     fit: BoxFit.fill),
-            //               ),
-            //             ),
-            //             SizedBox(
-            //               width: 10,
-            //             ),
-            //             Column(
-            //               crossAxisAlignment: CrossAxisAlignment.start,
-            //             ),
-            //           ],
-            //         ),
-            //         Divider(
-            //           color: Color(0xFF495592).withOpacity(0.9),
-            //         ),
-            //         Text(
-            //           'name:',
-            //           style: TextStyle(
-            //               color: Color(0xFF495592),
-            //               fontWeight: FontWeight.w600,
-            //               fontSize: 13),
-            //         ),
-            //         Text(
-            //           cardsDocs[i].data()!['FirstName'],
-            //           style: TextStyle(
-            //               color: Colors.black,
-            //               fontWeight: FontWeight.w500,
-            //               fontSize: 13),
-            //         ),
-            //         Divider(
-            //           color: Color(0xFF495592).withOpacity(0.9),
-            //         ),
-            //         Row(
-            //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //           children: [
-            //             Row(
-            //               children: [
-            //                 Text(
-            //                   'Position: ',
-            //                   style: TextStyle(
-            //                       color: Color(0xFF495592),
-            //                       fontWeight: FontWeight.bold,
-            //                       fontSize: 12),
-            //                 ),
-            //                 Text(
-            //                   cardsDocs[i].data()!['Position'],
-            //                   style: TextStyle(
-            //                       color: Colors.red,
-            //                       fontWeight: FontWeight.w800,
-            //                       fontSize: 14),
-            //                 ),
-            //                 // postsDocs[i].data()!['TimeStamp'],
-            //               ],
-            //             ),
-            //           ],
-            //         ),
-            //         QrCode(),
-            //       ],
-            //     ),
-            //   ),
-            // ),
           );
         },
       );
