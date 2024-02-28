@@ -18,9 +18,27 @@ class _SearchPagePremiumScreenState extends State<SearchPagePremiumScreen> {
   String? valueChoose;
 
   List<String> dropdownItemList = [
-    'City 1',
-    'City 2',
-    'City 3',
+    'Riyadh',
+    'Jeddah',
+    'Mecca',
+    'Medina',
+    'Dammam',
+    'Ta\'if',
+    'Buraidah',
+    'Tabuk',
+    'Abha',
+    'Al-Khobar',
+    'Hail',
+    'Al-Qatif',
+    'Khamis Mushait',
+    'Al-Ahsa',
+    'Najran',
+    'Yanbu',
+    'Al Jubail',
+    'Dhahran',
+    'Al Hofuf',
+    'Jubail Industrial City',
+
   ];
 
   Future<void> searchFromFirebase(String query) async {
