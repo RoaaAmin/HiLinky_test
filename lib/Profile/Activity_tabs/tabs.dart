@@ -45,7 +45,7 @@ class _tabsState extends State<tabs> {
                     text: "MyPosts",
                   ),
                   Tab(
-                    text: "MyCommints",
+                    text: "MyComments",
                   ),
                   Tab(
                     text: "MyLikes",

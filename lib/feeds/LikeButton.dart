@@ -26,8 +26,8 @@ class _LikeButtonState extends State<LikeButton> {
   Widget build(BuildContext context) {
     return IconButton(
       icon: Icon(
-        isLiked ? Icons.thumb_up : Icons.thumb_up_alt_outlined,
-        color: isLiked ? Colors.blue : null,
+        isLiked ? Icons.favorite : Icons.favorite_border_outlined,
+        color: isLiked ? Colors.red : null,
       ),
       onPressed: () {
         setState(() {

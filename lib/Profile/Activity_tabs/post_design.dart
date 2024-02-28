@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../Comment/CommentPage.dart';
+import '../../feeds/LikeButton.dart';
 
 class post_design extends StatefulWidget {
   final String? postedByUID;
@@ -151,7 +152,9 @@ class _post_designState extends State<post_design> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.favorite_border),
+                        LikeButton(
+                          postId: postsDocs[i].data()!['PostId'],
+                        ),
                         Text("  5676       "),
                         GestureDetector(
                             onTap: () {

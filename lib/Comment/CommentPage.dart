@@ -170,15 +170,15 @@ class _CommentPageState extends State<CommentPage> {
                                           "Reply",
                                           style: TextStyle(color: Colors.blue),
                                         )),
-                                    // TextButton(
-                                    //     onPressed: () {
-                                    //       // context.pushPage( home2());
-                                    //     },
-                                    //     child: Text(
-                                    //       "View All Replies",
-                                    //       style: TextStyle(
-                                    //           fontSize: 12, color: Colors.blue),
-                                    //     )),
+                                    TextButton(
+                                        onPressed: () {
+                                          // context.pushPage( home2());
+                                        },
+                                        child: Text(
+                                          "View All Replies",
+                                          style: TextStyle(
+                                              fontSize: 12, color: Colors.blue),
+                                        )),
                                   ],
                                 ),
                               ],
