@@ -13,6 +13,7 @@ import 'package:social_share/social_share.dart';
 import '../Comment/CommentPage.dart';
 import '../main.dart';
 import '../models/SnackBar.dart';
+import 'LikeButton.dart';
 
 class Feeds extends StatefulWidget {
   @override
@@ -287,11 +288,8 @@ class _FeedsState extends State<Feeds> {
                                     child: Icon(Icons.comment),
                                   ),
 
-                                  IconButton(
-                                    icon: Icon(Icons.thumb_up),
-                                    onPressed: () {
-                                      // Handle like action
-                                    },
+                                  LikeButton(
+                                    postId: postsDocs[i].data()!['PostId'],
                                   ),
                                   IconButton(
                                     icon: Icon(Icons.share),
