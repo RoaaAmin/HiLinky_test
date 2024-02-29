@@ -24,23 +24,28 @@ class _LikeButtonState extends State<LikeButton> {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(
-        isLiked ? Icons.favorite : Icons.favorite_border_outlined,
-        color: isLiked ? Colors.red : null,
-      ),
-      onPressed: () {
-        setState(() {
-          // Toggle the like status
-          isLiked = !isLiked;
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(
+            isLiked ? Icons.favorite : Icons.favorite_border_outlined,
+            color: isLiked ? Colors.red : null,
+          ),
+          onPressed: () {
+            setState(() {
+              // Toggle the like status
+              isLiked = !isLiked;
 
-          // Update the like count
-          likeCount = isLiked ? likeCount + 1 : likeCount - 1;
-        });
+              // Update the like count
+              likeCount = isLiked ? likeCount + 1 : likeCount - 1;
+            });
 
-        // Update like status in Firestore
-        updateLikeStatus(isLiked);
-      },
+            // Update like status in Firestore
+            updateLikeStatus(isLiked);
+          },
+        ),
+        Text('$likeCount'),
+      ],
     );
   }
 

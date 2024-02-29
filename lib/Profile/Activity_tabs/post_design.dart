@@ -155,7 +155,7 @@ class _post_designState extends State<post_design> {
                         LikeButton(
                           postId: postsDocs[i].data()!['PostId'],
                         ),
-                        Text("  5676       "),
+                        Text("       "),
                         GestureDetector(
                             onTap: () {
                               Navigator.push(
