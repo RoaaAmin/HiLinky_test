@@ -150,7 +150,7 @@ class _FeedsState extends State<Feeds> {
                 IconButton(
                     icon: Icon(LineIcons.bell, size:30.0),
                     onPressed: () {
-                      // Navigator.pushNamed(context, notificationsViewRoute);
+                      //Navigator.pushNamed(context, notificationsViewRoute);
                     }
                 ),
               ],

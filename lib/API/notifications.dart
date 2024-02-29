@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
@@ -6,24 +7,34 @@ import '../main.dart';
 import '../screens/home_screen.dart';
 
 class NotificationsPage extends StatefulWidget {
+  final String? postedByUID;
+  const NotificationsPage(
+      {super.key,
+
+        this.postedByUID,});
   @override
   State<NotificationsPage> createState() => _NotificationsPageState();
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
   QuerySnapshot<Map<String, dynamic>>? notifications;
-
+  String? specifiedUserID;
   @override
   void initState() {
     getNotifications();
     super.initState();
+    if (widget.postedByUID == '' || widget.postedByUID == null) {
+      specifiedUserID = FirebaseAuth.instance.currentUser!.uid;
+    } else {
+      specifiedUserID = widget.postedByUID;
+    }
   }
 
   getNotifications() async {
     Future.delayed(Duration(seconds: 1), () async {
       await FirebaseFirestore.instance
           .collection('Notifications')
-          .where('ToUID', isEqualTo: sUserID)
+          .where('ToUID', isEqualTo: specifiedUserID)
           .get()
           .then((value) async {
         setState(() {
@@ -116,59 +127,59 @@ class _NotificationsPageState extends State<NotificationsPage> {
       );
     } else {
       return Container(
-        padding: EdgeInsets.only(
-          top: 70.0,
-          left: 30.0,
-          right: 30.0,
-          bottom: 30.0,
-        ),
-        height: deviceHeight,
-        width: deviceWidth,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 1.0, bottom: 30.0),
-              child: Text(
-                "Notifications",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontSize: 40.0,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: deviceHeight * 0.1,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'assets/images/empty.png',
-                  //"empty.png"
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 30.0, bottom: 10.0),
-                  child: Text(
-                    "No New Notification",
-                    style:
-                        TextStyle(fontWeight: FontWeight.w700, fontSize: 24.0),
-                  ),
-                ),
-                Text(
-                  "You currently do not have any unread notifications.",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18.0,
-                    color: Colors.grey.withOpacity(0.6),
-                  ),
-                  textAlign: TextAlign.center,
-                )
-              ],
-            ),
-          ],
-        ),
+        // padding: EdgeInsets.only(
+        //   top: 70.0,
+        //   left: 30.0,
+        //   right: 30.0,
+        //   bottom: 30.0,
+        // ),
+        // height: deviceHeight,
+        // width: deviceWidth,
+        // child: Column(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: <Widget>[
+        //     Padding(
+        //       padding: EdgeInsets.only(top: 1.0, bottom: 30.0),
+        //       child: Text(
+        //         "Notifications",
+        //         style: TextStyle(
+        //           fontWeight: FontWeight.bold,
+        //           color: Colors.black,
+        //           fontSize: 40.0,
+        //         ),
+        //       ),
+        //     ),
+        //     SizedBox(
+        //       height: deviceHeight * 0.1,
+        //     ),
+        //     Column(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: <Widget>[
+        //         Image.asset(
+        //           'assets/images/empty.png',
+        //           //"empty.png"
+        //         ),
+        //         Container(
+        //           padding: EdgeInsets.only(top: 30.0, bottom: 10.0),
+        //           child: Text(
+        //             "No New Notification",
+        //             style:
+        //                 TextStyle(fontWeight: FontWeight.w700, fontSize: 24.0),
+        //           ),
+        //         ),
+        //         Text(
+        //           "You currently do not have any unread notifications.",
+        //           style: TextStyle(
+        //             fontWeight: FontWeight.w600,
+        //             fontSize: 18.0,
+        //             color: Colors.grey.withOpacity(0.6),
+        //           ),
+        //           textAlign: TextAlign.center,
+        //         )
+        //       ],
+        //     ),
+        //   ],
+        // ),
       );
     }
   }

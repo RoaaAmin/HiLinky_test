@@ -49,7 +49,6 @@ class _LikeButtonState extends State<LikeButton> {
     );
   }
 
-  // Fetch initial like status and count from Firestore
   void fetchLikeStatus() async {
     try {
       // Get current user ID

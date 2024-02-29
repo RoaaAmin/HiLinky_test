@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hilinky_test/Profile/Activity_tabs/Mylikes_card.dart';
 
 import 'card_list.dart';
 
@@ -21,7 +22,7 @@ class _MyLikesState extends State<MyLikes> {
           // ),
 
           body: ListView(
-       children: const [CardsList()],
+       children: const [MyLikes_Card()],
       )),
     );
   }
